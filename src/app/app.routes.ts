@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { MapPage } from './components/map-page/map-page';
+import { RestaurantPage } from './components/restaurant-page/restaurant-page';
 export const routes: Routes = [
   {
     path: 'mapa',
