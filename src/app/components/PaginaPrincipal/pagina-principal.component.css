@@ -1,7 +1,7 @@
 .contenedor-principal {
   display: flex;
-  width: 100%; /* Usar 100% en lugar de 100vw evita la barra horizontal */
-  height: 95vh; /* Alto exacto de la pantalla */
+  width: 100%;
+  height: 95vh;
   box-sizing: border-box; 
   margin: 0;
   overflow: hidden;
@@ -10,7 +10,7 @@
 .caja-app {
   border: 2px solid #000;
   width: 100%;
-  height: 100%; /* Obligamos a la caja a medir exactamente lo mismo que su contenedor */
+  height: 100%;
   background-color: #fff;
   display: flex;
   flex-direction: column;
