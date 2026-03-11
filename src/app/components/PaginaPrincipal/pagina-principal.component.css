@@ -1,18 +1,20 @@
 .contenedor-principal {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f5f5f5; /* Fondo suave opcional */
-  font-family: Arial, sans-serif;
-  padding: 20px;
+  width: 100%;
+  height: 95vh;
+  box-sizing: border-box; 
+  margin: 0;
+  overflow: hidden;
 }
 
 .caja-app {
   border: 2px solid #000;
   width: 100%;
-  max-width: 900px;
+  height: 100%;
   background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 .encabezado {
@@ -23,7 +25,7 @@
 
 .encabezado h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: 50px;
   font-weight: normal;
   letter-spacing: 1px;
 }
@@ -35,6 +37,7 @@
   padding: 60px 20px;
   flex-wrap: wrap;
   gap: 30px;
+  flex: 1; /* Toma el espacio sobrante para centrar los botones verticalmente */
 }
 
 .tarjeta {
@@ -47,7 +50,7 @@
 }
 
 .tarjeta:hover {
-  transform: translateY(-5px); /* Pequeño efecto al pasar el mouse */
+  transform: translateY(-5px);
 }
 
 .icono-caja {
@@ -58,7 +61,7 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
-  background-color: #fff; /* Similar al mockup */
+  background-color: #fff;
 }
 
 /* El mockup muestra un borde interno extra en restaurante, simulado aquí */
