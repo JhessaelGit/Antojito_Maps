@@ -1,8 +1,88 @@
-.map-container {
+/* Contenedor principal */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
   height: 100vh;
-  width: 100%;
+  font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Estilo del Header */
+.app-header {
+  background: #2d3436; /* Un tono oscuro para resaltar el logo */
+  padding: 0.8rem 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-section h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+
+.highlight {
+  color: #fab1a0; /* Un tono coral suave */
+}
+
+/* Envoltura del mapa */
+.map-wrapper {
+  flex-grow: 1;
+  position: relative;
 }
 
 #map {
   height: 100%;
+  width: 100%;
+}
+
+/* Tarjeta flotante (HUD) */
+/* Tarjeta flotante (HUD) - AJUSTADA A LA DERECHA */
+.map-overlay-info {
+  position: absolute;
+  top: 25px;
+  right: 25px; /* <--- Movido a la derecha */
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  z-index: 1000;
+  max-width: 240px;
+  /* Cambiamos el borde decorativo al lado derecho para que combine mejor */
+  border-right: 5px solid #fab1a0; 
+  border-left: none; 
+}
+
+.map-overlay-info h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  color: #2d3436;
+}
+
+.map-overlay-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #636e72;
+  line-height: 1.4;
+}
+
+.divider {
+  margin: 15px 0;
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
+.instruction {
+  font-style: italic;
+  font-size: 0.8rem !important;
+  color: #b2bec3 !important;
 }
