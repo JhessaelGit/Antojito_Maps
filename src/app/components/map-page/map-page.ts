@@ -48,6 +48,20 @@ export class MapPage implements OnInit {
     }).addTo(this.map);
   }
 
+ 
+  private addRestaurants(): void {
 
+    this.restaurants.forEach(restaurant => {
+
+      const marker = L.marker([restaurant.lat, restaurant.lng]).addTo(this.map);
+
+      marker.bindPopup(`
+        <b>${restaurant.name}</b><br>
+        ${restaurant.description}
+      `);
+
+    });
+
+  }
 
 }
