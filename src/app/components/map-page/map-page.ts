@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import * as L from 'leaflet';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -8,6 +9,14 @@ L.Icon.Default.mergeOptions({
   iconUrl: '/assets/marker-icon-red.png',
   shadowUrl: '/assets/marker-shadow.png'
 });
+
+interface Restaurante {
+  id: number;
+  nombre: string;
+  lat: number;
+  lng: number;
+  descripcion: string;
+}
 
 @Component({
   selector: 'app-map-page',
@@ -19,31 +28,35 @@ export class MapPage implements OnInit {
 
   private map: any;
 
-  // Restaurantes simulados
-  private restaurants = [
+  restaurantes: Restaurante[] = [
     {
-      name: "Pollos Panchita",
+      id: 1,
+      nombre: 'Pollos Panchita',
       lat: -17.3895,
       lng: -66.1568,
-      description: "Pollo frito y combos familiares"
+      descripcion: 'Pollo frito y combos familiares'
     },
     {
-      name: "Burger House",
+      id: 2,
+      nombre: 'Burger House',
       lat: -17.3950,
       lng: -66.1600,
-      description: "Hamburguesas artesanales"
+      descripcion: 'Hamburguesas artesanales'
     },
     {
-      name: "Pizza Loca",
+      id: 3,
+      nombre: 'Pizza Loca',
       lat: -17.3920,
       lng: -66.1500,
-      description: "Pizzas con promociones"
+      descripcion: 'Pizzas con promociones'
     }
   ];
 
+  constructor(private router: Router) {}
+
   ngOnInit(): void {
     this.initMap();
-    this.addRestaurants();
+    this.agregarMarcadores();
   }
 
   private initMap(): void {
@@ -54,43 +67,47 @@ export class MapPage implements OnInit {
       maxZoom: 19,
       attribution: '© OpenStreetMap contributors'
     }).addTo(this.map);
+
   }
 
- 
-  private addRestaurants(): void {
+  private agregarMarcadores(): void {
 
-  this.restaurants.forEach(restaurant => {
+    this.restaurantes.forEach(restaurante => {
 
-    const marker = L.marker([restaurant.lat, restaurant.lng]).addTo(this.map);
+      const marker = L.marker([restaurante.lat, restaurante.lng])
+        .addTo(this.map);
 
-    marker.bindPopup(`
-      <div style="text-align:center; width:200px">
+      marker.bindPopup(`
+        <div style="text-align:center; width:200px">
 
-        <img src="/assets/logo-panchita.png"
-             style="width:80px; margin-bottom:8px; border-radius:8px">
+          <img src="/assets/logo-panchita.png"
+               style="width:80px; margin-bottom:8px; border-radius:8px">
 
-        <h3 style="margin:5px 0">${restaurant.name}</h3>
-        <p style="font-size:14px; margin:0 0 10px 0"">
-          ${restaurant.description}
-        </p>
+          <h3 style="margin:5px 0">${restaurante.nombre}</h3>
 
-        <a href="/restaurant"
-           style="
-             background:#7F1100;
-             color:white;
-             padding:6px 12px;
-             border-radius:6px;
-             text-decoration:none;
-             font-size:14px
-           ">
-           Ver restaurante
-        </a>
+          <p style="font-size:14px; margin:0 0 10px 0">
+            ${restaurante.descripcion}
+          </p>
 
-      </div>
-    `);
+          <button
+            style="
+              background:#7F1100;
+              color:white;
+              padding:6px 12px;
+              border-radius:6px;
+              border:none;
+              cursor:pointer
+            "
+            onclick="window.location.href='/restaurant'"
+          >
+            Ver restaurante
+          </button>
 
-  });
+        </div>
+      `);
 
-}
+    });
+
+  }
 
 }
