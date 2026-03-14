@@ -1,44 +1,29 @@
-<div class="contenedor-principal">
-  <div class="caja-app">
-    
-    <div class="encabezado">
-      <h1>ANTOJITOS MAPS</h1>
+<div class="main-container">
+  <header class="header">
+    <h1>ANTOJITOS MAPS</h1>
+    <p>Selecciona tu perfil para ingresar</p>
+  </header>
+
+  <main class="roles-container">
+    <div class="role-card" (click)="selectRole('usuario')">
+      <div class="icon-wrapper">
+        <i class="fas fa-users"></i>
+      </div>
+      <h2>USUARIO</h2>
     </div>
 
-    <div class="opciones-contenedor">
-      
-      <div class="tarjeta" (click)="navegarA('usuario')">
-        <div class="icono-caja">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-        </div>
-        <div class="etiqueta">USUARIO</div>
+    <div class="role-card" (click)="selectRole('restaurante')">
+      <div class="icon-wrapper">
+        <i class="fas fa-utensils"></i>
       </div>
-
-      <div class="tarjeta" (click)="navegarA('restaurante')">
-        <div class="icono-caja">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
-            <path d="M7 2v20"></path>
-            <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
-          </svg>
-        </div>
-        <div class="etiqueta">RESTAURANTE</div>
-      </div>
-
-      <div class="tarjeta" (click)="navegarA('administrador')">
-        <div class="icono-caja">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16"></path>
-          </svg>
-        </div>
-        <div class="etiqueta">ADMINISTRADOR</div>
-      </div>
-
+      <h2>RESTAURANTE</h2>
     </div>
-  </div>
+
+    <div class="role-card" (click)="selectRole('administrador')">
+      <div class="icon-wrapper">
+        <i class="fas fa-laptop-code"></i>
+      </div>
+      <h2>ADMINISTRADOR</h2>
+    </div>
+  </main>
 </div>

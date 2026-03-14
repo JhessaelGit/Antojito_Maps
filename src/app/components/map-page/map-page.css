@@ -82,3 +82,10 @@
   font-size: 0.8rem !important;
   color: #b2bec3 !important;
 }
+
+
+::ng-deep .custom-restaurant-marker:hover {
+
+  filter: brightness(1.1) drop-shadow(0 0 10px rgba(127, 17, 0, 0.8)); 
+  z-index: 1000 !important;
+}
