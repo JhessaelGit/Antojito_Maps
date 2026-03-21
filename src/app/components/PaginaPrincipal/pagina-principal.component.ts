@@ -15,6 +15,7 @@ export class PaginaPrincipalComponent {
       this.router.navigate(['/mapa']); 
     } else if (role === 'restaurante') {
       console.log('Navegando a la vista de Restaurante...');
+      this.router.navigate(['/restaurant/login']);
     } else if (role === 'administrador') {
       console.log('Navegando a la vista de Administrador...');
       
