@@ -94,8 +94,7 @@ export class MapPage implements OnInit {
     this.map.on('locationfound', (e: any) => {
       const radius = e.accuracy / 2;
       
-      L.marker(e.latlng, { icon: iconoUsuario }).addTo(this.map)
-        .bindPopup("Te encuentras aquí").openPopup();
+      L.marker(e.latlng, { icon: iconoUsuario }).addTo(this.map);
         
       L.circle(e.latlng, radius).addTo(this.map);
     });
