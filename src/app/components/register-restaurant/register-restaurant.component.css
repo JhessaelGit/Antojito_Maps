@@ -1,0 +1,169 @@
+:host {
+  --color-red-phoenix: #7F1100;
+  --color-royal-green-qilin: #02332D;
+  --color-white-cream: #DACFBD;
+  --color-golden-days: #BF9861;
+  
+  display: block;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-wrapper {
+  background-color: var(--color-white-cream);
+  color: var(--color-royal-green-qilin);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* Encabezado */
+.app-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.app-header h1 {
+  font-size: 3rem;
+  color: var(--color-red-phoenix);
+  margin: 0;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.logo-container {
+  display: none; 
+}
+
+/* Contenedor del Formulario */
+.login-container {
+  background-color: #FFFFFF;
+  border: 3px solid var(--color-golden-days);
+  border-radius: 12px;
+  padding: 3rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 12px 24px rgba(127, 17, 0, 0.2); 
+}
+
+/* Textos dentro del formulario */
+.login-form h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 2rem;
+  color: var(--color-royal-green-qilin);
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.form-group {
+  margin-bottom: 1.8rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-weight: 700;
+  color: var(--color-royal-green-qilin);
+  font-size: 0.95rem;
+}
+
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon .input-icon {
+  position: absolute;
+  top: 50%;
+  left: 1.2rem;
+  transform: translateY(-50%);
+  color: var(--color-golden-days);
+  font-size: 1.2rem;
+}
+
+.input-with-icon input {
+  width: 100%;
+  padding: 1rem 3.5rem 1rem 3.5rem;
+  border: 2px solid var(--color-golden-days);
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  background-color: #FFFFFF;
+  color: var(--color-royal-green-qilin);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.input-with-icon input:focus {
+  outline: none;
+  border-color: var(--color-royal-green-qilin);
+  box-shadow: 0 0 0 3px rgba(2, 51, 45, 0.15);
+}
+
+/* Visibilidad de contraseña */
+.toggle-password-icon {
+  position: absolute;
+  top: 50%;
+  right: 1.2rem;
+  transform: translateY(-50%);
+  color: var(--color-golden-days);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.toggle-password-icon:hover {
+  color: var(--color-royal-green-qilin);
+}
+
+/* Botones */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 2.5rem;
+}
+
+.btn {
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  width: 100%;
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--color-royal-green-qilin);
+  color: #FFFFFF;
+  box-shadow: 0 4px 10px rgba(2, 51, 45, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: #011f1b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(2, 51, 45, 0.3);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-red-phoenix);
+  border: 2px solid var(--color-red-phoenix);
+}
+
+.btn-secondary:hover {
+  background-color: rgba(127, 17, 0, 0.05);
+  transform: translateY(-2px);
+}

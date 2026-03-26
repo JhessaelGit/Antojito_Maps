@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router'; // 👈 agregar
 
 @Component({
   selector: 'app-restaurant-login',
@@ -12,12 +13,17 @@ export class RestaurantLoginComponent {
   
   showPassword = false;
 
+  constructor(private router: Router) {} // 👈 agregar
+
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
 
   login() {
     console.log('Iniciando sesión en Antojitos Maps...');
-    // Aquí irá la lógica de autenticación más adelante
+  }
+
+  goToRegister() { 
+    this.router.navigate(['/restaurant/register']);
   }
 }
