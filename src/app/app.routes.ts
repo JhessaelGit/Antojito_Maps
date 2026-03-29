@@ -5,7 +5,7 @@ import { PaginaPrincipalComponent } from './components/PaginaPrincipal/pagina-pr
 import { RestaurantLoginComponent } from './components/login-restaurant/restaurant-login.component';
 import { RegisterRestaurantComponent } from './components/register-restaurant/register-restaurant.component';
 import { PaymentOptionsComponent } from './components/payment-options/payment-options.component';
-
+import { QrPaymentComponent } from './components/qr-payment/qr-payment.component';
 export const routes: Routes = [
   {
     path: 'restaurant',
@@ -22,6 +22,10 @@ export const routes: Routes = [
   {
     path: 'payment',
     component: PaymentOptionsComponent
+  },
+  {
+    path: 'payment/qr',
+    component: QrPaymentComponent
   },
   {
     path: 'inicio',

@@ -1,0 +1,18 @@
+.wrapper {
+  text-align: center;
+  padding: 20px;
+}
+
+.qr-box {
+  margin: 20px 0;
+}
+
+img {
+  width: 200px;
+  height: 200px;
+}
+
+.btn {
+  padding: 10px 20px;
+  cursor: pointer;
+}
