@@ -1,20 +1,13 @@
 <div class="restaurant-container">
   <header class="restaurant-header">
-    <div class="header-content">
-      <h1>Pollos Panchita</h1>
-      <div class="restaurant-meta">
-        <span>📍 Av. América, Cochabamba</span>
-        <span>⭐ 4.6</span>
-        <span>🍗 Pollo frito</span>
-      </div>
-      <p class="restaurant-description">
-        Restaurante especializado en pollo frito con combos familiares y promociones.
-      </p>
+    <h1>Pollos Panchita</h1>
+    <div class="restaurant-meta">
+      <span>📍 Av. América</span> <span>⭐ 4.6</span> <span>🍗 Pollo frito</span>
     </div>
   </header>
 
   <section class="offers-section">
-    <h2>Ofertas Especiales</h2>
+    <h2>Ofertas Activas</h2>
     <div class="offers">
       @for (promo of promociones; track promo.id) {
         <div class="offer-item">
@@ -24,8 +17,8 @@
             <span class="price">Bs {{ promo.precio }}</span>
           </div>
           <div class="admin-actions">
-            <button class="btn-icon edit" (click)="editarPromo(promo)">📝</button>
-            <button class="btn-icon delete" (click)="eliminarPromo(promo.id)">🗑️</button>
+            <button class="btn-icon" (click)="editarPromo(promo)">📝</button>
+            <button class="btn-icon" (click)="eliminarPromo(promo.id)">🗑️</button>
           </div>
         </div>
       }
@@ -33,7 +26,7 @@
   </section>
 
   <section class="menu-section">
-    <h2>Menú General</h2>
+    <h2>Menú</h2>
     <div class="menu">
       @for (item of menu; track item.id) {
         <div class="menu-item">
@@ -43,48 +36,50 @@
             <span class="price">Bs {{ item.precio }}</span>
           </div>
           <div class="admin-actions">
-            <button class="btn-icon edit" (click)="editarMenu(item)">📝</button>
-            <button class="btn-icon delete" (click)="eliminarMenu(item.id)">🗑️</button>
+            <button class="btn-icon" (click)="editarMenu(item)">📝</button>
+            <button class="btn-icon" (click)="eliminarMenu(item.id)">🗑️</button>
           </div>
         </div>
       }
     </div>
   </section>
-  <div class="restaurant-container">
+
   @if (editandoItem) {
     <div class="modal-overlay">
       <div class="modal-content">
         <div class="modal-header">
-          <h3>Editar {{ esPromo ? 'Promoción' : 'Producto' }}</h3>
+          <h3>Gestión de {{ esPromo ? 'Oferta' : 'Plato' }}</h3>
           <button class="close-btn" (click)="cerrarModal()">×</button>
         </div>
-        
         <div class="modal-body">
-          <label>Nombre:</label>
+          <label>Nombre</label>
           <input type="text" [(ngModel)]="itemTemporal.nombre">
-          
-          <label>Descripción:</label>
+          <label>Descripción</label>
           <textarea [(ngModel)]="itemTemporal.descripcion"></textarea>
-          
-          <label>Precio (Bs):</label>
+          <label>Precio (Bs)</label>
           <input type="number" [(ngModel)]="itemTemporal.precio">
+          
+          @if (esPromo) {
+            <label>Fecha y Hora de Expiración</label>
+            <input type="datetime-local" [(ngModel)]="itemTemporal.fechaExpiracionFormateada">
+            <p class="exp-hint">La oferta se ocultará automáticamente al expirar.</p>
+          }
         </div>
-
         <div class="modal-footer">
           <button class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
-          <button class="btn-save" (click)="guardarCambios()">Guardar Cambios</button>
+          <button class="btn-save" (click)="guardarCambios()">Guardar</button>
         </div>
       </div>
     </div>
   }
-  </div>
-@if (mostrandoUndo) {
-  <div class="snackbar-undo">
-    <div class="snackbar-content">
-      <span>Item eliminado correctamente.</span>
-      <button (click)="deshacerEliminar()">DESHACER</button>
+
+  @if (mostrandoUndo) {
+    <div class="snackbar-undo">
+      <div class="snackbar-content">
+        <span>Item eliminado</span>
+        <button (click)="deshacerEliminar()">Deshacer</button>
+      </div>
+      <div class="progress-bar"></div>
     </div>
-    <div class="progress-bar"></div>
-  </div>
-}
+  }
 </div>

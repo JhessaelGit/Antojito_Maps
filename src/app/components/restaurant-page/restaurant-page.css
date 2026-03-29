@@ -247,3 +247,21 @@
   from { width: 100%; }
   to { width: 0%; }
 }
+
+.exp-hint {
+  font-size: 0.7rem;
+  color: #BF9861;
+  margin-top: 5px;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+input[type="datetime-local"] {
+  cursor: pointer;
+}
+
+.modal-body input:focus, .modal-body textarea:focus {
+  border-color: #BF9861;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}

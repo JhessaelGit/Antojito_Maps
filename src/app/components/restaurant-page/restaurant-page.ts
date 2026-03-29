@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -9,39 +9,73 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './restaurant-page.html',
   styleUrl: './restaurant-page.css',
 })
-export class RestaurantPage {
-  promociones = [{ id: 1, nombre: '10% de descuento en Combo 1', descripcion: 'Papas + Arroz + 2 Presas + Refresco', precio: 21.6 }];
-  menu = [
+export class RestaurantPage implements OnInit, OnDestroy {
+  promociones: any[] = [
+    { 
+      id: 1, 
+      nombre: '10% de descuento en Combo 1', 
+      descripcion: 'Papas + Arroz + 2 Presas + Refresco', 
+      precio: 21.6,
+      fechaExpiracion: new Date(Date.now() + 86400000) 
+    }
+  ];
+
+  menu: any[] = [
     { id: 101, nombre: '2 Presas', descripcion: 'Papas + arroz + 2 presas de pollo', precio: 45 },
     { id: 102, nombre: 'Combo 1', descripcion: 'Papas + Arroz + 2 Presas + Refresco', precio: 35 }
   ];
 
-  // Variables para el Modal
-  editandoItem: boolean = false;
-  esPromo: boolean = false;
+  editandoItem = false;
+  esPromo = false;
   itemTemporal: any = {};
+  mostrandoUndo = false;
+  ultimoItemEliminado: any = null;
+  tipoItemEliminado: 'promo' | 'menu' | null = null;
+  
+  private timerUndo: any;
+  private timerCheckExpiracion: any;
+
+  ngOnInit() {
+    this.timerCheckExpiracion = setInterval(() => {
+      this.verificarExpiracion();
+    }, 10000);
+  }
+
+  ngOnDestroy() {
+    if (this.timerCheckExpiracion) clearInterval(this.timerCheckExpiracion);
+  }
+
+  verificarExpiracion() {
+    const ahora = new Date();
+    this.promociones = this.promociones.filter(p => new Date(p.fechaExpiracion) > ahora);
+  }
 
   editarPromo(promo: any) {
-    this.esPromo = true;
-    this.abrirModal(promo);
-  }
+  this.esPromo = true;
+  
+  const date = new Date(promo.fechaExpiracion);
+  // Ajuste manual del desfase de zona horaria
+  const offSet = date.getTimezoneOffset() * 60000;
+  const localISOTime = new Date(date.getTime() - offSet).toISOString().slice(0, 16);
+
+  this.itemTemporal = { 
+    ...promo, 
+    fechaExpiracionFormateada: localISOTime 
+  };
+  this.editandoItem = true;
+}
 
   editarMenu(item: any) {
     this.esPromo = false;
-    this.abrirModal(item);
-  }
-
-  private abrirModal(item: any) {
     this.itemTemporal = { ...item };
     this.editandoItem = true;
   }
 
-  cerrarModal() {
-    this.editandoItem = false;
-  }
-
   guardarCambios() {
-    if (this.esPromo) {
+  if (this.esPromo) {
+    //Se asume que es hora local
+      this.itemTemporal.fechaExpiracion = new Date(this.itemTemporal.fechaExpiracionFormateada);
+    
       const index = this.promociones.findIndex(p => p.id === this.itemTemporal.id);
       this.promociones[index] = this.itemTemporal;
     } else {
@@ -51,50 +85,32 @@ export class RestaurantPage {
     this.cerrarModal();
   }
 
-// Variables para el Deshacer
-  mostrandoUndo: boolean = false;
-  ultimoItemEliminado: any = null;
-  tipoItemEliminado: 'promo' | 'menu' | null = null;
-  timerUndo: any;
+  cerrarModal() { this.editandoItem = false; }
 
   eliminarPromo(id: number) {
-    const item = this.promociones.find(p => p.id === id);
-    if (item) {
-      this.ultimoItemEliminado = { ...item };
-      this.tipoItemEliminado = 'promo';
-      this.promociones = this.promociones.filter(p => p.id !== id);
-      this.activarUndo();
-    }
+    this.ultimoItemEliminado = { ...this.promociones.find(p => p.id === id) };
+    this.tipoItemEliminado = 'promo';
+    this.promociones = this.promociones.filter(p => p.id !== id);
+    this.mostrarNotificacionUndo();
   }
 
   eliminarMenu(id: number) {
-    const item = this.menu.find(m => m.id === id);
-    if (item) {
-      this.ultimoItemEliminado = { ...item };
-      this.tipoItemEliminado = 'menu';
-      this.menu = this.menu.filter(m => m.id !== id);
-      this.activarUndo();
-    }
+    this.ultimoItemEliminado = { ...this.menu.find(m => m.id === id) };
+    this.tipoItemEliminado = 'menu';
+    this.menu = this.menu.filter(m => m.id !== id);
+    this.mostrarNotificacionUndo();
   }
 
-  activarUndo() {
+  mostrarNotificacionUndo() {
     this.mostrandoUndo = true;
     if (this.timerUndo) clearTimeout(this.timerUndo);
-    
-    this.timerUndo = setTimeout(() => {
-      this.mostrandoUndo = false;
-      this.ultimoItemEliminado = null;
-    }, 5000);
+    this.timerUndo = setTimeout(() => this.mostrandoUndo = false, 5000);
   }
 
   deshacerEliminar() {
-    if (this.tipoItemEliminado === 'promo') {
-      this.promociones.push(this.ultimoItemEliminado);
-    } else if (this.tipoItemEliminado === 'menu') {
-      this.menu.push(this.ultimoItemEliminado);
-    }
+    if (this.tipoItemEliminado === 'promo') this.promociones.push(this.ultimoItemEliminado);
+    else this.menu.push(this.ultimoItemEliminado);
     this.mostrandoUndo = false;
-    this.ultimoItemEliminado = null;
     clearTimeout(this.timerUndo);
   }
 }
