@@ -77,7 +77,7 @@ export class RegisterRestaurantComponent {
       email: this.email
     });
 
-    this.router.navigate(['/restaurant/login']);
+    this.router.navigate(['/payment']);
   }
 
   goToLogin() {
