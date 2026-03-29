@@ -77,5 +77,14 @@
       </div>
     </div>
   }
-</div>
+  </div>
+@if (mostrandoUndo) {
+  <div class="snackbar-undo">
+    <div class="snackbar-content">
+      <span>Item eliminado correctamente.</span>
+      <button (click)="deshacerEliminar()">DESHACER</button>
+    </div>
+    <div class="progress-bar"></div>
+  </div>
+}
 </div>

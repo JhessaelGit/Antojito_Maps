@@ -1,7 +1,6 @@
 :host {
   display: block;
   min-height: 100vh;
-  /* Fondo crema con textura de puntos sutil */
   background-color: #DACFBD; 
   background-image: radial-gradient(#9e9689 0.8px, transparent 0.8px);
   background-size: 24px 24px;
@@ -14,9 +13,6 @@
   font-family: 'Inter', sans-serif;
 }
 
-/* =========================================
-   2. HEADER INSTITUCIONAL
-   ========================================= */
 .restaurant-header {
   background: linear-gradient(135deg, #7F1100, #02332D);
   color: white;
@@ -43,9 +39,7 @@
   color: #BF9861;
 }
 
-/* =========================================
-   3. SECCIONES Y TARJETAS (OFERTAS/MENÚ)
-   ========================================= */
+/*Tarjetas ofertas y menu*/
 .offers-section h2, .menu-section h2 {
   color: #02332D;
   border-bottom: 3px solid #BF9861;
@@ -68,14 +62,12 @@
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-/* Oferta (Roja) */
 .offer-item {
   background: #7F1100;
   color: white;
   box-shadow: 0 4px 15px rgba(127, 17, 0, 0.2);
 }
 
-/* Menú (Blanco con borde dorado) */
 .menu-item {
   background: white;
   border: 1px solid #dacfbd;
@@ -92,9 +84,6 @@
 .price { font-weight: bold; color: #BF9861; font-size: 1.1rem; }
 .offer-item .price { color: #fdf6e9; }
 
-/* =========================================
-   4. BOTONES DE ACCIÓN (LUPA/BORRAR)
-   ========================================= */
 .admin-actions {
   display: flex;
   gap: 10px;
@@ -124,9 +113,7 @@
   color: white;
 }
 
-/* =========================================
-   5. MODAL "DARK MODE" (EL FORMULARIO)
-   ========================================= */
+/* Modal para edición */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -136,7 +123,7 @@
   justify-content: center;
   align-items: center;
   z-index: 2000;
-  backdrop-filter: blur(4px); /* Efecto de desenfoque al fondo */
+  backdrop-filter: blur(4px);
 }
 
 .modal-content {
@@ -209,4 +196,54 @@
   color: #BF9861;
   font-size: 24px;
   cursor: pointer;
+}
+
+.snackbar-undo {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #2d3436;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s ease-out;
+}
+
+.snackbar-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 0.9rem;
+}
+
+.snackbar-content button {
+  background: none;
+  border: none;
+  color: #BF9861;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+/* Barra de tiempo */
+.progress-bar {
+  height: 3px;
+  background: #BF9861;
+  margin-top: 10px;
+  width: 100%;
+  animation: timerProgress 5s linear forwards;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(100px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes timerProgress {
+  from { width: 100%; }
+  to { width: 0%; }
 }

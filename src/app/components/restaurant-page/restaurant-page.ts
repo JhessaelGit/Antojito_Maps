@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // 1. IMPORTANTE PARA FORMULARIOS
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-restaurant-page',
   standalone: true,
-  imports: [CommonModule, FormsModule], // 2. AÑADIR FormsModule AQUÍ
+  imports: [CommonModule, FormsModule],
   templateUrl: './restaurant-page.html',
   styleUrl: './restaurant-page.css',
 })
@@ -19,9 +19,8 @@ export class RestaurantPage {
   // Variables para el Modal
   editandoItem: boolean = false;
   esPromo: boolean = false;
-  itemTemporal: any = {}; // Copia para editar sin alterar el original hasta guardar
+  itemTemporal: any = {};
 
-  // ABRIR MODAL
   editarPromo(promo: any) {
     this.esPromo = true;
     this.abrirModal(promo);
@@ -33,7 +32,7 @@ export class RestaurantPage {
   }
 
   private abrirModal(item: any) {
-    this.itemTemporal = { ...item }; // Creamos una copia superficial (Shallow copy)
+    this.itemTemporal = { ...item };
     this.editandoItem = true;
   }
 
@@ -52,12 +51,50 @@ export class RestaurantPage {
     this.cerrarModal();
   }
 
-  // ELIMINAR (Se mantiene igual)
+// Variables para el Deshacer
+  mostrandoUndo: boolean = false;
+  ultimoItemEliminado: any = null;
+  tipoItemEliminado: 'promo' | 'menu' | null = null;
+  timerUndo: any;
+
   eliminarPromo(id: number) {
-    if (confirm("¿Eliminar oferta?")) this.promociones = this.promociones.filter(p => p.id !== id);
+    const item = this.promociones.find(p => p.id === id);
+    if (item) {
+      this.ultimoItemEliminado = { ...item };
+      this.tipoItemEliminado = 'promo';
+      this.promociones = this.promociones.filter(p => p.id !== id);
+      this.activarUndo();
+    }
   }
 
   eliminarMenu(id: number) {
-    if (confirm("¿Eliminar del menú?")) this.menu = this.menu.filter(m => m.id !== id);
+    const item = this.menu.find(m => m.id === id);
+    if (item) {
+      this.ultimoItemEliminado = { ...item };
+      this.tipoItemEliminado = 'menu';
+      this.menu = this.menu.filter(m => m.id !== id);
+      this.activarUndo();
+    }
+  }
+
+  activarUndo() {
+    this.mostrandoUndo = true;
+    if (this.timerUndo) clearTimeout(this.timerUndo);
+    
+    this.timerUndo = setTimeout(() => {
+      this.mostrandoUndo = false;
+      this.ultimoItemEliminado = null;
+    }, 5000);
+  }
+
+  deshacerEliminar() {
+    if (this.tipoItemEliminado === 'promo') {
+      this.promociones.push(this.ultimoItemEliminado);
+    } else if (this.tipoItemEliminado === 'menu') {
+      this.menu.push(this.ultimoItemEliminado);
+    }
+    this.mostrandoUndo = false;
+    this.ultimoItemEliminado = null;
+    clearTimeout(this.timerUndo);
   }
 }
