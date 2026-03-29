@@ -87,3 +87,42 @@
   filter: brightness(1.1) drop-shadow(0 0 10px rgba(127, 17, 0, 0.8));
   z-index: 1000 !important;
 }
+
+/* Estilos para el buscador */
+.search-box {
+  display: flex;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px 15px;
+  border-radius: 25px;
+  border: 1px solid #bf9861;
+  transition: all 0.3s ease;
+}
+
+.search-box:focus-within {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 8px rgba(191, 152, 97, 0.4);
+}
+
+.search-box input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #dacfbd;
+  padding: 5px;
+  width: 200px;
+  font-size: 0.9rem;
+}
+
+.search-box input::placeholder {
+  color: #a0a0a0;
+}
+
+.search-box button {
+  background: transparent;
+  border: none;
+  color: #bf9861;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}

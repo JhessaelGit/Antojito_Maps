@@ -29,30 +29,15 @@ interface Restaurante {
 export class MapPage implements OnInit {
 
   private map: any;
-  mostrarBienvenida: boolean = true; // Variable para el temporizador
+  mostrarBienvenida: boolean = true;
+  
+  //DICCIONARIO DE MARCADORES
+  private markersMap: Map<number, L.Marker> = new Map(); 
 
   restaurantes: Restaurante[] = [
-    {
-      id: 1,
-      nombre: 'Pollos Panchita',
-      lat: -17.3895,
-      lng: -66.1568,
-      descripcion: 'Pollo frito y combos familiares'
-    },
-    {
-      id: 2,
-      nombre: 'Burger House',
-      lat: -17.3950,
-      lng: -66.1600,
-      descripcion: 'Hamburguesas artesanales'
-    },
-    {
-      id: 3,
-      nombre: 'Pizza Loca',
-      lat: -17.3920,
-      lng: -66.1500,
-      descripcion: 'Pizzas con promociones'
-    }
+    { id: 1, nombre: 'Pollos Panchita', lat: -17.3895, lng: -66.1568, descripcion: 'Pollo frito y combos familiares' },
+    { id: 2, nombre: 'Burger House', lat: -17.3950, lng: -66.1600, descripcion: 'Hamburguesas artesanales' },
+    { id: 3, nombre: 'Pizza Loca', lat: -17.3920, lng: -66.1500, descripcion: 'Pizzas con promociones' }
   ];
 
   constructor(private router: Router, private cd: ChangeDetectorRef) {}
@@ -64,9 +49,30 @@ export class MapPage implements OnInit {
     this.iniciarTemporizadorBienvenida();
   }
 
+  buscarRestaurante(termino: string): void {
+    if (!termino.trim()) return;
+
+    const res = this.restaurantes.find(r => 
+      r.nombre.toLowerCase().includes(termino.toLowerCase())
+    );
+
+    if (res) {
+      this.map.flyTo([res.lat, res.lng], 17, {
+        animate: true,
+        duration: 1.5
+      });
+
+      const marker = this.markersMap.get(res.id);
+      if (marker) {
+        marker.openPopup(); 
+      }
+    } else {
+      alert('Restaurante no encontrado.');
+    }
+  }
+
   private initMap(): void {
     this.map = L.map('map').setView([-17.3895, -66.1568], 13);
-
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap contributors'
@@ -77,30 +83,24 @@ export class MapPage implements OnInit {
     setTimeout(() => {
       this.mostrarBienvenida = false;
       this.cd.detectChanges(); 
-      console.log('Variable cambiada a false y vista actualizada');
     }, 5000);
   }
 
   private configurarGeolocalizacion(): void {
     this.map.locate({ setView: true, maxZoom: 16 });
-
     const iconoUsuario = L.divIcon({
       className: 'user-location-icon',
       html: '<div style="background-color: #007bff; width: 15px; height: 15px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5);"></div>',
       iconSize: [15, 15],
       iconAnchor: [7.5, 7.5]
     });
-
     this.map.on('locationfound', (e: any) => {
       const radius = e.accuracy / 2;
-      
       L.marker(e.latlng, { icon: iconoUsuario }).addTo(this.map);
-        
       L.circle(e.latlng, radius).addTo(this.map);
     });
-
     this.map.on('locationerror', () => {
-      console.log("Acceso a ubicación denegado o no disponible.");
+      console.log("Ubicación no disponible.");
     });
   }
 
@@ -108,6 +108,8 @@ export class MapPage implements OnInit {
     this.restaurantes.forEach(restaurante => {
       const marker = L.marker([restaurante.lat, restaurante.lng])
         .addTo(this.map);
+
+      this.markersMap.set(restaurante.id, marker);
 
       marker.bindPopup(`
         <div style="text-align:center; width:200px">
@@ -118,14 +120,7 @@ export class MapPage implements OnInit {
             ${restaurante.descripcion}
           </p>
           <button
-            style="
-              background:#7F1100;
-              color:white;
-              padding:6px 12px;
-              border-radius:6px;
-              border:none;
-              cursor:pointer
-            "
+            style="background:#7F1100; color:white; padding:6px 12px; border-radius:6px; border:none; cursor:pointer"
             onclick="window.location.href='/restaurant'"
           >
             Ver restaurante

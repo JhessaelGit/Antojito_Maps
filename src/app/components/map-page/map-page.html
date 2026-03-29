@@ -4,6 +4,17 @@
       <span class="logo-icon">📍</span>
       <h1>Antojitos <span class="highlight">Maps</span></h1>
     </div>
+
+    <div class="search-box">
+      <input 
+        type="text" 
+        #txtBuscar 
+        placeholder="Buscar restaurante..." 
+        (keyup.enter)="buscarRestaurante(txtBuscar.value)">
+      <button (click)="buscarRestaurante(txtBuscar.value)">
+        <span>🔍</span>
+      </button>
+    </div>
   </header>
 
   <main class="map-wrapper">
@@ -15,7 +26,7 @@
       <p>Explora los mejores sabores de la ciudad en un solo mapa.</p>
       <hr class="divider">
       <p class="instruction">Haz clic en los restaurantes para ver sus promociones disponibles.</p>
-  </div>
-}
+    </div>
+    }
   </main>
 </div>
