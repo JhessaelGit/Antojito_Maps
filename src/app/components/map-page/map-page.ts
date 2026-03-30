@@ -133,19 +133,40 @@ export class MapPage implements OnInit {
   }
 
 private agregarMarcadores(): void {
-
-  this.markersLayer.clearLayers(); // limpia markers
+  this.markersLayer.clearLayers(); 
+  this.markersMap.clear();
 
   this.restaurantesFiltrados.forEach(restaurante => {
-    const marker = L.marker([restaurante.lat, restaurante.lng])
-      .addTo(this.markersLayer);
+    const marker = L.marker([restaurante.lat, restaurante.lng]);
 
-    marker.bindPopup(`
-      <b>${restaurante.nombre}</b><br>
-      ${restaurante.descripcion}
-    `);
+    const popupContent = `
+      <div style="text-align: center; font-family: 'Poppins', sans-serif;">
+        <b style="color: #02332D; font-size: 1.1rem;">${restaurante.nombre}</b><br>
+        <p style="margin: 5px 0; font-size: 0.9rem;">${restaurante.descripcion}</p>
+        <button id="btn-view-${restaurante.id}" 
+                style="background: #BF9861; color: white; border: none; 
+                       padding: 8px 12px; border-radius: 5px; cursor: pointer;
+                       font-weight: bold; margin-top: 5px; width: 100%;">
+          Ver Menú y Ofertas
+        </button>
+      </div>
+    `;
+
+    marker.bindPopup(popupContent);
+    
+    marker.on('popupopen', () => {
+      const btn = document.getElementById(`btn-view-${restaurante.id}`);
+      if (btn) {
+        btn.addEventListener('click', () => {
+          this.router.navigate(['/restaurant-view']);
+        });
+      }
+    });
+
+    marker.addTo(this.markersLayer);
+    this.markersMap.set(restaurante.id, marker);
   });
-  }
+}
 
   filtrarRestaurantes(): void {
 

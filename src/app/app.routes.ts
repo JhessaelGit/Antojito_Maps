@@ -6,6 +6,7 @@ import { RestaurantLoginComponent } from './components/login-restaurant/restaura
 import { RegisterRestaurantComponent } from './components/register-restaurant/register-restaurant.component';
 import { PaymentOptionsComponent } from './components/payment-options/payment-options.component';
 import { QrPaymentComponent } from './components/qr-payment/qr-payment.component';
+import { RestaurantView } from './components/restaurant-view/restaurant-view';
 export const routes: Routes = [
   {
     path: 'restaurant',
@@ -35,6 +36,10 @@ export const routes: Routes = [
     path: 'mapa',
     component: MapPage
   },
+  { 
+    path: 'restaurant-view', 
+    component: RestaurantView 
+  }, 
   {
     path: '',
     redirectTo: 'inicio',
