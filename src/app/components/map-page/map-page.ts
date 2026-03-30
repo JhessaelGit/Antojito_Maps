@@ -3,15 +3,17 @@ import { Router } from '@angular/router';
 import * as L from 'leaflet';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RestauranteService } from '../../services/restaurante';
 
+// Configuración de iconos de Leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
-
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: '/assets/marker-icon-2x-red.png',
   iconUrl: '/assets/marker-icon-red.png',
   shadowUrl: '/assets/marker-shadow.png'
 });
 
+// Interfaz actualizada para coincidir con tu base de datos de Supabase
 interface Restaurante {
   id: number;
   nombre: string;
@@ -19,6 +21,7 @@ interface Restaurante {
   lng: number;
   descripcion: string;
   categoria: string;
+  imagenUrl?: string;
 }
 
 @Component({
@@ -36,45 +39,44 @@ export class MapPage implements OnInit {
   restaurantesFiltrados: Restaurante[] = [];
   markersLayer: any;
   
-  //DICCIONARIO DE MARCADORES
   private markersMap: Map<number, L.Marker> = new Map(); 
 
-  restaurantes: Restaurante[] = [
-  {
-    id: 1,
-    nombre: 'Pollos Panchita',
-    lat: -17.3895,
-    lng: -66.1568,
-    descripcion: 'Pollo frito y combos familiares',
-    categoria: 'pollo frito' 
-  },
-  {
-    id: 2,
-    nombre: 'Burger House',
-    lat: -17.3950,
-    lng: -66.1600,
-    descripcion: 'Hamburguesas artesanales',
-    categoria: 'comida rapida'
-  },
-  {
-    id: 3,
-    nombre: 'Pizza Loca',
-    lat: -17.3920,
-    lng: -66.1500,
-    descripcion: 'Pizzas con promociones',
-    categoria: 'italiana'
-  }
-];
+  // Lista que se llenará con los datos del Backend
+  restaurantes: Restaurante[] = [];
 
-  constructor(private router: Router, private cd: ChangeDetectorRef) {}
+  constructor(
+    private router: Router, 
+    private cd: ChangeDetectorRef,
+    private restauranteService: RestauranteService // Inyección del servicio
+  ) {}
 
   ngOnInit(): void {
     this.initMap();
-
     this.markersLayer = L.layerGroup().addTo(this.map); 
-    this.restaurantesFiltrados = this.restaurantes;
+    
+    // 1. Cargamos los datos desde el Backend (Java + Supabase)
+    this.cargarDatosDesdeBackend();
+    
+    // 2. Configuramos el resto de funciones
+    this.configurarGeolocalizacion();
+    this.iniciarTemporizadorBienvenida();
+  }
 
-    this.agregarMarcadores();
+  private cargarDatosDesdeBackend(): void {
+    this.restauranteService.getRestaurantes().subscribe({
+      next: (data) => {
+        // Mapeamos los datos para asegurar que coincidan con nuestra interfaz
+        this.restaurantes = data;
+        this.restaurantesFiltrados = [...this.restaurantes];
+        
+        // 3. Solo ahora que tenemos datos, dibujamos los marcadores
+        this.agregarMarcadores();
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al conectar con el Backend de Java:', err);
+      }
+    });
   }
 
   buscarRestaurante(termino: string): void {
@@ -132,52 +134,50 @@ export class MapPage implements OnInit {
     });
   }
 
-private agregarMarcadores(): void {
-  this.markersLayer.clearLayers(); 
-  this.markersMap.clear();
+  private agregarMarcadores(): void {
+    this.markersLayer.clearLayers(); 
+    this.markersMap.clear();
 
-  this.restaurantesFiltrados.forEach(restaurante => {
-    const marker = L.marker([restaurante.lat, restaurante.lng]);
+    this.restaurantesFiltrados.forEach(restaurante => {
+      const marker = L.marker([restaurante.lat, restaurante.lng]);
 
-    const popupContent = `
-      <div style="text-align: center; font-family: 'Poppins', sans-serif;">
-        <b style="color: #02332D; font-size: 1.1rem;">${restaurante.nombre}</b><br>
-        <p style="margin: 5px 0; font-size: 0.9rem;">${restaurante.descripcion}</p>
-        <button id="btn-view-${restaurante.id}" 
-                style="background: #BF9861; color: white; border: none; 
-                       padding: 8px 12px; border-radius: 5px; cursor: pointer;
-                       font-weight: bold; margin-top: 5px; width: 100%;">
-          Ver Menú y Ofertas
-        </button>
-      </div>
-    `;
+      const popupContent = `
+        <div style="text-align: center; font-family: 'Poppins', sans-serif;">
+          <b style="color: #02332D; font-size: 1.1rem;">${restaurante.nombre}</b><br>
+          <p style="margin: 5px 0; font-size: 0.9rem;">${restaurante.descripcion}</p>
+          <button id="btn-view-${restaurante.id}" 
+                  style="background: #BF9861; color: white; border: none; 
+                         padding: 8px 12px; border-radius: 5px; cursor: pointer;
+                         font-weight: bold; margin-top: 5px; width: 100%;">
+            Ver Menú y Ofertas
+          </button>
+        </div>
+      `;
 
-    marker.bindPopup(popupContent);
-    
-    marker.on('popupopen', () => {
-      const btn = document.getElementById(`btn-view-${restaurante.id}`);
-      if (btn) {
-        btn.addEventListener('click', () => {
-          this.router.navigate(['/restaurant-view']);
-        });
-      }
+      marker.bindPopup(popupContent);
+      
+      marker.on('popupopen', () => {
+        const btn = document.getElementById(`btn-view-${restaurante.id}`);
+        if (btn) {
+          btn.addEventListener('click', () => {
+            this.router.navigate(['/restaurant-view']);
+          });
+        }
+      });
+
+      marker.addTo(this.markersLayer);
+      this.markersMap.set(restaurante.id, marker);
     });
-
-    marker.addTo(this.markersLayer);
-    this.markersMap.set(restaurante.id, marker);
-  });
-}
-
-  filtrarRestaurantes(): void {
-
-  if (this.categoriaSeleccionada === '') {
-    this.restaurantesFiltrados = this.restaurantes;
-  } else {
-    this.restaurantesFiltrados = this.restaurantes.filter(r =>
-      r.categoria === this.categoriaSeleccionada
-    );
   }
 
-  this.agregarMarcadores(); 
-}
+  filtrarRestaurantes(): void {
+    if (this.categoriaSeleccionada === '') {
+      this.restaurantesFiltrados = [...this.restaurantes];
+    } else {
+      this.restaurantesFiltrados = this.restaurantes.filter(r =>
+        r.categoria === this.categoriaSeleccionada
+      );
+    }
+    this.agregarMarcadores(); 
+  }
 }
