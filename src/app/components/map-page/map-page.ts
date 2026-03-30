@@ -133,27 +133,36 @@ export class MapPage implements OnInit {
   }
 
 private agregarMarcadores(): void {
-  this.markersLayer.clearLayers(); 
+
+  this.markersLayer.clearLayers();
   this.markersMap.clear();
 
   this.restaurantesFiltrados.forEach(restaurante => {
+
     const marker = L.marker([restaurante.lat, restaurante.lng]);
 
     const popupContent = `
-      <div style="text-align: center; font-family: 'Poppins', sans-serif;">
-        <b style="color: #02332D; font-size: 1.1rem;">${restaurante.nombre}</b><br>
-        <p style="margin: 5px 0; font-size: 0.9rem;">${restaurante.descripcion}</p>
-        <button id="btn-view-${restaurante.id}" 
-                style="background: #BF9861; color: white; border: none; 
-                       padding: 8px 12px; border-radius: 5px; cursor: pointer;
-                       font-weight: bold; margin-top: 5px; width: 100%;">
-          Ver Menú y Ofertas
+      <div style="text-align:center; width:200px">
+        <img src="/assets/logo-panchita.png"
+             style="width:80px; margin-bottom:8px; border-radius:8px">
+
+        <h3 style="margin:5px 0">${restaurante.nombre}</h3>
+
+        <p style="font-size:14px; margin:0 0 10px 0">
+          ${restaurante.descripcion}
+        </p>
+
+        <button id="btn-view-${restaurante.id}"
+          style="background:#7F1100; color:white; padding:6px 12px;
+                 border-radius:6px; border:none; cursor:pointer; width:100%">
+          Ver restaurante
         </button>
       </div>
     `;
 
     marker.bindPopup(popupContent);
-    
+
+    // 🔥 mantener navegación Angular (lo de tu compañero)
     marker.on('popupopen', () => {
       const btn = document.getElementById(`btn-view-${restaurante.id}`);
       if (btn) {
@@ -164,6 +173,8 @@ private agregarMarcadores(): void {
     });
 
     marker.addTo(this.markersLayer);
+
+    // 🔥 importante para búsqueda
     this.markersMap.set(restaurante.id, marker);
   });
 }
