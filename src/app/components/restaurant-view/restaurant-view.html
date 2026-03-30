@@ -1,0 +1,57 @@
+<div class="client-container">
+  <button class="back-btn" (click)="volverAlMapa()">⬅ Volver al Mapa</button>
+
+  <header class="client-header">
+    <div class="overlay">
+      <img src="/assets/logo-panchita.png" alt="Logo" class="main-logo">
+      <h1>Pollos Panchita</h1>
+      <div class="tags">
+        <span class="tag">🍗 Pollo Frito</span>
+        <span class="tag">⭐ 4.6 (500+ reseñas)</span>
+        <span class="tag">📍 Cercado, Cbba</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="client-content">
+    <section class="promo-section">
+      <h2 class="section-title">🔥 ¡Ofertas Imperdibles!</h2>
+      <div class="promo-grid">
+        @for (promo of promociones; track promo.id) {
+          <div class="promo-card">
+            <div class="promo-badge">¡QUEDAN {{ calcularTiempoRestante(promo.fechaExpiracion) }}!</div>
+            <div class="promo-info">
+              <h3>{{ promo.nombre }}</h3>
+              <p>{{ promo.descripcion }}</p>
+              <div class="price-tag">Bs {{ promo.precio }}</div>
+            </div>
+            <button class="order-btn">Pedir por WhatsApp 📱</button>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="menu-section">
+      <h2 class="section-title">🍴 Nuestro Menú</h2>
+      <div class="menu-list">
+        @for (item of menu; track item.id) {
+          <div class="menu-card">
+            <div class="item-details">
+              <h3>{{ item.nombre }}</h3>
+              <p>{{ item.descripcion }}</p>
+            </div>
+            <span class="item-price">Bs {{ item.precio }}</span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="location-section">
+      <h2 class="section-title">📍 ¿Dónde estamos?</h2>
+      <div class="map-placeholder">
+        <p>Av. América casi Santa Cruz, Cochabamba, Bolivia</p>
+        <button class="gps-btn">Abrir en Google Maps 🚗</button>
+      </div>
+    </section>
+  </main>
+</div>
