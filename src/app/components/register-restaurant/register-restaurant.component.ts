@@ -37,9 +37,10 @@ export class RegisterRestaurantComponent {
   }
 
   register() {
+
+    // 🔴 YA NO enviamos email aquí
     this.logger.info('Intento de registro', {
-      name: this.name,
-      email: this.email
+      name: this.name
     });
 
     this.clearErrors();
@@ -71,7 +72,7 @@ export class RegisterRestaurantComponent {
       return;
     }
 
-    // 🔹 Registro exitoso (simulado)
+    // ✔ SOLO aquí se envía al backend
     this.logger.info('Registro exitoso', {
       name: this.name,
       email: this.email

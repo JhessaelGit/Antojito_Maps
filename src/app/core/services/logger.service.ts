@@ -1,42 +1,30 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 export type LogLevel = 'INFO' | 'WARN' | 'ERROR';
-
-export interface LogEntry {
-  level: LogLevel;
-  message: string;
-  timestamp: Date;
-  context?: any;
-}
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoggerService {
 
+  private apiUrl: string = 'http://localhost:8080/log';
+
+  constructor(private http: HttpClient) {}
+
+  private sendToServer(email: string) {
+    this.http.post(this.apiUrl, { email }).subscribe({
+      error: err => console.error(err)
+    });
+  }
+
   log(level: LogLevel, message: string, context?: any) {
-    const logEntry: LogEntry = {
-      level,
-      message,
-      timestamp: new Date(),
-      context
-    };
 
-    // 🔹 Salida actual (console)
-    switch (level) {
-      case 'INFO':
-        console.log(logEntry);
-        break;
-      case 'WARN':
-        console.warn(logEntry);
-        break;
-      case 'ERROR':
-        console.error(logEntry);
-        break;
+    console.log({ level, message, context });
+
+    if (context?.email) {
+      this.sendToServer(context.email);
     }
-
-    // 🔹 FUTURO: aquí puedes enviar al backend
-    // this.sendToServer(logEntry);
   }
 
   info(message: string, context?: any) {
