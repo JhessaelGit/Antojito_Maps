@@ -8,6 +8,10 @@
 
   <section class="offers-section">
     <h2>Ofertas Activas</h2>
+
+    <!-- 🔹 BOTÓN CREAR -->
+    <button class="btn-add" (click)="crearPromo()">➕ Crear Promoción</button>
+
     <div class="offers">
       @for (promo of promociones; track promo.id) {
         <div class="offer-item">
@@ -54,8 +58,10 @@
         <div class="modal-body">
           <label>Nombre</label>
           <input type="text" [(ngModel)]="itemTemporal.nombre">
+
           <label>Descripción</label>
           <textarea [(ngModel)]="itemTemporal.descripcion"></textarea>
+
           <label>Precio (Bs)</label>
           <input type="number" [(ngModel)]="itemTemporal.precio">
           

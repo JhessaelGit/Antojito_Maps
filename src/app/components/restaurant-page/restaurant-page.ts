@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './restaurant-page.css',
 })
 export class RestaurantPage implements OnInit, OnDestroy {
+
   promociones: any[] = [
     { 
       id: 1, 
@@ -31,7 +32,7 @@ export class RestaurantPage implements OnInit, OnDestroy {
   mostrandoUndo = false;
   ultimoItemEliminado: any = null;
   tipoItemEliminado: 'promo' | 'menu' | null = null;
-  
+
   private timerUndo: any;
   private timerCheckExpiracion: any;
 
@@ -50,20 +51,39 @@ export class RestaurantPage implements OnInit, OnDestroy {
     this.promociones = this.promociones.filter(p => new Date(p.fechaExpiracion) > ahora);
   }
 
-  editarPromo(promo: any) {
-  this.esPromo = true;
-  
-  const date = new Date(promo.fechaExpiracion);
-  // Ajuste manual del desfase de zona horaria
-  const offSet = date.getTimezoneOffset() * 60000;
-  const localISOTime = new Date(date.getTime() - offSet).toISOString().slice(0, 16);
+  // 🔹 CREAR PROMO
+  crearPromo() {
+    this.esPromo = true;
 
-  this.itemTemporal = { 
-    ...promo, 
-    fechaExpiracionFormateada: localISOTime 
-  };
-  this.editandoItem = true;
-}
+    const ahora = new Date();
+    const offSet = ahora.getTimezoneOffset() * 60000;
+    const localISOTime = new Date(ahora.getTime() - offSet).toISOString().slice(0, 16);
+
+    this.itemTemporal = {
+      id: Date.now(),
+      nombre: '',
+      descripcion: '',
+      precio: 0,
+      fechaExpiracionFormateada: localISOTime
+    };
+
+    this.editandoItem = true;
+  }
+
+  editarPromo(promo: any) {
+    this.esPromo = true;
+
+    const date = new Date(promo.fechaExpiracion);
+    const offSet = date.getTimezoneOffset() * 60000;
+    const localISOTime = new Date(date.getTime() - offSet).toISOString().slice(0, 16);
+
+    this.itemTemporal = { 
+      ...promo, 
+      fechaExpiracionFormateada: localISOTime 
+    };
+
+    this.editandoItem = true;
+  }
 
   editarMenu(item: any) {
     this.esPromo = false;
@@ -72,20 +92,28 @@ export class RestaurantPage implements OnInit, OnDestroy {
   }
 
   guardarCambios() {
-  if (this.esPromo) {
-    //Se asume que es hora local
+    if (this.esPromo) {
       this.itemTemporal.fechaExpiracion = new Date(this.itemTemporal.fechaExpiracionFormateada);
-    
+
       const index = this.promociones.findIndex(p => p.id === this.itemTemporal.id);
-      this.promociones[index] = this.itemTemporal;
+
+      if (index !== -1) {
+        this.promociones[index] = this.itemTemporal; // editar
+      } else {
+        this.promociones.push(this.itemTemporal); // crear
+      }
+
     } else {
       const index = this.menu.findIndex(m => m.id === this.itemTemporal.id);
       this.menu[index] = this.itemTemporal;
     }
+
     this.cerrarModal();
   }
 
-  cerrarModal() { this.editandoItem = false; }
+  cerrarModal() {
+    this.editandoItem = false;
+  }
 
   eliminarPromo(id: number) {
     this.ultimoItemEliminado = { ...this.promociones.find(p => p.id === id) };
@@ -110,6 +138,7 @@ export class RestaurantPage implements OnInit, OnDestroy {
   deshacerEliminar() {
     if (this.tipoItemEliminado === 'promo') this.promociones.push(this.ultimoItemEliminado);
     else this.menu.push(this.ultimoItemEliminado);
+
     this.mostrandoUndo = false;
     clearTimeout(this.timerUndo);
   }
