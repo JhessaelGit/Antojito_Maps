@@ -1,0 +1,21 @@
+<div class="wrapper">
+
+  <div class="header">
+    <h1>Antojitos Maps</h1>
+  </div>
+
+  <div class="container">
+    <h2>Escanea el QR para pagar</h2>
+
+    <div class="qr-box">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PagoAntojitosMaps" alt="QR">
+    </div>
+
+    <p *ngIf="plan">Plan seleccionado: {{ plan }}</p>
+
+    <button class="btn" (click)="pagoRealizado()">
+      Ya pagué
+    </button>
+  </div>
+
+</div>

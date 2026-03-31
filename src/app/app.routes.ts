@@ -4,6 +4,9 @@ import { RestaurantPage } from './components/restaurant-page/restaurant-page';
 import { PaginaPrincipalComponent } from './components/PaginaPrincipal/pagina-principal.component';
 import { RestaurantLoginComponent } from './components/login-restaurant/restaurant-login.component';
 import { RegisterRestaurantComponent } from './components/register-restaurant/register-restaurant.component';
+import { PaymentOptionsComponent } from './components/payment-options/payment-options.component';
+import { QrPaymentComponent } from './components/qr-payment/qr-payment.component';
+import { RestaurantView } from './components/restaurant-view/restaurant-view';
 export const routes: Routes = [
   {
     path: 'restaurant',
@@ -14,17 +17,29 @@ export const routes: Routes = [
     component: RestaurantLoginComponent
   },
   {
-    path: 'inicio',
-    component: PaginaPrincipalComponent
-  },
-  {
     path: 'restaurant/register',
     component: RegisterRestaurantComponent
+  },
+  {
+    path: 'payment',
+    component: PaymentOptionsComponent
+  },
+  {
+    path: 'payment/qr',
+    component: QrPaymentComponent
+  },
+  {
+    path: 'inicio',
+    component: PaginaPrincipalComponent
   },
   {
     path: 'mapa',
     component: MapPage
   },
+  { 
+    path: 'restaurant-view', 
+    component: RestaurantView 
+  }, 
   {
     path: '',
     redirectTo: 'inicio',

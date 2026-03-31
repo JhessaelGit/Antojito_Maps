@@ -5,7 +5,7 @@
   </div>
 
   <div class="login-container">
-    <form class="login-form">
+    <form class="login-form" (ngSubmit)="register()">
       <h2>Registro de Restaurante</h2>
 
       <!-- Nombre -->
@@ -59,17 +59,16 @@
 
       <div class="button-group">
         <button 
-          type="button" 
-          class="btn btn-primary" 
-          (click)="register()">
+          type="submit" 
+          class="btn btn-primary">
           Registrarse
         </button>
 
         <button 
-        type="button" 
-        class="btn btn-secondary" 
-        (click)="goToLogin()">
-        Volver al Login
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="goToLogin()">
+          Volver al Login
         </button>
       </div>
 
