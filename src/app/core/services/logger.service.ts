@@ -7,8 +7,9 @@ export type LogLevel = 'INFO' | 'WARN' | 'ERROR';
   providedIn: 'root'
 })
 export class LoggerService {
-
-  private apiUrl: string = 'http://localhost:8080/log';
+  private apiUrl: string = 'https://antogitomapsbackend-production.up.railway.app/log';
+  
+  //private apiUrl: string = 'http://localhost:8080/log';
 
   constructor(private http: HttpClient) {}
 

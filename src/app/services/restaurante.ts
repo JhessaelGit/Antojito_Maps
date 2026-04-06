@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class RestauranteService {
 
-  private API_URL = 'http://localhost:8080/api/restaurantes';
+  private API_URL = 'https://antogitomapsbackend-production.up.railway.app/api/restaurantes';
 
   constructor(private http: HttpClient) { }
 
