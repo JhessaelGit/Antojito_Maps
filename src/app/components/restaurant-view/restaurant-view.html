@@ -1,47 +1,21 @@
-<div class="client-container">
-  <button class="back-btn" (click)="volverAlMapa()">⬅ Volver al Mapa</button>
-
-  <header class="client-header">
-    <div class="overlay">
-      <h1>Pollos Panchita</h1>
-      <div class="tags">
-        <span class="tag">🍗 Pollo Frito</span>
-        <span class="tag">⭐ 4.6</span>
-        <span class="tag">📍 Av. América</span>
-      </div>
-    </div>
+<div class="container" *ngIf="restaurante">
+  <header class="res-header">
+    <app-button variant="outline" label="← Volver al Mapa" (clicked)="volverAlMapa()"></app-button>
+    <h1>{{ restaurante.nombre }}</h1>
+    <p class="category-badge">{{ restaurante.categoria }}</p>
   </header>
 
-  <main class="client-content">
-    <section class="promo-section">
-      <h2 class="section-title">🔥 Ofertas de Temporada</h2>
-      <div class="promo-grid">
-        @for (promo of promociones; track promo.id) {
-          <div class="promo-card">
-            <div class="promo-badge">Vence en: {{ calcularTiempoRestante(promo.fechaExpiracion) }}</div>
-            <div class="promo-info">
-              <h3>{{ promo.nombre }}</h3>
-              <p>{{ promo.descripcion }}</p>
-              <div class="price-tag">Bs {{ promo.precio }}</div>
-            </div>
-          </div>
-        }
-      </div>
-    </section>
-
-    <section class="menu-section">
-      <h2 class="section-title">🍴 Nuestro Menú</h2>
-      <div class="menu-list">
-        @for (item of menu; track item.id) {
-          <div class="menu-card">
-            <div class="item-details">
-              <h3>{{ item.nombre }}</h3>
-              <p>{{ item.descripcion }}</p>
-            </div>
-            <span class="item-price">Bs {{ item.precio }}</span>
-          </div>
-        }
-      </div>
-    </section>
-  </main>
+  <section class="promo-section">
+    <h2>Promociones Disponibles</h2>
+    <div class="grid">
+      <app-card 
+        *ngFor="let promo of promociones"
+        variant="promotion"
+        [title]="promo.nombre"
+        [subtitle]="promo.desc"
+        [badgeText]="'$' + promo.precio"
+        [showActions]="false"> 
+      </app-card>
+    </div>
+  </section>
 </div>

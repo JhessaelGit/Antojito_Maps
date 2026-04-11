@@ -1,38 +1,53 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { RestauranteService } from '../../core/services/restaurante.service';
+import { Restaurante } from '../../core/models/restaurant.model';
+import { CardComponent } from '../../shared/components/card/card.component';
+import { ButtonComponent } from '../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-restaurant-view',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CardComponent, ButtonComponent], // Importamos los nuevos componentes
   templateUrl: './restaurant-view.html',
   styleUrl: './restaurant-view.css'
 })
 export class RestaurantView implements OnInit {
-  promociones = [
-    { id: 1, nombre: 'Combo Económico', descripcion: '2 presas + papas + arroz', precio: 25, fechaExpiracion: new Date(Date.now() + 7200000) }
-  ];
+  restaurante?: Restaurante;
+  promociones: any[] = []; // Esto vendrá del backend después
 
-  menu = [
-    { id: 101, nombre: 'Cuarto de Pollo', descripcion: 'Pierna o entrepierna con guarniciones', precio: 28 },
-    { id: 102, nombre: 'Medio Pollo', descripcion: '2 presas grandes con guarniciones', precio: 50 }
-  ];
-
-  constructor(private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private restauranteService: RestauranteService
+  ) {}
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
+    // Obtenemos el ID de la URL
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.cargarDatosRestaurante(Number(id));
+    }
   }
 
-  calcularTiempoRestante(fecha: Date): string {
-    const diff = new Date(fecha).getTime() - new Date().getTime();
-    const horas = Math.floor(diff / (1000 * 60 * 60));
-    return horas > 0 ? `${horas}h` : 'Poco tiempo';
+  cargarDatosRestaurante(id: number) {
+    this.restauranteService.getRestauranteById(id).subscribe({
+      next: (data: Restaurante) => {
+        this.restaurante = data;
+        this.promociones = [
+          { id: 1, nombre: 'Combo Especial', desc: 'Descripción breve', precio: 25 },
+          { id: 2, nombre: 'Duo Pack', desc: 'Ideal para compartir', precio: 45 }
+        ];
+      },
+      error: (err: any) => { // <--- Agregamos : any
+        console.error('Error al cargar restaurante', err);
+      }
+    });
   }
 
-volverAlMapa() {
-    this.router.navigate(['/mapa']); 
+  volverAlMapa() {
+    this.router.navigate(['/map-page']); 
   }
-
 }
