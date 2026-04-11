@@ -34,6 +34,6 @@ export class SectionHeaderComponent {
   constructor(private location: Location) {}
 
   goBack() {
-    this.location.back(); // Vuelve a la ruta anterior del historial
+    this.location.back(); 
   }
 }

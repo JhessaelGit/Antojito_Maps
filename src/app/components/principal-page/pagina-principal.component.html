@@ -1,0 +1,143 @@
+<div class="pg">
+
+  <!-- NAV -->
+  <nav class="am-nav">
+    <div class="am-logo">Antojitos<span>Maps</span></div>
+    <div class="am-nav-links">
+      <a (click)="irAlMapa()">Explorar mapa</a>
+      <a href="#como-funciona">¿Cómo funciona?</a>
+      <a (click)="selectRole('restaurante')">Para negocios</a>
+    </div>
+    <button class="am-nav-btn" (click)="selectRole('restaurante')">Iniciar sesión</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="am-hero">
+    <div class="am-hero-left">
+      <div class="am-pill"><span class="am-pill-dot"></span>Cochabamba · Bolivia</div>
+      <h1 class="am-hero-title">
+        Todos los sabores<br>de <span class="hl">La Llajta</span><br>en un mapa
+      </h1>
+      <p class="am-hero-sub">
+        Desde salteñas jugosas hasta sushi fresco — encuentra restaurantes,
+        descuentos y promociones cerca de ti en Cochabamba.
+      </p>
+      <div class="am-hero-cta">
+        <button class="am-btn-p" (click)="irAlMapa()">
+          <i class="fas fa-map-marked-alt"></i> Ver el mapa
+        </button>
+        <button class="am-btn-o" (click)="selectRole('restaurant/register')">
+          Registrar mi negocio
+        </button>
+      </div>
+      <div class="am-stats">
+        <div><div class="am-stat-num">200+</div><div class="am-stat-lbl">Negocios activos</div></div>
+        <div class="am-stat-div"></div>
+        <div><div class="am-stat-num">15</div><div class="am-stat-lbl">Zonas de Cbba</div></div>
+        <div class="am-stat-div"></div>
+        <div><div class="am-stat-num">Gratis</div><div class="am-stat-lbl">Para comensales</div></div>
+      </div>
+    </div>
+
+    <div class="am-hero-right">
+      <div class="am-food-card tall">
+        <span class="am-food-emoji">🥟</span>
+        <div class="am-food-name">Salteñas</div>
+        <div class="am-food-tag">Típico cochabambino</div>
+      </div>
+      <div class="am-food-card">
+        <span class="am-food-emoji">🍔</span>
+        <div class="am-food-name">Hamburguesas</div>
+        <div class="am-food-tag">Fast food</div>
+      </div>
+      <div class="am-food-card">
+        <span class="am-food-emoji">🍣</span>
+        <div class="am-food-name">Sushi</div>
+        <div class="am-food-tag">Japonesa</div>
+      </div>
+      <div class="am-food-card">
+        <span class="am-food-emoji">🍕</span>
+        <div class="am-food-name">Pizza</div>
+        <div class="am-food-tag">Italiana</div>
+      </div>
+      <div class="am-food-card">
+        <span class="am-food-emoji">🍗</span>
+        <div class="am-food-name">Pollo a la brasa</div>
+        <div class="am-food-tag">Parrilla</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRIP DE CATEGORÍAS -->
+  <section class="am-strip">
+    <h2 class="am-strip-title">¿Qué antojito buscas hoy?</h2>
+    <p class="am-strip-sub">Explora por categoría y descubre los mejores lugares</p>
+    <div class="am-strip-scroll">
+      <div class="am-dish-card" *ngFor="let dish of categorias" (click)="irAlMapa()">
+        <div class="am-dish-img" [ngClass]="dish.bg">{{ dish.emoji }}</div>
+        <div class="am-dish-body">
+          <div class="am-dish-name">{{ dish.nombre }}</div>
+          <div class="am-dish-cat">{{ dish.categoria }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA -->
+  <section class="am-how" id="como-funciona">
+    <h2 class="am-how-title">Simple como pedir una salteña</h2>
+    <p class="am-how-sub">Tres pasos y ya estás comiendo</p>
+    <div class="am-how-steps">
+      <div class="am-step">
+        <div class="am-step-num">01</div>
+        <div class="am-step-title">Abre el mapa</div>
+        <p class="am-step-desc">Visualiza todos los restaurantes y negocios activos en Cochabamba, ordenados por zona y categoría.</p>
+      </div>
+      <div class="am-step">
+        <div class="am-step-num">02</div>
+        <div class="am-step-title">Elige tu antojito</div>
+        <p class="am-step-desc">Filtra por tipo de comida, distancia o promociones activas. Lee la info del local antes de salir.</p>
+      </div>
+      <div class="am-step">
+        <div class="am-step-num">03</div>
+        <div class="am-step-title">¡A comer!</div>
+        <p class="am-step-desc">Ve directo al local con la dirección exacta y aprovecha las promociones del día. Completamente gratis.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROLES -->
+  <section class="am-roles">
+    <div class="am-roles-header">
+      <h2 class="am-roles-title">¿Cómo quieres entrar?</h2>
+      <p class="am-roles-sub">Elige tu rol y empieza ahora</p>
+    </div>
+    <div class="am-roles-grid">
+      <div class="am-role-card r1" (click)="selectRole('usuario')">
+        <div class="am-role-icon"><i class="fas fa-map-marked-alt"></i></div>
+        <h3 class="am-role-h">Comensal</h3>
+        <p class="am-role-p">Descubre restaurantes, promociones y los mejores antojitos cerca de ti. Sin registro, gratis.</p>
+        <div class="am-role-link">Explorar el mapa <i class="fas fa-arrow-right"></i></div>
+      </div>
+      <div class="am-role-card r2" (click)="selectRole('restaurante')">
+        <div class="am-role-icon"><i class="fas fa-store"></i></div>
+        <h3 class="am-role-h">Negocio</h3>
+        <p class="am-role-p">Publica tu menú, crea promociones y lleva más caseritos a tu local. Visible en todo Cbba.</p>
+        <div class="am-role-link">Registrar negocio <i class="fas fa-arrow-right"></i></div>
+      </div>
+      <div class="am-role-card r3" (click)="selectRole('administrador')">
+        <div class="am-role-icon"><i class="fas fa-clipboard-list"></i></div>
+        <h3 class="am-role-h">Admin</h3>
+        <p class="am-role-p">Gestiona la plataforma y mantén el mapa con la mejor oferta gastronómica de la ciudad.</p>
+        <div class="am-role-link">Acceder <i class="fas fa-arrow-right"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="am-footer">
+    <div class="am-logo">Antojitos<span>Maps</span></div>
+    <div class="am-footer-txt">Hecho con amor en Cochabamba, Bolivia</div>
+  </footer>
+
+</div>

@@ -1,1 +1,28 @@
-/* You can add global styles to this file, and also import other style files */
+/* VARIABLES DE DISEÑO ANTOJITOS MAPS */
+:root {
+  --color-primary:   #7F1100;
+  --color-secondary: #02332D;
+  --color-neutral:   #DACFBD;
+  --color-accent:    #BF9861;
+  --color-white:     #FFFFFF;
+  
+  --font-heading: 'Playfair Display', serif;
+  --font-body:    'Inter', sans-serif;
+
+  --spacing-md: 16px;
+  --spacing-lg: 32px;
+  --radius-lg:  24px;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-neutral) !important; 
+  font-family: var(--font-body);
+}
+
+* {
+  box-sizing: border-box;
+}

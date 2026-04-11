@@ -21,7 +21,7 @@ import { ReactiveFormsModule, FormControl } from '@angular/forms';
       </span>
     </div>
   `,
-  styleUrls: ['./from-input.css']
+  styleUrls: ['./form-input.css']
 })
 export class FormInputComponent {
   @Input() label: string = '';

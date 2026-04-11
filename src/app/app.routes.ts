@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { MapPage } from './components/map-page/map-page.component';
 import { RestaurantPage } from './components/restaurant-page/restaurant-page.component';
-import { PaginaPrincipalComponent } from './components/PaginaPrincipal/pagina-principal.component';
+import { PaginaPrincipalComponent } from './components/principal-page/pagina-principal.component';
 import { RestaurantLoginComponent } from './components/login-restaurant/restaurant-login.component';
 import { RegisterRestaurantComponent } from './components/register-restaurant/register-restaurant.component';
 import { PaymentOptionsComponent } from './components/payment-options/payment-options.component';
