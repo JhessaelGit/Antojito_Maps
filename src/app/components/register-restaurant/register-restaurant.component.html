@@ -1,77 +1,243 @@
-<div class="login-wrapper">
-  
-  <div class="app-header">
-    <h1>Antojitos Maps</h1>
-  </div>
+<div class="rr-page">
 
-  <div class="login-container">
-    <form class="login-form" (ngSubmit)="register()">
-      <h2>Registro de Restaurante</h2>
+  <!-- NAV -->
+  <nav class="rr-nav">
+    <div class="rr-logo">Antojitos<span>Maps</span></div>
+    <button class="rr-nav-back" type="button" (click)="goToLogin()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2">
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Volver al login
+    </button>
+  </nav>
 
-      <!-- Nombre -->
-      <div class="form-group">
-        <label>Nombre del Restaurante</label>
-        <div class="input-with-icon">
-          <i class="fas fa-store input-icon"></i>
-          <input 
-            type="text" 
-            [(ngModel)]="name"
-            name="name"
-            placeholder="Ingresa el nombre">
+  <div class="rr-body">
+
+    <!-- PANEL IZQUIERDO -->
+    <aside class="rr-left">
+
+      <div class="rr-left-title">
+        Registra tu<br><span class="hl">negocio</span><br>en La Llajta
+      </div>
+      <p class="rr-left-sub">
+        Únete a la plataforma gastronómica de Cochabamba y lleva más caseritos a tu local.
+      </p>
+
+      <div class="rr-step">
+        <div class="rr-step-num">1</div>
+        <div>
+          <div class="rr-step-title">Datos del negocio</div>
+          <div class="rr-step-desc">Nombre, categoría, descripción y credenciales</div>
         </div>
-        <small class="error" *ngIf="errorName">{{ errorName }}</small>
       </div>
-
-      <!-- Correo -->
-      <div class="form-group">
-        <label>Correo</label>
-        <div class="input-with-icon">
-          <i class="fas fa-envelope input-icon"></i>
-          <input 
-            type="email" 
-            [(ngModel)]="email"
-            name="email"
-            placeholder="Ingresa el correo">
+      <div class="rr-step">
+        <div class="rr-step-num">2</div>
+        <div>
+          <div class="rr-step-title">Foto del restaurante</div>
+          <div class="rr-step-desc">Sube una imagen atractiva que verán tus clientes</div>
         </div>
-        <small class="error" *ngIf="errorEmail">{{ errorEmail }}</small>
       </div>
-
-      <!-- Contraseña -->
-      <div class="form-group">
-        <label>Contraseña</label>
-        <div class="input-with-icon">
-          <i class="fas fa-lock input-icon"></i>
-
-          <input 
-            [type]="showPassword ? 'text' : 'password'"
-            [(ngModel)]="password"
-            name="password"
-            placeholder="Ingresa la contraseña">
-
-          <i 
-            class="fas toggle-password-icon" 
-            [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" 
-            (click)="togglePasswordVisibility()">
-          </i>
+      <div class="rr-step">
+        <div class="rr-step-num">3</div>
+        <div>
+          <div class="rr-step-title">Ubicación en el mapa</div>
+          <div class="rr-step-desc">Coloca un pin para obtener latitud y longitud exactas</div>
         </div>
-        <small class="error" *ngIf="errorPassword">{{ errorPassword }}</small>
       </div>
-
-      <div class="button-group">
-        <button 
-          type="submit" 
-          class="btn btn-primary">
-          Registrarse
-        </button>
-
-        <button 
-          type="button" 
-          class="btn btn-secondary" 
-          (click)="goToLogin()">
-          Volver al Login
-        </button>
+      <div class="rr-step">
+        <div class="rr-step-num">4</div>
+        <div>
+          <div class="rr-step-title">Elige tu plan</div>
+          <div class="rr-step-desc">Básico, Premium o Pro según tu negocio</div>
+        </div>
       </div>
+    </aside>
 
-    </form>
+    <!-- Pills de pasos visibles solo en móvil -->
+    <div class="rr-steps-mobile" style="display:none">
+      <span style="background:rgba(191,152,97,0.2);color:#BF9861;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700">1. Datos</span>
+      <span style="background:rgba(191,152,97,0.2);color:#BF9861;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700">2. Foto</span>
+      <span style="background:rgba(191,152,97,0.2);color:#BF9861;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700">3. Mapa</span>
+      <span style="background:rgba(191,152,97,0.2);color:#BF9861;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700">4. Plan</span>
+    </div>
+
+    <!-- PANEL DERECHO: FORMULARIO -->
+    <div class="rr-right">
+      <div class="rr-form-card">
+        <h2 class="rr-form-title">Crear cuenta</h2>
+        <p class="rr-form-sub">Todos los campos son obligatorios</p>
+
+        <form (ngSubmit)="register()">
+
+          <!-- ── DATOS DEL NEGOCIO ────────────────────── -->
+          <div class="rr-divider">
+            <div class="rr-divider-line"></div>
+            <span class="rr-divider-txt">Datos del negocio</span>
+            <div class="rr-divider-line"></div>
+          </div>
+
+          <div class="fg">
+            <label>Nombre del restaurante</label>
+            <div class="input-wrap">
+              <i class="fas fa-store inp-icon"></i>
+              <input type="text" [(ngModel)]="name" name="name"
+                     placeholder="Ej. Salteñería El Tío"
+                     [class.is-error]="errorName">
+            </div>
+            <small class="err" *ngIf="errorName">{{ errorName }}</small>
+          </div>
+
+          <div class="rr-row">
+            <div class="fg">
+              <label>Categoría</label>
+              <select [(ngModel)]="category" name="category"
+                      [class.is-error]="errorCategory">
+                <option value="">Seleccionar...</option>
+                <option value="Comida Típica">Comida Típica</option>
+                <option value="Sushi">Sushi</option>
+                <option value="Pizzería">Pizzería</option>
+                <option value="Fast Food">Fast Food</option>
+                <option value="Parrilla">Parrilla</option>
+                <option value="Cafetería">Cafetería</option>
+                <option value="Otro">Otro</option>
+              </select>
+              <small class="err" *ngIf="errorCategory">{{ errorCategory }}</small>
+            </div>
+            <div class="fg">
+              <label>Teléfono</label>
+              <div class="input-wrap">
+                <i class="fas fa-phone inp-icon"></i>
+                <input type="tel" [(ngModel)]="phone" name="phone"
+                       placeholder="Ej. 76543210">
+              </div>
+            </div>
+          </div>
+
+          <div class="fg">
+            <label>Descripción</label>
+            <textarea rows="3" [(ngModel)]="description" name="description"
+                      placeholder="Describe brevemente tu negocio y especialidad..."></textarea>
+          </div>
+
+          <!-- ── ACCESO ───────────────────────────────── -->
+          <div class="rr-divider">
+            <div class="rr-divider-line"></div>
+            <span class="rr-divider-txt">Acceso</span>
+            <div class="rr-divider-line"></div>
+          </div>
+
+          <div class="fg">
+            <label>Correo electrónico</label>
+            <div class="input-wrap">
+              <i class="fas fa-envelope inp-icon"></i>
+              <input type="email" [(ngModel)]="email" name="email"
+                     placeholder="correo@negocio.com"
+                     [class.is-error]="errorEmail">
+            </div>
+            <small class="err" *ngIf="errorEmail">{{ errorEmail }}</small>
+          </div>
+
+          <div class="fg">
+            <label>Contraseña</label>
+            <div class="input-wrap">
+              <i class="fas fa-lock inp-icon"></i>
+              <input [type]="showPassword ? 'text' : 'password'"
+                     [(ngModel)]="password" name="password"
+                     placeholder="Mínimo 6 caracteres"
+                     class="has-eye" [class.is-error]="errorPassword">
+              <button type="button" class="btn-eye"
+                      (click)="togglePasswordVisibility()">
+                <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+              </button>
+            </div>
+            <small class="err" *ngIf="errorPassword">{{ errorPassword }}</small>
+          </div>
+
+          <!-- ── FOTO ────────────────────────────────── -->
+          <div class="rr-divider">
+            <div class="rr-divider-line"></div>
+            <span class="rr-divider-txt">Foto del restaurante</span>
+            <div class="rr-divider-line"></div>
+          </div>
+
+          <div class="rr-upload-zone"
+               [class.has-image]="imagePreview"
+               (click)="fileInput.click()"
+               (dragover)="$event.preventDefault()"
+               (drop)="onDrop($event)">
+            <div class="rr-upload-content" *ngIf="!imagePreview">
+              <div class="rr-upload-icon">
+                <i class="fas fa-camera"></i>
+              </div>
+              <div class="rr-upload-txt">Haz clic o arrastra una foto aquí</div>
+              <div class="rr-upload-sub">JPG, PNG o WEBP · Máx. 5MB</div>
+            </div>
+            <div class="rr-upload-preview" *ngIf="imagePreview">
+              <img [src]="imagePreview" alt="Preview restaurante">
+              <button type="button" class="rr-remove-img"
+                      (click)="removeImage($event)">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <input #fileInput type="file" accept="image/*"
+                 style="display:none" (change)="onFileSelected($event)">
+          <small class="err" *ngIf="errorImage">{{ errorImage }}</small>
+
+          <!-- ── UBICACIÓN ───────────────────────────── -->
+          <div class="rr-divider">
+            <div class="rr-divider-line"></div>
+            <span class="rr-divider-txt">Ubicación en el mapa</span>
+            <div class="rr-divider-line"></div>
+          </div>
+
+          <!-- El mapa Leaflet se monta aquí -->
+          <div class="rr-map-container">
+            <div id="register-map" class="rr-map"></div>
+            <div class="rr-map-hint-bar">
+              <i class="fas fa-info-circle"></i>
+              Haz clic en el mapa para colocar el pin de tu negocio
+            </div>
+          </div>
+
+          <div class="rr-coords">
+            <div class="rr-coord-chip" [class.active]="latitude !== null">
+              <i class="fas fa-location-arrow"></i>
+              <div>
+                <div class="rr-coord-lbl">LATITUD</div>
+                <div class="rr-coord-val">
+                  {{ formatCoord(latitude) }}
+                </div>
+              </div>
+            </div>
+            <div class="rr-coord-chip" [class.active]="longitude !== null">
+              <i class="fas fa-compass"></i>
+              <div>
+                <div class="rr-coord-lbl">LONGITUD</div>
+                <div class="rr-coord-val">
+                  {{ formatCoord(longitude) }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <small class="err" *ngIf="errorLocation">{{ errorLocation }}</small>
+
+          <!-- ── BOTONES ──────────────────────────────── -->
+          <div class="rr-btns">
+            <button type="submit" class="rr-btn-primary">
+              <i class="fas fa-check-circle"></i>
+              Crear cuenta y continuar
+            </button>
+            <button type="button" class="rr-btn-outline" (click)="goToLogin()">
+              Ya tengo cuenta — Iniciar sesión
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
   </div>
 </div>
