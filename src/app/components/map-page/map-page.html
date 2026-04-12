@@ -1,46 +1,102 @@
-<div class="dashboard-container">
-  <header class="app-header">
-    <div class="logo-section">
-      <span class="logo-icon">📍</span>
-      <h1>Antojitos <span class="highlight">Maps</span></h1>
+<div class="map-container">
+
+  <!-- Header -->
+  <header class="map-header">
+    <div class="header-left">
+      <button class="btn-back" (click)="volverAlInicio()" title="Volver al inicio">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </button>
+      <div class="logo-section">
+        <span class="logo-dot"></span>
+        <h1>Antojitos <span class="highlight">Maps</span></h1>
+      </div>
     </div>
 
-    <div class="search-box">
-      <input 
-        type="text" 
-        #txtBuscar 
-        placeholder="Buscar restaurante..." 
-        (keyup.enter)="buscarRestaurante(txtBuscar.value)">
-      <button (click)="buscarRestaurante(txtBuscar.value)">
-        <span>🔍</span>
+    <div class="header-right">
+      <button class="btn-location" (click)="centrarEnMiUbicacion()" title="Mi ubicación">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path>
+          <path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path>
+        </svg>
       </button>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          #txtBuscar
+          placeholder="Buscar restaurante..."
+          (keyup.enter)="buscarRestaurante(txtBuscar.value)"
+          (input)="buscarRestaurante(txtBuscar.value)">
+      </div>
     </div>
   </header>
 
-  <main class="map-wrapper">
+  <!-- Chips de categoría -->
+  <div class="category-bar">
+    @for (cat of categorias; track cat.slug) {
+      <button
+        class="chip"
+        [class.chip-active]="categoriaSeleccionada === cat.slug"
+        (click)="seleccionarCategoria(cat.slug)">
+        {{ cat.label }}
+      </button>
+    }
+  </div>
 
-    
-    <div style="position:absolute; z-index:1000; top:70px; left:10px; background:white; padding:8px; border-radius:8px;">
-      <select [(ngModel)]="categoriaSeleccionada" (change)="filtrarRestaurantes()">
-        <option value="">Todas</option>
-        <option value="pollo frito">Pollo frito</option>
-        <option value="comida rapida">Comida rápida</option>
-        <option value="italiana">Italiana</option>
-      </select>
-    </div>
+  <!-- Cuerpo del mapa -->
+  <div class="map-wrapper">
 
-   
-    <div id="map"></div>
-    
-
-    @if (mostrarBienvenida) {
-      <div class="map-overlay-info">
-        <h3>¡Bienvenido!</h3>
-        <p>Explora los mejores sabores de la ciudad en un solo mapa.</p>
-        <hr class="divider">
-        <p class="instruction">Haz clic en los restaurantes para ver sus promociones disponibles.</p>
+    <!-- Loading -->
+    @if (cargando) {
+      <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Cargando restaurantes...</p>
       </div>
     }
 
-  </main>
+    <!-- Error API (timeout o fallo) -->
+    @if (errorApi) {
+      <div class="api-error-banner">
+        <span>⚠️ No se pudieron cargar los restaurantes. El servidor puede estar en pausa.</span>
+        <button (click)="cargarRestaurantes()">Reintentar</button>
+      </div>
+    }
+
+    <div id="map"></div>
+
+    <!-- Overlay bienvenida -->
+    @if (mostrarBienvenida && !cargando) {
+      <div class="overlay-card">
+        <p class="overlay-title">¡Bienvenido!</p>
+        <p class="overlay-sub">Explora los mejores sabores de la ciudad en un solo mapa.</p>
+        <hr class="divider">
+        <p class="overlay-hint">Haz clic en los marcadores para ver las promociones disponibles.</p>
+      </div>
+    }
+
+    <!-- Sin resultados -->
+    @if (sinResultados && !cargando) {
+      <div class="empty-state-card">
+        <span class="empty-icon">🍽️</span>
+        <p class="empty-title">Sin resultados en "{{ categoriaSinResultados }}"</p>
+        <p class="empty-sub">
+          Aún no hay restaurantes registrados en esta categoría.<br>
+          ¡Explora las otras opciones!
+        </p>
+        <button class="btn-explore" (click)="verTodasLasCategorias()">
+          Ver todas las categorías
+        </button>
+      </div>
+    }
+
+  </div>
+
 </div>

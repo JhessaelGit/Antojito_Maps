@@ -1,159 +1,238 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
-import * as L from 'leaflet';
+import { Component, OnInit, AfterViewInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Restaurante } from '../../core/models/restaurant.model';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RestauranteService } from '../../core/services/restaurante.service';
-
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: '/assets/marker-icon-2x-red.png',
-  iconUrl: '/assets/marker-icon-red.png',
-  shadowUrl: '/assets/marker-shadow.png'
-});
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-map-page',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './map-page.html',
-  styleUrl: './map-page.css'
+  styleUrls: ['./map-page.css']
 })
-export class MapPage implements OnInit {
+export class MapPage implements OnInit, AfterViewInit {
 
-  private map: any;
-  mostrarBienvenida: boolean = true;
+  private map!: L.Map;
+  private markersLayer = L.layerGroup();
+  private locationMarker?: L.Marker;
+
+  categorias = [
+    { label: 'Todas',         slug: '' },
+    { label: 'Sushi',         slug: 'Sushi' },
+    { label: 'Comida Típica', slug: 'Comida Tipica' },
+    { label: 'Pizzería',      slug: 'Pizzeria' },
+    { label: 'Salteñas',      slug: 'Salteñas' },
+    { label: 'Chicharrón',    slug: 'Chicharron' },
+    { label: 'Hamburguesas',  slug: 'Hamburguesas' },
+    { label: 'Tacos',         slug: 'Tacos' },
+    { label: 'Parrilla',      slug: 'Parrilla' },
+  ];
+
   categoriaSeleccionada: string = '';
-  restaurantesFiltrados: Restaurante[] = [];
-  markersLayer: any;
-  
-  private markersMap: Map<string, L.Marker> = new Map(); 
-  restaurantes: Restaurante[] = [];
+  textoBusqueda: string = '';
+  mostrarBienvenida: boolean = true;
+  sinResultados: boolean = false;
+  categoriaSinResultados: string = '';
+  cargando: boolean = false;
+  errorApi: boolean = false;
+
+  private restaurantes: any[] = [];
 
   constructor(
-    private router: Router, 
-    private cd: ChangeDetectorRef,
-    private restauranteService: RestauranteService 
+    private route: ActivatedRoute,
+    private router: Router,
+    private ngZone: NgZone,
+    private restauranteService: RestauranteService
   ) {}
 
-  ngOnInit(): void {
-    this.initMap();
-    this.markersLayer = L.layerGroup().addTo(this.map); 
-    this.cargarDatosDesdeBackend();
-    this.configurarGeolocalizacion();
-    this.iniciarTemporizadorBienvenida();
-  }
-
-  private cargarDatosDesdeBackend(): void {
-    this.restauranteService.getRestaurantes().subscribe({
-      next: (data) => {
-        this.restaurantes = data;
-        this.restaurantesFiltrados = [...this.restaurantes];
-        this.agregarMarcadores();
-        this.cd.detectChanges();
-      },
-      error: (err) => console.error('Error al conectar con el servicio:', err)
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.categoriaSeleccionada = params['categoria'] || '';
+      if (this.map) {
+        this.filtrarRestaurantes();
+      }
     });
   }
 
-  private initMap(): void {
-    this.map = L.map('map').setView([-17.3895, -66.1568], 13);
+  ngAfterViewInit() {
+    this.initMap();
+    this.obtenerUbicacion();
+    this.cargarRestaurantes();
+  }
+
+  private initMap() {
+    this.map = L.map('map', {
+      center: [-17.3935, -66.1568],
+      zoom: 15,
+      zoomControl: true
+    });
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
       attribution: '© OpenStreetMap contributors'
     }).addTo(this.map);
+
+    this.markersLayer.addTo(this.map);
   }
 
-  private agregarMarcadores(): void {
-    this.markersLayer.clearLayers(); 
-    this.markersMap.clear();
+  private obtenerUbicacion() {
+    if (!navigator.geolocation) return;
 
-    this.restaurantesFiltrados.forEach(restaurante => {
-      
-      const latVal = restaurante.latitude ?? restaurante.latitud;
-      const lngVal = restaurante.longitude ?? restaurante.longitud;
-      const id = restaurante.uuid ?? restaurante.id;
-      const nombre = restaurante.nombre ?? restaurante.name;
-      const descripcion = restaurante.descripcion ?? restaurante.description;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
 
-      
-      if (latVal !== undefined && lngVal !== undefined && id) {
-        const marker = L.marker([latVal, lngVal]);
-
-        const popupContent = `
-          <div style="text-align: center; font-family: 'Inter', sans-serif; min-width: 150px;">
-            <b style="color: #02332D; font-size: 1rem;">${nombre}</b><br>
-            <p style="margin: 5px 0; font-size: 0.85rem; color: #666;">
-              ${descripcion ? descripcion : 'Sin descripción disponible'}
-            </p>
-            <button id="btn-view-${id}" 
-                    style="background: #BF9861; color: white; border: none; 
-                           padding: 8px 12px; border-radius: 5px; cursor: pointer;
-                           font-weight: bold; margin-top: 5px; width: 100%;">
-              Ver Menú y Ofertas
-            </button>
-          </div>
-        `;
-
-        marker.bindPopup(popupContent);
-        
-        marker.on('popupopen', () => {
-          const btn = document.getElementById(`btn-view-${id}`);
-          if (btn) {
-            btn.onclick = () => {
-              this.router.navigate(['/restaurant-view', id]);
-            };
-          }
+        // Icono de ubicación del usuario
+        const iconoUbicacion = L.divIcon({
+          className: 'user-location-marker',
+          html: `
+            <div class="user-pulse-ring"></div>
+            <div class="user-dot"></div>
+          `,
+          iconSize: [20, 20],
+          iconAnchor: [10, 10]
         });
 
-        marker.addTo(this.markersLayer);
-        this.markersMap.set(id, marker);
+        if (this.locationMarker) {
+          this.locationMarker.setLatLng([lat, lng]);
+        } else {
+          this.locationMarker = L.marker([lat, lng], { icon: iconoUbicacion })
+            .addTo(this.map);
+        }
+
+        // Centra el mapa en la ubicación del usuario
+        this.map.setView([lat, lng], 15);
+      },
+      (err) => {
+        console.warn('Geolocalización denegada o no disponible:', err.message);
+        // Si no hay permiso, el mapa queda centrado en Cochabamba por defecto
+      },
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  }
+
+  cargarRestaurantes() {
+    this.cargando = true;
+    this.errorApi = false;
+
+    const timeoutId = setTimeout(() => {
+      if (this.cargando) {
+        this.cargando = false;
+        this.errorApi = true;
+        console.warn('La API tardó demasiado. Mostrando mapa sin datos.');
+      }
+    }, 8000);
+
+    this.restauranteService.getRestaurantes().subscribe({
+      next: (data: any) => {
+        clearTimeout(timeoutId);
+
+        if (Array.isArray(data)) {
+          this.restaurantes = data;
+        } else if (data?.data && Array.isArray(data.data)) {
+          this.restaurantes = data.data;
+        } else if (data?.restaurantes && Array.isArray(data.restaurantes)) {
+          this.restaurantes = data.restaurantes;
+        } else if (data?.content && Array.isArray(data.content)) {
+          this.restaurantes = data.content;
+        } else {
+          console.warn('Formato de respuesta inesperado:', data);
+          this.restaurantes = [];
+        }
+
+        this.cargando = false;
+        this.filtrarRestaurantes();
+      },
+      error: (err) => {
+        clearTimeout(timeoutId);
+        console.error('Error cargando restaurantes:', err);
+        this.cargando = false;
+        this.errorApi = true;
       }
     });
   }
 
-  buscarRestaurante(termino: string): void {
-    if (!termino.trim()) return;
-    const res = this.restaurantes.find(r => {
-      const nombre = r.nombre ?? r.name ?? '';
-      return nombre.toLowerCase().includes(termino.toLowerCase());
+  filtrarRestaurantes() {
+    this.markersLayer.clearLayers();
+
+    const filtrados = this.restaurantes.filter(r => {
+      const matchCat = !this.categoriaSeleccionada ||
+        (r.category ?? r.categoria ?? '')
+          .toLowerCase() === this.categoriaSeleccionada.toLowerCase();
+
+      const nombre = r.name ?? r.nombre ?? '';
+      const matchBusqueda = !this.textoBusqueda ||
+        nombre.toLowerCase().includes(this.textoBusqueda.toLowerCase());
+
+      return matchCat && matchBusqueda;
     });
 
-    if (res) {
-      const lat = res.latitude ?? res.latitud;
-      const lng = res.longitude ?? res.longitud;
-      const id = res.uuid ?? res.id;
+    const catLabel = this.categorias.find(c =>
+      c.slug.toLowerCase() === this.categoriaSeleccionada.toLowerCase()
+    )?.label || this.categoriaSeleccionada;
 
-      if (lat !== undefined && lng !== undefined && id) {
-        this.map.flyTo([lat, lng], 17);
-        const marker = this.markersMap.get(id);
-        if (marker) marker.openPopup();
-      }
-    }
-  }
+    this.sinResultados = filtrados.length === 0 && !!this.categoriaSeleccionada;
+    this.categoriaSinResultados = catLabel;
+    this.mostrarBienvenida = filtrados.length === 0 && !this.categoriaSeleccionada;
 
-  filtrarRestaurantes(): void {
-    this.restaurantesFiltrados = this.categoriaSeleccionada === '' 
-      ? [...this.restaurantes] 
-      : this.restaurantes.filter(r => {
-          const cat = r.categoria ?? r.category;
-          return cat === this.categoriaSeleccionada;
+    filtrados.forEach(r => {
+      const lat = r.latitude ?? r.lat ?? r.latitud;
+      const lng = r.longitude ?? r.lng ?? r.longitud;
+      if (!lat || !lng) return;
+
+      const icono = L.divIcon({
+        className: 'custom-restaurant-marker',
+        html: `<div class="marker-pin"><div class="marker-inner"></div></div>`,
+        iconSize: [28, 36],
+        iconAnchor: [14, 36]
+      });
+
+      const nombre = r.name ?? r.nombre ?? 'Restaurante';
+      const descripcion = r.description ?? r.descripcion ?? (r.category ?? r.categoria ?? '');
+
+      const marker = L.marker([lat, lng], { icon: icono });
+      marker.bindPopup(`
+        <div style="font-family:'Inter',sans-serif; min-width:160px;">
+          <strong style="color:#02332D; font-size:14px;">${nombre}</strong><br>
+          <small style="color:#888;">${descripcion}</small>
+        </div>
+      `);
+
+      marker.on('click', () => {
+        this.ngZone.run(() => {
+          this.router.navigate(['/restaurant', r.uuid ?? r.id]);
         });
-    this.agregarMarcadores(); 
-  }
+      });
 
-  private configurarGeolocalizacion(): void {
-    this.map.locate({ setView: true, maxZoom: 16 });
-    this.map.on('locationfound', (e: any) => {
-      L.circle(e.latlng, { radius: e.accuracy / 2, color: '#007bff' }).addTo(this.map);
+      this.markersLayer.addLayer(marker);
     });
   }
 
-  private iniciarTemporizadorBienvenida(): void {
-    setTimeout(() => {
-      this.mostrarBienvenida = false;
-      this.cd.detectChanges(); 
-    }, 5000);
+  buscarRestaurante(texto: string) {
+    this.textoBusqueda = texto;
+    this.filtrarRestaurantes();
+  }
+
+  seleccionarCategoria(slug: string) {
+    this.categoriaSeleccionada = slug;
+    this.router.navigate([], {
+      queryParams: { categoria: slug || null },
+      queryParamsHandling: 'merge'
+    });
+    this.filtrarRestaurantes();
+  }
+
+  verTodasLasCategorias() {
+    this.seleccionarCategoria('');
+  }
+
+  volverAlInicio() {
+    this.router.navigate(['/inicio']);
+  }
+
+  centrarEnMiUbicacion() {
+    this.obtenerUbicacion();
   }
 }

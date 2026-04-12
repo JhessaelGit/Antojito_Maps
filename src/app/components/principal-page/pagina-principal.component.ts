@@ -12,16 +12,16 @@ import { CommonModule } from '@angular/common';
 export class PaginaPrincipalComponent {
 
   categorias = [
-    { emoji: '🥟', nombre: 'Salteñas',       categoria: 'Típico boliviano', bg: 'bg1' },
-    { emoji: '🍖', nombre: 'Chicharrón',      categoria: 'Cocina boliviana', bg: 'bg2' },
-    { emoji: '🍔', nombre: 'Hamburguesas',    categoria: 'Fast food',        bg: 'bg3' },
-    { emoji: '🍣', nombre: 'Sushi',           categoria: 'Japonesa',         bg: 'bg4' },
-    { emoji: '🍕', nombre: 'Pizza',           categoria: 'Italiana',         bg: 'bg1' },
-    { emoji: '🌮', nombre: 'Tacos',           categoria: 'Mexicana',         bg: 'bg5' },
-    { emoji: '🍗', nombre: 'Pollo a la brasa',categoria: 'Parrilla',         bg: 'bg3' },
-    { emoji: '🥩', nombre: 'Parrilla',        categoria: 'Asados',           bg: 'bg6' },
-    { emoji: '🥗', nombre: 'Ensaladas',       categoria: 'Saludable',        bg: 'bg7' },
-    { emoji: '☕', nombre: 'Cafeterías',      categoria: 'Desayunos',        bg: 'bg8' },
+    { emoji: '🥟', nombre: 'Salteñas',        categoria: 'Típico boliviano', bg: 'bg1', slug: 'Salteñas' },
+    { emoji: '🍖', nombre: 'Chicharrón',       categoria: 'Cocina boliviana', bg: 'bg2', slug: 'Chicharron' },
+    { emoji: '🍔', nombre: 'Hamburguesas',     categoria: 'Fast food',        bg: 'bg3', slug: 'Hamburguesas' },
+    { emoji: '🍣', nombre: 'Sushi',            categoria: 'Japonesa',         bg: 'bg4', slug: 'Sushi' },
+    { emoji: '🍕', nombre: 'Pizza',            categoria: 'Italiana',         bg: 'bg1', slug: 'Pizzeria' },
+    { emoji: '🌮', nombre: 'Tacos',            categoria: 'Mexicana',         bg: 'bg5', slug: 'Tacos' },
+    { emoji: '🍗', nombre: 'Pollo a la brasa', categoria: 'Parrilla',         bg: 'bg3', slug: 'Pollo a la brasa' },
+    { emoji: '🥩', nombre: 'Parrilla',         categoria: 'Asados',           bg: 'bg6', slug: 'Parrilla' },
+    { emoji: '🥗', nombre: 'Ensaladas',        categoria: 'Saludable',        bg: 'bg7', slug: 'Ensaladas' },
+    { emoji: '☕', nombre: 'Cafeterías',       categoria: 'Desayunos',        bg: 'bg8', slug: 'Cafeterias' },
   ];
 
   constructor(private router: Router) {}
