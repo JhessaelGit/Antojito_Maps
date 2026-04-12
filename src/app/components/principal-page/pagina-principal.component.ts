@@ -31,6 +31,7 @@ export class PaginaPrincipalComponent {
       case 'usuario':      this.router.navigate(['/mapa']);  break;
       case 'restaurante':  this.router.navigate(['/restaurant/login']); break;
       case 'administrador':this.router.navigate(['/admin']); break;
+      case 'registroRestaurante': this.router.navigate(['/restaurant/register']); break;
     }
   }
 

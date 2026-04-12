@@ -52,7 +52,7 @@ export class RegisterRestaurantComponent implements AfterViewInit, OnDestroy {
     private router:  Router,
     private logger:  LoggerService,
     private ngZone:  NgZone,
-    private cd:      ChangeDetectorRef   // ← igual que map-page
+    private cd:      ChangeDetectorRef  
   ) {}
 
   ngAfterViewInit(): void {
@@ -108,12 +108,12 @@ export class RegisterRestaurantComponent implements AfterViewInit, OnDestroy {
               const pos      = ev.target.getLatLng();
               this.latitude  = pos.lat;
               this.longitude = pos.lng;
-              this.cd.detectChanges();   // ← forzar re-render al arrastrar
+              this.cd.detectChanges();  
             });
           });
         }
 
-        this.cd.detectChanges();   // ← forzar re-render al hacer clic
+        this.cd.detectChanges(); 
         this.logger.info('Pin colocado', { lat: this.latitude, lng: this.longitude });
       });
     });
@@ -141,7 +141,7 @@ export class RegisterRestaurantComponent implements AfterViewInit, OnDestroy {
     const reader     = new FileReader();
     reader.onload    = e => {
       this.imagePreview = e.target?.result as string;
-      this.cd.detectChanges();   // ← forzar re-render al cargar imagen
+      this.cd.detectChanges(); 
     };
     reader.readAsDataURL(file);
   }

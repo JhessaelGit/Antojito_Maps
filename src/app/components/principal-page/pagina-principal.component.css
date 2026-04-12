@@ -1,6 +1,3 @@
-/* ══════════════════════════════════════
-   ANTOJITOS MAPS — Página Principal
-   ══════════════════════════════════════ */
 .pg {
   font-family: var(--font-body);
   background: var(--color-neutral);
@@ -220,7 +217,8 @@
   transition: transform .35s cubic-bezier(.4,0,.2,1); z-index: 0;
 }
 .am-role-card.r1::after { background: var(--color-primary); }
-.am-role-card.r2::after, .am-role-card.r3::after { background: var(--color-secondary); }
+.am-role-card.r2::after { background: var(--color-accent-dark); }
+.am-role-card.r3::after { background: var(--color-secondary); }
 .am-role-card:hover::after { transform: translateY(0); }
 .am-role-card > * { position: relative; z-index: 1; }
 

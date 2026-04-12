@@ -3,11 +3,6 @@
   <!-- NAV -->
   <nav class="am-nav">
     <div class="am-logo">Antojitos<span>Maps</span></div>
-    <div class="am-nav-links">
-      <a (click)="irAlMapa()">Explorar mapa</a>
-      <a href="#como-funciona">¿Cómo funciona?</a>
-      <a (click)="selectRole('restaurante')">Para negocios</a>
-    </div>
     <button class="am-nav-btn" (click)="selectRole('restaurante')">Iniciar sesión</button>
   </nav>
 
@@ -26,9 +21,7 @@
         <button class="am-btn-p" (click)="irAlMapa()">
           <i class="fas fa-map-marked-alt"></i> Ver el mapa
         </button>
-        <button class="am-btn-o" (click)="selectRole('restaurant/register')">
-          Registrar mi negocio
-        </button>
+        <button class="am-btn-o" (click)="selectRole('registroRestaurante')">Registrar mi negocio</button>
       </div>
       <div class="am-stats">
         <div><div class="am-stat-num">200+</div><div class="am-stat-lbl">Negocios activos</div></div>
@@ -123,7 +116,7 @@
         <div class="am-role-icon"><i class="fas fa-store"></i></div>
         <h3 class="am-role-h">Negocio</h3>
         <p class="am-role-p">Publica tu menú, crea promociones y lleva más caseritos a tu local. Visible en todo Cbba.</p>
-        <div class="am-role-link">Registrar negocio <i class="fas fa-arrow-right"></i></div>
+        <div class="am-role-link">Iniciar sesión <i class="fas fa-arrow-right"></i></div>
       </div>
       <div class="am-role-card r3" (click)="selectRole('administrador')">
         <div class="am-role-icon"><i class="fas fa-clipboard-list"></i></div>
