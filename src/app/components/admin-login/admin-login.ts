@@ -62,7 +62,7 @@ export class AdminLogin {
           action: 'LOGIN_SUCCESS'
         });
 
-        this.router.navigate(['/admin']);
+        this.router.navigate(['/admin/restaurants']);
 
       } else {
 

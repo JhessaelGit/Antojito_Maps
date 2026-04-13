@@ -1,0 +1,39 @@
+.container {
+  padding: 20px;
+  background: var(--color-neutral);
+  height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-admin {
+  background: var(--color-primary);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  position: relative;
+}
+
+.lock {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}

@@ -1,16 +1,9 @@
 .admin-container {
   height: 100vh;
-  background-color: var(--color-neutral);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.titulo {
-  font-family: var(--font-heading);
-  color: var(--color-secondary);
-  margin-bottom: var(--spacing-lg);
 }
 
 .opciones {
@@ -19,33 +12,9 @@
 }
 
 .card {
-  background: var(--color-white);
-  padding: 20px;
-  border-radius: var(--radius-lg);
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  cursor: pointer;
   text-align: center;
-  cursor: pointer;
-  transition: transform 0.2s;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.card:hover {
-  transform: scale(1.05);
-}
-
-.icono {
-  font-size: 40px;
-  margin-bottom: 10px;
-}
-
-button {
-  background-color: var(--color-primary);
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: var(--color-accent-dark);
 }

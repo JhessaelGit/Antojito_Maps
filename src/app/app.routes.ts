@@ -9,6 +9,7 @@ import { QrPaymentComponent } from './components/qr-payment/qr-payment.component
 import { RestaurantView } from './components/restaurant-view/restaurant-view.component';
 import { AdminLogin } from './components/admin-login/admin-login';
 import { AdminPageComponent } from './components/admin-page/admin-page';
+import { AdminRestaurantsComponent } from './components/admin-restaurants/admin-restaurants.component';
 
 export const routes: Routes = [
   {
@@ -34,6 +35,10 @@ export const routes: Routes = [
   {
     path: 'admin/eliminados',
     component: AdminPageComponent
+  },
+  {
+    path: 'admin/restaurants',
+    component: AdminRestaurantsComponent
   },
   {
     path: 'restaurant/login',
