@@ -1,9 +1,10 @@
-import { Component, OnInit, AfterViewInit, NgZone } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RestauranteService } from '../../core/services/restaurante.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Subject, finalize, takeUntil, timeout } from 'rxjs';
 import * as L from 'leaflet';
 
 @Component({
@@ -13,7 +14,7 @@ import * as L from 'leaflet';
   templateUrl: './map-page.html',
   styleUrls: ['./map-page.css']
 })
-export class MapPage implements OnInit, AfterViewInit {
+export class MapPage implements OnInit, AfterViewInit, OnDestroy {
 
   private map!: L.Map;
   private markersLayer = L.layerGroup();
@@ -37,35 +38,52 @@ export class MapPage implements OnInit, AfterViewInit {
   mostrarBienvenida: boolean = true;
   sinResultados: boolean = false;
   categoriaSinResultados: string = '';
-  cargando: boolean = false;
+  cargando: boolean = true;
   errorApi: boolean = false;
 
   private restaurantes: any[] = [];
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
     public router: Router,
-    private ngZone: NgZone,
     private restauranteService: RestauranteService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.categoriaSeleccionada = params['categoria'] || '';
-      if (this.map) {
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(params => {
+        this.categoriaSeleccionada = params['categoria'] || '';
         this.filtrarRestaurantes();
-      }
-    });
+        this.refreshView();
+      });
+
+    // Cargar datos en OnInit evita cambios de estado tardios en la primera deteccion.
+    this.cargarRestaurantes();
   }
 
   ngAfterViewInit(): void {
     this.initMap();
     this.obtenerUbicacion();
-    this.cargarRestaurantes();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    if (this.map) this.map.remove();
   }
 
   private initMap(): void {
+    if (this.map) this.map.remove();
+
+    const mapContainer = L.DomUtil.get('map') as (HTMLElement & { _leaflet_id?: number }) | null;
+    if (mapContainer?._leaflet_id) {
+      mapContainer._leaflet_id = undefined;
+    }
+
     this.map = L.map('map', {
       center: [-17.3935, -66.1568],
       zoom: 15,
@@ -110,21 +128,38 @@ export class MapPage implements OnInit, AfterViewInit {
     this.cargando = true;
     this.errorApi = false;
 
-    this.restauranteService.getRestaurantes().subscribe({
-      next: (data: any) => {
-        if (Array.isArray(data)) this.restaurantes = data;
-        else if (data?.data) this.restaurantes = data.data;
-        else this.restaurantes = [];
+    this.restauranteService
+      .getRestaurantes()
+      .pipe(
+        timeout(15000),
+        takeUntil(this.destroy$),
+        finalize(() => {
+          this.cargando = false;
+          this.refreshView();
+        })
+      )
+      .subscribe({
+        next: (data: any) => {
+          if (Array.isArray(data)) this.restaurantes = data;
+          else if (data?.data) this.restaurantes = data.data;
+          else this.restaurantes = [];
 
-        this.cargando = false;
-        this.filtrarRestaurantes();
-      },
-      error: (err) => {
-        console.error('Error:', err);
-        this.cargando = false;
-        this.errorApi = true;
-      }
-    });
+          this.filtrarRestaurantes();
+        },
+        error: (err) => {
+          console.error('Error:', err);
+          this.errorApi = true;
+          this.refreshView();
+        }
+      });
+  }
+
+  private refreshView(): void {
+    try {
+      this.cd.detectChanges();
+    } catch {
+      // No-op: si la vista ya fue destruida al navegar, evitamos romper flujo.
+    }
   }
 
   filtrarRestaurantes(): void {

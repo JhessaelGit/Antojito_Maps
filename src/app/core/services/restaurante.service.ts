@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class RestauranteService {
 
-  private BASE_URL = 'https://antogitomapsbackend-production.up.railway.app';
+  private readonly BASE_URL = '/api';
 
   constructor(private http: HttpClient) {}
 
