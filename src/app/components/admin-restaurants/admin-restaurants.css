@@ -135,13 +135,24 @@
   transform: scale(1.05);
 }
 
-/* RESPONSIVE */
+
+
 @media (max-width: 768px) {
+
   .grid {
     grid-template-columns: 1fr;
   }
 
-  .title h1 {
-    font-size: 32px;
+  .card {
+    width: 100%;
   }
+
+  .container {
+    padding: 20px;
+  }
+
+  .title h1 {
+    font-size: 28px;
+  }
+
 }

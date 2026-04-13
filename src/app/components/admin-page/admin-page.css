@@ -80,3 +80,27 @@
   max-width: 500px;
   margin: 0 auto 40px auto;
 }
+
+
+@media (max-width: 768px) {
+
+  .cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .content h1 {
+    font-size: 28px;
+    text-align: center;
+  }
+
+  .content p {
+    text-align: center;
+  }
+
+}
