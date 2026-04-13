@@ -7,10 +7,15 @@ import { RegisterRestaurantComponent } from './components/register-restaurant/re
 import { PaymentOptionsComponent } from './components/payment-options/payment-options.component';
 import { QrPaymentComponent } from './components/qr-payment/qr-payment.component';
 import { RestaurantView } from './components/restaurant-view/restaurant-view.component';
+import { AdminLogin } from './components/admin-login/admin-login';
 export const routes: Routes = [
   {
     path: 'restaurant',
     component: RestaurantPage
+  },
+  {
+    path: 'admin/login',
+    component: AdminLogin
   },
   {
     path: 'restaurant/login',
