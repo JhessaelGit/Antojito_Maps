@@ -1,0 +1,43 @@
+{
+  "LANDING": {
+    "NAV_EXPLORE": "Explorar mapa",
+    "NAV_HOW": "¿Cómo funciona?",
+    "NAV_BUSINESS": "Para negocios",
+    "LOGIN_BTN": "Iniciar sesión",
+    "LOGIN_BTN2": "Acceder",
+    "HERO_TITLE": "Todos los sabores<br>de <span class='hl'>La Llajta</span><br>en un mapa",
+    "HERO_SUB": "Desde salteñas jugosas hasta sushi fresco — encuentra restaurantes, descuentos y promociones cerca de ti en Cochabamba.",
+    "HERO_MAP_BTN": "Ver el mapa",
+    "HERO_REG_BTN": "Registrar mi negocio",
+    "STATS_BIZ": "Negocios activos",
+    "STATS_ZONES": "Zonas de Cbba",
+    "STATS_FREE_NUM": "Gratis",
+    "STATS_FREE_LBL": "Para comensales",
+    "FOOD": {
+      "SALTEÑA_TAG": "Típico cochabambino",
+      "BURGER_TAG": "Fast food",
+      "SUSHI_TAG": "Japonesa",
+      "PIZZA_TAG": "Italiana",
+      "CHICKEN_TAG": "Parrilla"
+    },
+    "STRIP_TITLE": "¿Qué antojito buscas hoy?",
+    "STRIP_SUB": "Explora por categoría y descubre los mejores lugares",
+    "HOW_TITLE": "Simple como pedir una salteña",
+    "HOW_SUB": "Tres pasos y ya estás comiendo",
+    "STEP1_TITLE": "Abre el mapa",
+    "STEP1_DESC": "Visualiza todos los restaurantes y negocios activos en Cochabamba.",
+    "STEP2_TITLE": "Elige tu antojito",
+    "STEP2_DESC": "Filtra por tipo de comida, distancia o promociones activas.",
+    "STEP3_TITLE": "¡A comer!",
+    "STEP3_DESC": "Ve directo al local con la dirección exacta y disfruta.",
+    "ROLES_TITLE": "¿Cómo quieres entrar?",
+    "ROLES_SUB": "Elige tu rol y empieza ahora",
+    "ROLE_EATER": "Comensal",
+    "ROLE_EATER_DESC": "Descubre restaurantes, promociones y los mejores antojitos cerca de ti. Sin registro, gratis.",
+    "ROLE_BIZ": "Negocio",
+    "ROLE_BIZ_DESC": "Publica tu menú, crea promociones y lleva más caseritos a tu local.",
+    "ROLE_ADMIN": "Admin",
+    "ROLE_ADMIN_DESC": "Gestiona la plataforma y mantén el mapa con la mejor oferta gastronómica.",
+    "FOOTER_MADE": "Hecho con amor en Cochabamba, Bolivia"
+  }
+}

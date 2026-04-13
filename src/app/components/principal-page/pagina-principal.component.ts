@@ -13,7 +13,6 @@ import { LanguageSwitchComponent } from '../language-switch/language-switch.comp
 })
 export class PaginaPrincipalComponent {
 
-  // He mantenido todas tus categorías para que el *ngFor del HTML no falle
   categorias = [
     { emoji: '🥟', nombre: 'Salteñas',          categoria: 'Típico boliviano', bg: 'bg1', slug: 'Salteñas' },
     { emoji: '🍖', nombre: 'Chicharrón',       categoria: 'Cocina boliviana', bg: 'bg2', slug: 'Chicharron' },
@@ -28,12 +27,10 @@ export class PaginaPrincipalComponent {
   ];
 
   constructor(private router: Router, private translate: TranslateService) {
-    // Esto asegura que al cargar la página se use el idioma guardado
     const savedLang = localStorage.getItem('userLang') || 'es';
     this.translate.use(savedLang);
   }
 
-  // Este método gestiona todas las rutas de la landing
   selectRole(role: string): void {
     switch (role) {
       case 'usuario':
@@ -48,7 +45,6 @@ export class PaginaPrincipalComponent {
         this.router.navigate(['/admin/login']);
         break;
 
-      // Importante: Coincide con el (click) del nuevo HTML de tu compañera
       case 'registroRestaurante':
         this.router.navigate(['/restaurant/register']);
         break;

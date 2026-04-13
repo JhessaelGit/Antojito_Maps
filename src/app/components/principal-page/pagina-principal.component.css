@@ -283,8 +283,6 @@
   .am-footer { flex-direction: column; gap: 8px; text-align: center; padding: 24px; }
 }
 
-/* ... (Todo tu CSS anterior aquí) ... */
-
 /* Ajuste para el contenedor de acciones en el Nav */
 .am-nav-actions {
   display: flex;
@@ -305,7 +303,7 @@
 }
 
 .am-nav-actions ::ng-deep .btn-lang {
-  color: #DACFBD !important; /* Color crema del Nav */
+  color: #DACFBD !important; 
   font-size: 12px !important;
 }
 

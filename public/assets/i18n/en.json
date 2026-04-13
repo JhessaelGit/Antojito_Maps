@@ -1,0 +1,43 @@
+{
+  "LANDING": {
+    "NAV_EXPLORE": "Explore map",
+    "NAV_HOW": "How it works?",
+    "NAV_BUSINESS": "For business",
+    "LOGIN_BTN": "Login",
+    "LOGIN_BTN2": "Access",
+    "HERO_TITLE": "All the flavors<br>of <span class='hl'>La Llajta</span><br>in one map",
+    "HERO_SUB": "From juicy salteñas to fresh sushi — find restaurants, discounts, and promotions near you in Cochabamba.",
+    "HERO_MAP_BTN": "View map",
+    "HERO_REG_BTN": "Register my business",
+    "STATS_BIZ": "Active businesses",
+    "STATS_ZONES": "Cbba Zones",
+    "STATS_FREE_NUM": "Free",
+    "STATS_FREE_LBL": "For eaters",
+    "FOOD": {
+      "SALTEÑA_TAG": "Typical from Cochabamba",
+      "BURGER_TAG": "Fast food",
+      "SUSHI_TAG": "Japanese",
+      "PIZZA_TAG": "Italian",
+      "CHICKEN_TAG": "Grill"
+    },
+    "STRIP_TITLE": "What treat are you looking for today?",
+    "STRIP_SUB": "Explore by category and discover the best places",
+    "HOW_TITLE": "As simple as ordering a salteña",
+    "HOW_SUB": "Three steps and you're eating",
+    "STEP1_TITLE": "Open the map",
+    "STEP1_DESC": "Visualize all active restaurants and businesses in Cochabamba.",
+    "STEP2_TITLE": "Choose your treat",
+    "STEP2_DESC": "Filter by food type, distance, or active promos.",
+    "STEP3_TITLE": "Let's eat!",
+    "STEP3_DESC": "Go directly to the place with the exact address and enjoy.",
+    "ROLES_TITLE": "How do you want to enter?",
+    "ROLES_SUB": "Choose your role and start now",
+    "ROLE_EATER": "Eater",
+    "ROLE_EATER_DESC": "Discover restaurants, promos, and the best treats near you. No registration, free.",
+    "ROLE_BIZ": "Business",
+    "ROLE_BIZ_DESC": "Post your menu, create promos, and bring more customers to your place.",
+    "ROLE_ADMIN": "Admin",
+    "ROLE_ADMIN_DESC": "Manage the platform and keep the map with the city's best food offers.",
+    "FOOTER_MADE": "Made with love in Cochabamba, Bolivia"
+  }
+}

@@ -2,12 +2,12 @@
 
   <nav class="am-nav">
     <div class="am-logo">Antojitos<span>Maps</span></div>
-    <div class="am-nav-links">
-      <a (click)="irAlMapa()">Explorar mapa</a>
-      <a href="#como-funciona">¿Cómo funciona?</a>
-      <a (click)="selectRole('restaurante')">Para negocios</a>
+    <div class="am-nav-actions" style="display: flex; align-items: center; gap: 1rem;">
+      <app-language-switch></app-language-switch>
+      <button class="am-nav-btn" (click)="selectRole('restaurante')">
+        {{ 'LANDING.LOGIN_BTN' | translate }}
+      </button>
     </div>
-    <button class="am-nav-btn" (click)="selectRole('restaurante')">Iniciar sesión</button>
   </nav>
 
   <section class="am-hero">
@@ -20,8 +20,8 @@
         <button class="am-btn-p" (click)="irAlMapa()">
           <i class="fas fa-map-marked-alt"></i> {{ 'LANDING.HERO_MAP_BTN' | translate }}
         </button>
-        <button class="am-btn-o" (click)="selectRole('restaurant/register')">
-          Registrar mi negocio
+        <button class="am-btn-o" (click)="selectRole('registroRestaurante')">
+          {{ 'LANDING.HERO_REG_BTN' | translate }}
         </button>
       </div>
 
@@ -118,17 +118,19 @@
         <div class="am-role-icon"><i class="fas fa-map-marked-alt"></i></div>
         <h3 class="am-role-h">{{ 'LANDING.ROLE_EATER' | translate }}</h3>
         <p class="am-role-p">{{ 'LANDING.ROLE_EATER_DESC' | translate }}</p>
+        <div class="am-role-link">{{ 'LANDING.NAV_EXPLORE' | translate }} <i class="fas fa-arrow-right"></i></div>
       </div>
       <div class="am-role-card r2" (click)="selectRole('restaurante')">
         <div class="am-role-icon"><i class="fas fa-store"></i></div>
-        <h3 class="am-role-h">Negocio</h3>
-        <p class="am-role-p">Publica tu menú, crea promociones y lleva más caseritos a tu local. Visible en todo Cbba.</p>
-        <div class="am-role-link">Registrar negocio <i class="fas fa-arrow-right"></i></div>
+        <h3 class="am-role-h">{{ 'LANDING.ROLE_BIZ' | translate }}</h3>
+        <p class="am-role-p">{{ 'LANDING.ROLE_BIZ_DESC' | translate }}</p>
+        <div class="am-role-link">{{ 'LANDING.LOGIN_BTN' | translate }} <i class="fas fa-arrow-right"></i></div>
       </div>
       <div class="am-role-card r3" (click)="selectRole('administrador')">
         <div class="am-role-icon"><i class="fas fa-clipboard-list"></i></div>
         <h3 class="am-role-h">{{ 'LANDING.ROLE_ADMIN' | translate }}</h3>
         <p class="am-role-p">{{ 'LANDING.ROLE_ADMIN_DESC' | translate }}</p>
+        <div class="am-role-link">{{ 'LANDING.LOGIN_BTN2' | translate }} <i class="fas fa-arrow-right"></i></div>
       </div>
     </div>
   </section>
