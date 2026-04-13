@@ -1,0 +1,88 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: var(--color-neutral);
+  font-family: var(--font-body);
+}
+
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.card {
+  background: var(--color-white);
+  padding: 2rem;
+  border-radius: 20px;
+  width: 420px;
+  box-shadow: 0 8px 32px rgba(2,51,45,0.1);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.header h2 {
+  font-family: var(--font-heading);
+  color: var(--color-secondary);
+  margin: 0;
+}
+
+.btn-add {
+  background: var(--color-secondary);
+  color: var(--color-white);
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-add:hover {
+  background: #011f1b;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid rgba(2,51,45,0.1);
+  border-radius: 10px;
+}
+
+.name {
+  color: var(--color-secondary);
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-icon.edit:hover {
+  color: var(--color-accent);
+}
+
+.btn-icon.delete:hover {
+  color: var(--color-primary);
+}

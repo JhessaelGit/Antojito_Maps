@@ -12,11 +12,16 @@ import { AdminLogin } from './components/admin-login/admin-login';
 import { AdminPageComponent } from './components/admin-page/admin-page';
 import { AdminRestaurantsComponent } from './components/admin-restaurants/admin-restaurants.component';
 import { AdminCreate } from './components/admin-create/admin-create';
+import { AdminEdit } from './components/admin-edit/admin-edit';
 
 export const routes: Routes = [
   {
     path: 'restaurant',
     component: RestaurantPage
+  },
+  {
+    path: 'admin/edit',
+    component: AdminEdit
   },
   {
     path: 'admin/login',
