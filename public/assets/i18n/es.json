@@ -39,5 +39,21 @@
     "ROLE_ADMIN": "Admin",
     "ROLE_ADMIN_DESC": "Gestiona la plataforma y mantén el mapa con la mejor oferta gastronómica.",
     "FOOTER_MADE": "Hecho con amor en Cochabamba, Bolivia"
+  },
+  "LOGIN": {
+    "BACK_BTN": "Volver",
+    "SIDE_TITLE": "Gestiona tu restaurante desde un solo lugar",
+    "SIDE_SUB": "Publica promociones, actualiza tu información y llega a más caseritos en Cochabamba.",
+    "FEATURE_1": "Crea y edita promociones",
+    "FEATURE_2": "Aparece en el mapa de la ciudad",
+    "FEATURE_3": "Gestiona tu información comercial",
+    "FORM_TITLE": "Acceso a Restaurantes",
+    "FORM_SUBTITLE": "Ingresa con tu cuenta de owner",
+    "LABEL_EMAIL": "Correo electrónico",
+    "LABEL_PASS": "Contraseña",
+    "PLACEHOLDER_PASS": "Tu contraseña",
+    "SUBMIT_BTN": "Iniciar sesión",
+    "DIVIDER": "¿No tienes cuenta?",
+    "REGISTER_BTN": "Registrar mi restaurante"
   }
 }

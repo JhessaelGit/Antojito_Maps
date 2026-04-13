@@ -39,5 +39,21 @@
     "ROLE_ADMIN": "Admin",
     "ROLE_ADMIN_DESC": "Manage the platform and keep the map with the city's best food offers.",
     "FOOTER_MADE": "Made with love in Cochabamba, Bolivia"
+  },
+  "LOGIN": {
+    "BACK_BTN": "Back",
+    "SIDE_TITLE": "Manage your restaurant from one place",
+    "SIDE_SUB": "Post promotions, update your info, and reach more customers in Cochabamba.",
+    "FEATURE_1": "Create and edit promotions",
+    "FEATURE_2": "Appear on the city map",
+    "FEATURE_3": "Manage your business information",
+    "FORM_TITLE": "Restaurant Access",
+    "FORM_SUBTITLE": "Login with your owner account",
+    "LABEL_EMAIL": "Email address",
+    "LABEL_PASS": "Password",
+    "PLACEHOLDER_PASS": "Your password",
+    "SUBMIT_BTN": "Login",
+    "DIVIDER": "Don't have an account?",
+    "REGISTER_BTN": "Register my restaurant"
   }
 }
