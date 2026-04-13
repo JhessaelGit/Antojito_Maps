@@ -1,17 +1,12 @@
 :host {
-  --color-red-phoenix: #7F1100;
-  --color-royal-green-qilin: #02332D;
-  --color-white-cream: #DACFBD;
-  --color-golden-days: #BF9861;
-
   display: block;
   height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-body);
 }
 
 .login-wrapper {
-  background-color: var(--color-white-cream);
-  color: var(--color-royal-green-qilin);
+  background-color: var(--color-neutral);
+  color: var(--color-secondary);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -28,14 +23,15 @@
 
 .app-header h1 {
   font-size: 3rem;
-  color: var(--color-red-phoenix);
+  color: var(--color-primary);
   font-weight: 900;
+  font-family: var(--font-heading);
 }
 
 /* Form container */
 .login-container {
-  background-color: #FFFFFF;
-  border: 3px solid var(--color-golden-days);
+  background-color: var(--color-white);
+  border: 3px solid var(--color-accent);
   border-radius: 12px;
   padding: 3rem;
   width: 100%;
@@ -48,6 +44,8 @@
   margin-bottom: 2rem;
   font-size: 1.8rem;
   font-weight: 800;
+  color: var(--color-secondary);
+  font-family: var(--font-heading);
 }
 
 .form-group {
@@ -58,6 +56,7 @@
   display: block;
   margin-bottom: 0.6rem;
   font-weight: 700;
+  color: var(--color-secondary);
 }
 
 .input-with-icon {
@@ -69,20 +68,22 @@
   top: 50%;
   left: 1.2rem;
   transform: translateY(-50%);
-  color: var(--color-golden-days);
+  color: var(--color-accent);
 }
 
 .input-with-icon input {
   width: 100%;
   padding: 1rem 3.5rem;
-  border: 2px solid var(--color-golden-days);
+  border: 2px solid var(--color-accent);
   border-radius: 8px;
   font-weight: 600;
+  background-color: var(--color-white);
+  color: var(--color-secondary);
 }
 
 .input-with-icon input:focus {
   outline: none;
-  border-color: var(--color-royal-green-qilin);
+  border-color: var(--color-secondary);
   box-shadow: 0 0 0 3px rgba(2, 51, 45, 0.15);
 }
 
@@ -93,7 +94,7 @@
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: var(--color-golden-days);
+  color: var(--color-accent);
 }
 
 /* Buttons */
@@ -108,11 +109,12 @@
   font-weight: bold;
   border: none;
   cursor: pointer;
+  font-family: var(--font-body);
 }
 
 .btn-primary {
-  background-color: var(--color-royal-green-qilin);
-  color: white;
+  background-color: var(--color-secondary);
+  color: var(--color-white);
 }
 
 .btn-primary:hover {
@@ -121,7 +123,7 @@
 
 /* Error */
 .error {
-  color: red;
+  color: var(--color-primary);
   font-size: 0.85rem;
   margin-top: 5px;
 }
