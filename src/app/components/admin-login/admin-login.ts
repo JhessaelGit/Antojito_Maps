@@ -25,28 +25,37 @@ export class AdminLogin {
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
 
-    this.logger.info('Toggle password visibility (admin)', {
-      visible: this.showPassword
+    this.logger.info('Toggle password admin', {
+      role: 'ADMIN',
+      action: 'TOGGLE_PASSWORD'
     });
   }
 
   login(form: NgForm) {
     if (form.invalid) return;
 
-    this.logger.info('Intento de login admin', {
-      correo: this.correo
+    this.logger.info('Intento login admin', {
+      email: this.correo,
+      role: 'ADMIN',
+      action: 'LOGIN_ATTEMPT'
     });
 
     const success = true;
 
     if (success) {
       this.logger.info('Login admin exitoso', {
-        correo: this.correo
+        email: this.correo,
+        role: 'ADMIN',
+        action: 'LOGIN_SUCCESS'
       });
 
-      this.router.navigate(['/restaurant']); // luego cambiarás a panel admin
+      this.router.navigate(['/restaurant']);
     } else {
-      this.logger.error('Login admin fallido');
+      this.logger.error('Login admin fallido', {
+        email: this.correo,
+        role: 'ADMIN',
+        action: 'LOGIN_ERROR'
+      });
     }
   }
 }
