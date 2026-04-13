@@ -1,0 +1,41 @@
+<div class="form-page">
+
+  <div class="form-card">
+
+    <h2 class="title">Agregar Administrador</h2>
+
+    <!-- FOTO -->
+    <div class="image-upload" (click)="fileInput.click()">
+      <input type="file" hidden #fileInput (change)="onFileSelected($event)">
+
+      <div *ngIf="!preview" class="placeholder">+</div>
+
+      <img *ngIf="preview" [src]="preview">
+    </div>
+    <div class="image-label">Subir imagen</div>
+    <!-- NOMBRE -->
+    <div class="field-group">
+      <input [(ngModel)]="nombre" placeholder="Nombre completo">
+      <div class="error" *ngIf="errorNombre">{{ errorNombre }}</div>
+    </div>
+
+    <!-- CORREO -->
+    <div class="field-group">
+      <input [(ngModel)]="correo" placeholder="Correo">
+      <div class="error" *ngIf="errorCorreo">{{ errorCorreo }}</div>
+    </div>
+
+    <!-- FUNCIONES -->
+    <div class="field-group">
+      <textarea [(ngModel)]="funciones" placeholder="Funciones"></textarea>
+      <div class="error" *ngIf="errorFunciones">{{ errorFunciones }}</div>
+    </div>
+
+    <!-- BOTÓN -->
+    <button class="btn-primary" (click)="agregar()">
+      Agregar
+    </button>
+
+  </div>
+
+</div>
