@@ -21,7 +21,10 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
   restaurantLat:      number | null = null;
   restaurantLng:      number | null = null;
 
-  // Vista activa del sidebar
+  get selectedPlan(): string {
+    return localStorage.getItem('selected_plan') || 'BASIC';
+  }
+
   vistaActiva: 'promos' | 'menu' | 'perfil' = 'promos';
 
   promociones: any[] = [
