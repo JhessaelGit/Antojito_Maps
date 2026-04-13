@@ -33,18 +33,30 @@
 .rr-logo span { color: var(--color-accent); }
 
 .rr-nav-back {
+  position: absolute;
+  top: 20px;
+  right: 20px;
   display: flex;
   align-items: center;
   gap: 6px;
-  color: rgba(218,207,189,0.65);
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(2,51,45,0.15);
+  border-radius: 10px;
+  color: var(--color-secondary);
   font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
   cursor: pointer;
-  background: none;
-  border: none;
   font-family: var(--font-body);
-  transition: color .2s;
+  transition: all 0.2s ease;
+  z-index: 10;
 }
-.rr-nav-back:hover { color: var(--color-neutral); }
+.rr-nav-back:hover { 
+  background: white;
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateX(-2px);
+}
 .rr-nav-back svg { width: 14px; height: 14px; flex-shrink: 0; }
 
 /* ─── LAYOUT PRINCIPAL ─────────────────────── */
