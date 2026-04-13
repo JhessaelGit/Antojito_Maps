@@ -196,3 +196,18 @@
   color: var(--color-primary);
   font-size: 12px;
 }
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .login-side-panel { display: none; }
+  .login-form-panel {
+    flex: 1;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-card { padding: 1.75rem 1.25rem; }
+  .btn-back { top: 12px; left: 12px; }
+  .form-title { font-size: 1.3rem; }
+}

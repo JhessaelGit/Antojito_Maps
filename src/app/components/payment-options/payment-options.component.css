@@ -1,72 +1,163 @@
 :host {
-  --color-red-phoenix: #7F1100;
-  --color-royal-green-qilin: #02332D;
-  --color-white-cream: #DACFBD;
-  --color-golden-days: #BF9861;
-
   display: block;
-  height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  font-family: var(--font-body);
 }
 
 .wrapper {
-  background-color: var(--color-white-cream);
-  height: 100%;
+  background: var(--color-neutral);
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 2rem 1rem;
 }
 
-.header h1 {
-  color: var(--color-red-phoenix);
-  font-size: 3rem;
+.header {
+  text-align: center;
   margin-bottom: 2rem;
 }
 
+.header h1 {
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 900;
+  margin: 0 0 8px;
+}
+
+.header p {
+  font-size: 14px;
+  color: rgba(2,51,45,0.55);
+  margin: 0;
+}
+
 .container {
-  background: white;
-  border: 3px solid var(--color-golden-days);
-  border-radius: 12px;
+  background: var(--color-white);
+  border: 2px solid var(--color-accent);
+  border-radius: 20px;
   padding: 2rem;
-  width: 600px;
+  width: 100%;
+  max-width: 640px;
+  box-shadow: 0 8px 32px rgba(2,51,45,0.1);
   text-align: center;
 }
 
+.container h2 {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  color: var(--color-secondary);
+  margin: 0 0 1.5rem;
+}
+
 .plans {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .plan-card {
-  border: 2px solid var(--color-golden-days);
-  border-radius: 10px;
-  padding: 1.5rem;
-  width: 200px;
+  border: 2px solid rgba(191,152,97,0.35);
+  border-radius: 14px;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.2s, transform 0.2s;
+  position: relative;
+}
+
+.plan-card:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-3px);
+}
+
+.plan-card.featured {
+  border-color: var(--color-accent);
+  background: rgba(191,152,97,0.05);
+}
+
+.plan-badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-accent);
+  color: var(--color-secondary);
+  font-size: 9px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .plan-card h3 {
-  color: var(--color-royal-green-qilin);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin: 0;
 }
 
 .price {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin: 1rem 0;
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.price span {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(2,51,45,0.45);
+}
+
+.plan-desc {
+  font-size: 11px;
+  color: rgba(2,51,45,0.5);
+  line-height: 1.5;
+  flex: 1;
 }
 
 .btn {
-  background-color: var(--color-royal-green-qilin);
-  color: white;
+  background: var(--color-secondary);
+  color: var(--color-white);
   border: none;
-  padding: 0.8rem;
+  padding: 10px;
   width: 100%;
-  border-radius: 6px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
+  font-family: var(--font-body);
+  transition: background 0.2s;
+  margin-top: auto;
 }
 
-.btn:hover {
-  background-color: #011f1b;
+.btn:hover { background: #011f1b; }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .plans {
+    grid-template-columns: 1fr;
+    max-width: 320px;
+    margin: 1rem auto 0;
+  }
+
+  .container {
+    padding: 1.5rem 1rem;
+    border-radius: 16px;
+  }
+
+  .plan-card { padding: 1.25rem 1rem; }
+}
+
+@media (max-width: 360px) {
+  .container { padding: 1.25rem 0.75rem; }
+  .header h1 { font-size: 1.6rem; }
 }
