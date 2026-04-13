@@ -344,26 +344,28 @@
 }
 
 ::ng-deep .marker-pin {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   border-radius: 50% 50% 50% 0;
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), #5f0d00);
   transform: rotate(-45deg);
-  border: 2.5px solid white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  border: 3px solid var(--color-neutral);
+  box-shadow: 0 4px 12px rgba(2,51,45,0.35), 0 0 0 2px rgba(191,152,97,0.45);
   position: relative;
-  transition: background 0.2s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 ::ng-deep .marker-inner {
   position: absolute;
-  inset: 5px;
-  background: white;
+  inset: 7px;
+  background: var(--color-accent);
+  border: 2px solid var(--color-secondary);
   border-radius: 50%;
 }
 
 ::ng-deep .custom-restaurant-marker:hover .marker-pin {
-  background: var(--color-accent);
+  transform: rotate(-45deg) scale(1.08);
+  box-shadow: 0 6px 16px rgba(2,51,45,0.45), 0 0 0 2px rgba(191,152,97,0.65);
 }
 
 /* ─── MARCADOR DE UBICACIÓN ────────────────── */
@@ -417,6 +419,82 @@
   margin: 0;
   line-height: 1;
   width: auto !important;
+}
+
+::ng-deep .restaurant-popup-card {
+  width: 268px;
+  background: var(--color-white);
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: var(--font-body);
+}
+
+::ng-deep .restaurant-popup-media {
+  position: relative;
+  height: 136px;
+  background: linear-gradient(135deg, rgba(127,17,0,0.85), rgba(2,51,45,0.9));
+}
+
+::ng-deep .restaurant-popup-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+::ng-deep .restaurant-popup-fallback {
+  display: none;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  background: linear-gradient(135deg, rgba(191,152,97,0.35), rgba(218,207,189,0.15));
+}
+
+::ng-deep .restaurant-popup-media.no-image .restaurant-popup-fallback,
+::ng-deep .restaurant-popup-fallback.only {
+  display: flex;
+}
+
+::ng-deep .restaurant-popup-body {
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  max-height: 195px;
+  overflow-y: auto;
+}
+
+::ng-deep .restaurant-popup-category {
+  display: inline-flex;
+  width: fit-content;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  background: rgba(191,152,97,0.24);
+  border: 1px solid rgba(191,152,97,0.45);
+  border-radius: 999px;
+  padding: 3px 8px;
+}
+
+::ng-deep .restaurant-popup-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-secondary);
+  line-height: 1.25;
+}
+
+::ng-deep .restaurant-popup-desc {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(2,51,45,0.8);
+  white-space: normal;
+  word-break: break-word;
 }
 
 ::ng-deep .custom-popup .leaflet-popup-tip-container {

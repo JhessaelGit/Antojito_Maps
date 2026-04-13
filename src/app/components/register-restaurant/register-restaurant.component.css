@@ -388,6 +388,25 @@
 }
 .rr-btn-primary i { font-size: 14px; }
 
+.rr-btn-primary:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.rr-btn-primary:disabled:hover {
+  background: var(--color-primary);
+  transform: none;
+}
+
+small.ok {
+  color: #1F7A3D;
+  font-size: 11px;
+  margin-top: 4px;
+  display: block;
+  text-align: center;
+}
+
 .rr-btn-outline {
   background: transparent;
   color: var(--color-primary);

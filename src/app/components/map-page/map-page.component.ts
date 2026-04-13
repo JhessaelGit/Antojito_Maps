@@ -1,9 +1,10 @@
-import { Component, OnInit, AfterViewInit, NgZone } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RestauranteService } from '../../core/services/restaurante.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Subject, finalize, takeUntil, timeout } from 'rxjs';
 import * as L from 'leaflet';
 
 @Component({
@@ -13,7 +14,7 @@ import * as L from 'leaflet';
   templateUrl: './map-page.html',
   styleUrls: ['./map-page.css']
 })
-export class MapPage implements OnInit, AfterViewInit {
+export class MapPage implements OnInit, AfterViewInit, OnDestroy {
 
   private map!: L.Map;
   private markersLayer = L.layerGroup();
@@ -37,35 +38,52 @@ export class MapPage implements OnInit, AfterViewInit {
   mostrarBienvenida: boolean = true;
   sinResultados: boolean = false;
   categoriaSinResultados: string = '';
-  cargando: boolean = false;
+  cargando: boolean = true;
   errorApi: boolean = false;
 
   private restaurantes: any[] = [];
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
     public router: Router,
-    private ngZone: NgZone,
     private restauranteService: RestauranteService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.categoriaSeleccionada = params['categoria'] || '';
-      if (this.map) {
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(params => {
+        this.categoriaSeleccionada = params['categoria'] || '';
         this.filtrarRestaurantes();
-      }
-    });
+        this.refreshView();
+      });
+
+    // Cargar datos en OnInit evita cambios de estado tardios en la primera deteccion.
+    this.cargarRestaurantes();
   }
 
   ngAfterViewInit(): void {
     this.initMap();
     this.obtenerUbicacion();
-    this.cargarRestaurantes();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    if (this.map) this.map.remove();
   }
 
   private initMap(): void {
+    if (this.map) this.map.remove();
+
+    const mapContainer = L.DomUtil.get('map') as (HTMLElement & { _leaflet_id?: number }) | null;
+    if (mapContainer?._leaflet_id) {
+      mapContainer._leaflet_id = undefined;
+    }
+
     this.map = L.map('map', {
       center: [-17.3935, -66.1568],
       zoom: 15,
@@ -110,21 +128,38 @@ export class MapPage implements OnInit, AfterViewInit {
     this.cargando = true;
     this.errorApi = false;
 
-    this.restauranteService.getRestaurantes().subscribe({
-      next: (data: any) => {
-        if (Array.isArray(data)) this.restaurantes = data;
-        else if (data?.data) this.restaurantes = data.data;
-        else this.restaurantes = [];
+    this.restauranteService
+      .getRestaurantes()
+      .pipe(
+        timeout(15000),
+        takeUntil(this.destroy$),
+        finalize(() => {
+          this.cargando = false;
+          this.refreshView();
+        })
+      )
+      .subscribe({
+        next: (data: any) => {
+          if (Array.isArray(data)) this.restaurantes = data;
+          else if (data?.data) this.restaurantes = data.data;
+          else this.restaurantes = [];
 
-        this.cargando = false;
-        this.filtrarRestaurantes();
-      },
-      error: (err) => {
-        console.error('Error:', err);
-        this.cargando = false;
-        this.errorApi = true;
-      }
-    });
+          this.filtrarRestaurantes();
+        },
+        error: (err) => {
+          console.error('Error:', err);
+          this.errorApi = true;
+          this.refreshView();
+        }
+      });
+  }
+
+  private refreshView(): void {
+    try {
+      this.cd.detectChanges();
+    } catch {
+      // No-op: si la vista ya fue destruida al navegar, evitamos romper flujo.
+    }
   }
 
   filtrarRestaurantes(): void {
@@ -147,13 +182,13 @@ export class MapPage implements OnInit, AfterViewInit {
     filtrados.forEach(r => {
       const lat = r.latitude ?? r.lat ?? r.latitud;
       const lng = r.longitude ?? r.lng ?? r.longitud;
-      if (!lat || !lng) return;
+      if (lat === null || lat === undefined || lng === null || lng === undefined) return;
 
       const icono = L.divIcon({
         className: 'custom-restaurant-marker',
         html: `<div class="marker-pin"><div class="marker-inner"></div></div>`,
-        iconSize: [28, 36],
-        iconAnchor: [14, 36]
+        iconSize: [36, 46],
+        iconAnchor: [18, 42]
       });
 
       // Traducciones para el Popup
@@ -161,26 +196,58 @@ export class MapPage implements OnInit, AfterViewInit {
       const nombre = r.name ?? r.nombre ?? 'Restaurante';
       const descripcion = r.description ?? r.descripcion ?? noDesc;
       const categoria = r.category ?? r.categoria ?? '';
-      const imagen = r.image_url ?? r.imageUrl ?? '';
+      const imagen = r.imagenUrl ?? r.image_url ?? r.imageUrl ?? r.imagen_url ?? '';
+      const popupHtml = this.buildPopupHtml(nombre, descripcion, categoria, imagen);
 
-      const imagenHtml = imagen 
-        ? `<img src="${imagen}" style="width:100%;height:110px;object-fit:cover;border-radius:10px 10px 0 0;display:block;">`
-        : `<div style="width:100%;height:70px;background:#f0ebe3;border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:center;font-size:32px;">🍽️</div>`;
-
-      const popupHtml = `
-        <div style="font-family:'Inter',sans-serif; width:210px; border-radius:10px; overflow:hidden; margin:-14px -20px -14px;">
-          ${imagenHtml}
-          <div style="padding:12px 14px 14px;">
-            <span style="font-size:10px;font-weight:700; color:#BF9861;text-transform:uppercase; letter-spacing:0.8px;">${categoria}</span>
-            <p style="margin:5px 0 5px;font-size:14px; font-weight:700;color:#02332D;line-height:1.2;">${nombre}</p>
-            <p style="margin:0 0 12px;font-size:12px; color:#666;line-height:1.4;">${descripcion}</p>
-          </div>
-        </div>
-      `;
-
-      const marker = L.marker([lat, lng], { icon: icono }).bindPopup(popupHtml, { maxWidth: 230, className: 'custom-popup' });
+      const marker = L.marker([lat, lng], { icon: icono }).bindPopup(popupHtml, { maxWidth: 290, className: 'custom-popup' });
       this.markersLayer.addLayer(marker);
     });
+  }
+
+  private buildPopupHtml(nombre: string, descripcion: string, categoria: string, imagen: string): string {
+    const safeNombre = this.escapeHtml(nombre || 'Restaurante');
+    const safeDescripcion = this.escapeHtml(descripcion || this.translate.instant('MAP.NO_DESC'));
+    const safeCategoria = this.escapeHtml(categoria || 'Sin categoria');
+
+    const safeImagen = this.escapeHtml(imagen || '');
+    const mediaHtml = safeImagen
+      ? `
+          <div class="restaurant-popup-media">
+            <img
+              class="restaurant-popup-image"
+              src="${safeImagen}"
+              alt="Foto de ${safeNombre}"
+              loading="lazy"
+              onerror="this.parentElement.classList.add('no-image'); this.remove();"
+            />
+                 <div class="restaurant-popup-fallback" aria-hidden="true">🍽️</div>
+          </div>
+        `
+      : `
+          <div class="restaurant-popup-media no-image">
+            <div class="restaurant-popup-fallback only" aria-hidden="true">🍽️</div>
+          </div>
+        `;
+
+    return `
+      <article class="restaurant-popup-card">
+        ${mediaHtml}
+        <div class="restaurant-popup-body">
+          <span class="restaurant-popup-category">${safeCategoria}</span>
+          <h3 class="restaurant-popup-title">${safeNombre}</h3>
+          <p class="restaurant-popup-desc">${safeDescripcion}</p>
+        </div>
+      </article>
+    `;
+  }
+
+  private escapeHtml(value: string): string {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   buscarRestaurante(texto: string): void {
