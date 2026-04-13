@@ -1,10 +1,9 @@
 .container {
   padding: 50px;
   min-height: 100vh;
-  background-color: var(--color-secondary);
+  background: var(--color-secondary);
   color: var(--color-neutral);
 }
-
 
 .header {
   display: flex;
@@ -12,17 +11,15 @@
   align-items: center;
 }
 
-
 .logo {
   font-family: var(--font-heading);
   font-size: 26px;
-  letter-spacing: 0.5px;
+  color: var(--color-neutral);
 }
 
 .logo span {
   color: var(--color-accent);
 }
-
 
 .btn-admin {
   background: transparent;
@@ -30,18 +27,15 @@
   color: var(--color-accent);
   padding: 8px 20px;
   border-radius: 999px;
-  font-size: 14px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
 .btn-admin:hover {
   background: var(--color-accent);
   color: var(--color-secondary);
-  box-shadow: 0 0 10px rgba(191, 152, 97, 0.4);
   transform: translateY(-2px);
 }
-
 
 .location {
   margin-top: 20px;
@@ -53,7 +47,6 @@
   font-size: 12px;
 }
 
-
 .title {
   margin-top: 30px;
 }
@@ -61,18 +54,13 @@
 .title h1 {
   font-family: var(--font-heading);
   font-size: 44px;
-  margin-bottom: 10px;
+  color: var(--color-neutral);
 }
-
 
 .subtexto {
-  font-family: var(--font-body);
   font-size: 16px;
-  color: var(--color-neutral);
-  opacity: 0.75;
-  line-height: 1.6;
+  color: #bfb6a8;
 }
-
 
 .grid {
   margin-top: 40px;
@@ -81,36 +69,31 @@
   gap: 30px;
 }
 
-
 .card {
+  position: relative;
   background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
-  padding: 25px;
+  color: var(--color-neutral);
+  padding: 20px;
   border-radius: var(--radius-lg);
   border: 1px solid rgba(255,255,255,0.1);
-  position: relative;
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
 .card:hover {
   transform: translateY(-6px);
   border: 1px solid var(--color-accent);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
-/* TITULO CARD */
 .card h3 {
   font-family: var(--font-heading);
   margin-bottom: 10px;
 }
 
-/* TEXTO CARD */
 .card p {
   font-size: 14px;
-  color: #d6cfc2;
+  color: #cfc6b8;
 }
 
-/* LOCK */
 .lock {
   position: absolute;
   right: 15px;
@@ -118,7 +101,6 @@
   font-size: 18px;
 }
 
-/* BOTÓN CARD */
 .card button {
   margin-top: 12px;
   background: var(--color-primary);
@@ -127,7 +109,7 @@
   padding: 8px 14px;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
 .card button:hover {
@@ -135,13 +117,16 @@
   transform: scale(1.05);
 }
 
-/* RESPONSIVE */
 @media (max-width: 768px) {
   .grid {
     grid-template-columns: 1fr;
   }
 
+  .container {
+    padding: 20px;
+  }
+
   .title h1 {
-    font-size: 32px;
+    font-size: 28px;
   }
 }

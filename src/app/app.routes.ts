@@ -12,6 +12,7 @@ import { AdminLogin } from './components/admin-login/admin-login';
 import { AdminPageComponent } from './components/admin-page/admin-page';
 import { AdminRestaurantsComponent } from './components/admin-restaurants/admin-restaurants.component';
 import { AdminCreate } from './components/admin-create/admin-create';
+import { AdminDeletedComponent } from './components/admin-deleted/admin-deleted.component';
 
 export const routes: Routes = [
   {
@@ -36,7 +37,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin/eliminados',
-    component: AdminPageComponent
+    component: AdminDeletedComponent
   },
   {
     path: 'admin/restaurants',

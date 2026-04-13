@@ -1,0 +1,34 @@
+<div class="container">
+
+  <div class="header">
+    <h2 class="logo">Antojitos<span>Maps</span></h2>
+    <button class="btn-back" (click)="volver()">
+  <span class="arrow">←</span>
+  <span>Volver</span>
+</button>
+  </div>
+
+  <div class="title">
+    <h1>Administradores eliminados</h1>
+    <p>Gestiona administradores eliminados</p>
+  </div>
+
+  <div class="list">
+
+    <div class="card" *ngFor="let admin of adminsEliminados">
+
+      <div class="info">
+        <h3>{{ admin.nombre }}</h3>
+        <p>{{ admin.email }}</p>
+        <span class="estado">Eliminado</span>
+      </div>
+
+      <div class="actions">
+        <button (click)="restaurar(admin)">Restaurar</button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
