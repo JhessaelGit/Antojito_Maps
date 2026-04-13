@@ -2,19 +2,22 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoggerService} from '../../core/services/logger.service';
+import { LoggerService } from '../../core/services/logger.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-restaurant-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    TranslateModule, 
+  ],
   templateUrl: './restaurant-login.component.html',
   styleUrls: ['./restaurant-login.component.css'],
 })
 export class RestaurantLoginComponent {
-
   showPassword = false;
-
   email: string = '';
   password: string = '';
 
@@ -25,35 +28,16 @@ export class RestaurantLoginComponent {
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
-
-    this.logger.info('Toggle password visibility', {
-      visible: this.showPassword
-    });
   }
 
   login() {
-
-    // no se guarda en backend
     this.logger.info('Intento de login');
-
-    const success = true;
-
-    if (success) {
-
-      // ✔ ahora usa el email real
-      this.logger.info('Login exitoso', {
-        email: this.email
-      });
-
-      this.router.navigate(['/restaurant']);
-    } else {
-      this.logger.error('Login fallido');
-    }
+    // Si el login es exitoso, navegamos al dashboard
+    // El idioma ya estará guardado en el localStorage gracias al Switch
+    this.router.navigate(['/restaurant']);
   }
 
   goToRegister() {
-    this.logger.info('Navegación a registro de restaurante');
-
     this.router.navigate(['/restaurant/register']);
   }
 }

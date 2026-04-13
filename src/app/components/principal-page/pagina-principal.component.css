@@ -282,3 +282,34 @@
   .am-stats { gap: 20px; }
   .am-footer { flex-direction: column; gap: 8px; text-align: center; padding: 24px; }
 }
+
+/* ... (Todo tu CSS anterior aquí) ... */
+
+/* Ajuste para el contenedor de acciones en el Nav */
+.am-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Estilo personalizado para el switch dentro de la página principal */
+.am-nav-actions ::ng-deep .lang-container {
+  position: relative !important;
+  top: 0 !important;
+  right: 0 !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(218, 207, 189, 0.2) !important;
+  box-shadow: none !important;
+  padding: 6px 12px !important;
+  z-index: 10 !important;
+}
+
+.am-nav-actions ::ng-deep .btn-lang {
+  color: #DACFBD !important; /* Color crema del Nav */
+  font-size: 12px !important;
+}
+
+.am-nav-actions ::ng-deep .btn-lang.active {
+  color: var(--color-accent) !important;
+  opacity: 1 !important;
+}
