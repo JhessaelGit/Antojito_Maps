@@ -1,6 +1,5 @@
 <div class="rr-page">
 
-  <!-- NAV -->
   <nav class="rr-nav">
     <div class="rr-logo">Antojitos<span>Maps</span></div>
     <button class="rr-nav-back" type="button" (click)="goToLogin()">
@@ -9,81 +8,73 @@
         <line x1="19" y1="12" x2="5" y2="12"/>
         <polyline points="12 19 5 12 12 5"/>
       </svg>
-      Volver al login
+      {{ 'REGISTER.NAV_BACK' | translate }}
     </button>
   </nav>
 
   <div class="rr-body">
 
-    <!-- PANEL IZQUIERDO -->
     <aside class="rr-left">
-
-      <div class="rr-left-title">
-        Registra tu<br><span class="hl">negocio</span><br>en La Llajta
-      </div>
+      <div class="rr-left-title" [innerHTML]="'REGISTER.SIDE_TITLE' | translate">
+        </div>
       <p class="rr-left-sub">
-        Únete a la plataforma gastronómica de Cochabamba y lleva más caseritos a tu local.
+        {{ 'REGISTER.SIDE_SUB' | translate }}
       </p>
 
       <div class="rr-step">
         <div class="rr-step-num">1</div>
         <div>
-          <div class="rr-step-title">Datos del negocio</div>
-          <div class="rr-step-desc">Nombre, categoría, descripción y credenciales</div>
+          <div class="rr-step-title">{{ 'REGISTER.STEP1_TITLE' | translate }}</div>
+          <div class="rr-step-desc">{{ 'REGISTER.STEP1_DESC' | translate }}</div>
         </div>
       </div>
       <div class="rr-step">
         <div class="rr-step-num">2</div>
         <div>
-          <div class="rr-step-title">Foto del restaurante</div>
-          <div class="rr-step-desc">Sube una imagen atractiva que verán tus clientes</div>
+          <div class="rr-step-title">{{ 'REGISTER.STEP2_TITLE' | translate }}</div>
+          <div class="rr-step-desc">{{ 'REGISTER.STEP2_DESC' | translate }}</div>
         </div>
       </div>
       <div class="rr-step">
         <div class="rr-step-num">3</div>
         <div>
-          <div class="rr-step-title">Ubicación en el mapa</div>
-          <div class="rr-step-desc">Coloca un pin para obtener latitud y longitud exactas</div>
+          <div class="rr-step-title">{{ 'REGISTER.STEP3_TITLE' | translate }}</div>
+          <div class="rr-step-desc">{{ 'REGISTER.STEP3_DESC' | translate }}</div>
         </div>
       </div>
       <div class="rr-step">
         <div class="rr-step-num">4</div>
         <div>
-          <div class="rr-step-title">Elige tu plan</div>
-          <div class="rr-step-desc">Básico, Premium o Pro según tu negocio</div>
+          <div class="rr-step-title">{{ 'REGISTER.STEP4_TITLE' | translate }}</div>
+          <div class="rr-step-desc">{{ 'REGISTER.STEP4_DESC' | translate }}</div>
         </div>
       </div>
     </aside>
 
-    <!-- Pills de pasos visibles solo en móvil -->
     <div class="rr-steps-mobile" style="display:none">
-      <span style="background:rgba(191,152,97,0.2);color:#BF9861;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700">1. Datos</span>
-      <span style="background:rgba(191,152,97,0.2);color:#BF9861;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700">2. Foto</span>
-      <span style="background:rgba(191,152,97,0.2);color:#BF9861;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700">3. Mapa</span>
-      <span style="background:rgba(191,152,97,0.2);color:#BF9861;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700">4. Plan</span>
+      <span class="mobile-step">1. {{ 'REGISTER.STEP1_TITLE' | translate }}</span>
+      <span class="mobile-step">2. {{ 'REGISTER.STEP2_TITLE' | translate }}</span>
     </div>
 
-    <!-- PANEL DERECHO: FORMULARIO -->
     <div class="rr-right">
       <div class="rr-form-card">
-        <h2 class="rr-form-title">Crear cuenta</h2>
-        <p class="rr-form-sub">Todos los campos son obligatorios</p>
+        <h2 class="rr-form-title">{{ 'REGISTER.FORM_TITLE' | translate }}</h2>
+        <p class="rr-form-sub">{{ 'REGISTER.FORM_SUB' | translate }}</p>
 
         <form (ngSubmit)="register()">
 
-          <!-- ── DATOS DEL NEGOCIO ────────────────────── -->
           <div class="rr-divider">
             <div class="rr-divider-line"></div>
-            <span class="rr-divider-txt">Datos del negocio</span>
+            <span class="rr-divider-txt">{{ 'REGISTER.STEP1_TITLE' | translate }}</span>
             <div class="rr-divider-line"></div>
           </div>
 
           <div class="fg">
-            <label>Nombre del restaurante</label>
+            <label>{{ 'REGISTER.LBL_NAME' | translate }}</label>
             <div class="input-wrap">
               <i class="fas fa-store inp-icon"></i>
               <input type="text" [(ngModel)]="name" name="name"
-                     placeholder="Ej. Salteñería El Tío"
+                     [placeholder]="'REGISTER.PLACEHOLDER_NAME' | translate"
                      [class.is-error]="errorName">
             </div>
             <small class="err" *ngIf="errorName">{{ errorName }}</small>
@@ -91,37 +82,37 @@
 
           <div class="rr-row">
             <div class="fg">
-              <label>Categoría</label>
+              <label>{{ 'REGISTER.LBL_CAT' | translate }}</label>
               <select [(ngModel)]="category" name="category"
                       [class.is-error]="errorCategory">
-                <option value="">Seleccionar...</option>
-                <option value="Comida Típica">Comida Típica</option>
-                <option value="Sushi">Sushi</option>
-                <option value="Pizzería">Pizzería</option>
-                <option value="Fast Food">Fast Food</option>
-                <option value="Parrilla">Parrilla</option>
-                <option value="Cafetería">Cafetería</option>
-                <option value="Otro">Otro</option>
+                <option value="">{{ 'REGISTER.ERR_CAT' | translate }}</option>
+                <option value="Salteñas">{{ 'CATEGORIES.SALTEÑAS' | translate }}</option>
+                <option value="Chicharron">{{ 'CATEGORIES.CHICHARRON' | translate }}</option>
+                <option value="Sushi">{{ 'CATEGORIES.SUSHI' | translate }}</option>
+                <option value="Comida Tipica">{{ 'CATEGORIES.TYPICAL' | translate }}</option>
+                <option value="Pizzeria">{{ 'CATEGORIES.PIZZA' | translate }}</option>
+                <option value="Hamburguesas">{{ 'CATEGORIES.BURGERS' | translate }}</option>
+                <option value="Tacos">{{ 'CATEGORIES.TACOS' | translate }}</option>
+                <option value="Parrilla">{{ 'CATEGORIES.GRILL' | translate }}</option>
               </select>
               <small class="err" *ngIf="errorCategory">{{ errorCategory }}</small>
             </div>
             <div class="fg">
-              <label>Teléfono</label>
+              <label>{{ 'REGISTER.LBL_PHONE' | translate }}</label>
               <div class="input-wrap">
                 <i class="fas fa-phone inp-icon"></i>
                 <input type="tel" [(ngModel)]="phone" name="phone"
-                       placeholder="Ej. 76543210">
+                       placeholder="76543210">
               </div>
             </div>
           </div>
 
           <div class="fg">
-            <label>Descripción</label>
+            <label>{{ 'REGISTER.LBL_DESC' | translate }}</label>
             <textarea rows="3" [(ngModel)]="description" name="description"
-                      placeholder="Describe brevemente tu negocio y especialidad..."></textarea>
+                      [placeholder]="'REGISTER.PLACEHOLDER_DESC' | translate"></textarea>
           </div>
 
-          <!-- ── ACCESO ───────────────────────────────── -->
           <div class="rr-divider">
             <div class="rr-divider-line"></div>
             <span class="rr-divider-txt">Acceso</span>
@@ -129,7 +120,7 @@
           </div>
 
           <div class="fg">
-            <label>Correo electrónico</label>
+            <label>{{ 'REGISTER.LBL_EMAIL' | translate }}</label>
             <div class="input-wrap">
               <i class="fas fa-envelope inp-icon"></i>
               <input type="email" [(ngModel)]="email" name="email"
@@ -140,12 +131,12 @@
           </div>
 
           <div class="fg">
-            <label>Contraseña</label>
+            <label>{{ 'REGISTER.LBL_PASS' | translate }}</label>
             <div class="input-wrap">
               <i class="fas fa-lock inp-icon"></i>
               <input [type]="showPassword ? 'text' : 'password'"
                      [(ngModel)]="password" name="password"
-                     placeholder="Mínimo 6 caracteres"
+                     [placeholder]="'REGISTER.ERR_PASS' | translate"
                      class="has-eye" [class.is-error]="errorPassword">
               <button type="button" class="btn-eye"
                       (click)="togglePasswordVisibility()">
@@ -155,10 +146,9 @@
             <small class="err" *ngIf="errorPassword">{{ errorPassword }}</small>
           </div>
 
-          <!-- ── FOTO ────────────────────────────────── -->
           <div class="rr-divider">
             <div class="rr-divider-line"></div>
-            <span class="rr-divider-txt">Foto del restaurante</span>
+            <span class="rr-divider-txt">{{ 'REGISTER.STEP2_TITLE' | translate }}</span>
             <div class="rr-divider-line"></div>
           </div>
 
@@ -171,8 +161,8 @@
               <div class="rr-upload-icon">
                 <i class="fas fa-camera"></i>
               </div>
-              <div class="rr-upload-txt">Haz clic o arrastra una foto aquí</div>
-              <div class="rr-upload-sub">JPG, PNG o WEBP · Máx. 5MB</div>
+              <div class="rr-upload-txt">{{ 'REGISTER.UPLOAD_TXT' | translate }}</div>
+              <div class="rr-upload-sub">{{ 'REGISTER.UPLOAD_SUB' | translate }}</div>
             </div>
             <div class="rr-upload-preview" *ngIf="imagePreview">
               <img [src]="imagePreview" alt="Preview restaurante">
@@ -186,19 +176,17 @@
                  style="display:none" (change)="onFileSelected($event)">
           <small class="err" *ngIf="errorImage">{{ errorImage }}</small>
 
-          <!-- ── UBICACIÓN ───────────────────────────── -->
           <div class="rr-divider">
             <div class="rr-divider-line"></div>
-            <span class="rr-divider-txt">Ubicación en el mapa</span>
+            <span class="rr-divider-txt">{{ 'REGISTER.STEP3_TITLE' | translate }}</span>
             <div class="rr-divider-line"></div>
           </div>
 
-          <!-- El mapa Leaflet se monta aquí -->
           <div class="rr-map-container">
             <div id="register-map" class="rr-map"></div>
             <div class="rr-map-hint-bar">
               <i class="fas fa-info-circle"></i>
-              Haz clic en el mapa para colocar el pin de tu negocio
+              {{ 'REGISTER.MAP_HINT' | translate }}
             </div>
           </div>
 
@@ -224,14 +212,13 @@
           </div>
           <small class="err" *ngIf="errorLocation">{{ errorLocation }}</small>
 
-          <!-- ── BOTONES ──────────────────────────────── -->
           <div class="rr-btns">
             <button type="submit" class="rr-btn-primary">
               <i class="fas fa-check-circle"></i>
-              Crear cuenta y continuar
+              {{ 'REGISTER.BTN_CREATE' | translate }}
             </button>
             <button type="button" class="rr-btn-outline" (click)="goToLogin()">
-              Ya tengo cuenta — Iniciar sesión
+              {{ 'REGISTER.BTN_HAS_ACCOUNT' | translate }}
             </button>
           </div>
 

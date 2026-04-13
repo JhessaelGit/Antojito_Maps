@@ -5,27 +5,27 @@
   </div>
 
   <div class="container">
-    <h2>Opciones de Pago</h2>
+    <h2>{{ 'PAYMENTS.TITLE' | translate }}</h2>
 
     <div class="plans">
 
       <div class="plan-card">
-        <h3>Plan Mensual</h3>
-        <p>Publica promociones</p>
-        <p class="price">99 Bs</p>
+        <h3>{{ 'PAYMENTS.MONTHLY_PLAN' | translate }}</h3>
+        <p>{{ 'PAYMENTS.PROMO_TEXT' | translate }}</p>
+        <p class="price">99 {{ 'PAYMENTS.CURRENCY' | translate }}</p>
 
         <button (click)="seleccionar('mensual')" class="btn">
-          Seleccionar
+          {{ 'PAYMENTS.SELECT_BTN' | translate }}
         </button>
       </div>
 
       <div class="plan-card">
-        <h3>Plan Anual</h3>
-        <p>Mayor visibilidad</p>
-        <p class="price">1000 Bs</p>
+        <h3>{{ 'PAYMENTS.ANNUAL_PLAN' | translate }}</h3>
+        <p>{{ 'PAYMENTS.VISIBILITY_TEXT' | translate }}</p>
+        <p class="price">1000 {{ 'PAYMENTS.CURRENCY' | translate }}</p>
 
         <button (click)="seleccionar('anual')" class="btn">
-          Seleccionar
+          {{ 'PAYMENTS.SELECT_BTN' | translate }}
         </button>
       </div>
 
