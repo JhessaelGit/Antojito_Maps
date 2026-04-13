@@ -1,73 +1,120 @@
-<div class="login-wrapper">
-  
-  <div class="app-header">
-    <h1>Antojitos Maps</h1>
+<div class="login-page">
+
+  <!-- Botón volver -->
+  <button class="btn-back" (click)="router.navigate(['/inicio'])">
+    ← Volver
+  </button>
+
+  <!-- Panel izquierdo -->
+  <div class="login-side-panel">
+    <div class="side-content">
+      <div class="side-logo">Antojitos<span>Maps</span></div>
+
+      <h2 class="side-title">
+        Panel de administración
+      </h2>
+
+      <p class="side-sub">
+        Gestiona restaurantes, usuarios y el contenido de la plataforma.
+      </p>
+
+      <div class="side-features">
+        <div class="feature-item">
+          <span class="feature-dot"></span>
+          Control total del sistema
+        </div>
+        <div class="feature-item">
+          <span class="feature-dot"></span>
+          Gestión de restaurantes
+        </div>
+        <div class="feature-item">
+          <span class="feature-dot"></span>
+          Monitoreo de actividad
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="login-container">
-    <form class="login-form" #form="ngForm">
+  <!-- Panel derecho -->
+  <div class="login-form-panel">
+    <div class="form-card">
 
-      <h2>Administrador</h2>
-
-      <!-- Correo -->
-      <div class="form-group">
-        <label for="correo">Correo</label>
-        <div class="input-with-icon">
-          <i class="fas fa-user input-icon"></i>
-
-          <input 
-            type="email"
-            id="correo"
-            name="correo"
-            [(ngModel)]="correo"
-            placeholder="Ingresa tu correo"
-            required
-          />
-        </div>
-
-        <div *ngIf="form.submitted && !correo" class="error">
-          El correo no puede estar vacío
-        </div>
-
-        <div *ngIf="correo && !correo.includes('@')" class="error">
-          El correo debe contener "@"
-        </div>
+      <div class="form-header">
+        <h1 class="form-title">Administrador</h1>
+        <p class="form-subtitle">
+          Accede al panel de control
+        </p>
       </div>
 
-      <!-- Contraseña -->
-      <div class="form-group">
-        <label for="password">Contraseña</label>
+      <form class="form-body" #form="ngForm">
 
-        <div class="input-with-icon">
-          <i class="fas fa-lock input-icon"></i>
+        <!-- EMAIL -->
+        <div class="field-group">
+          <label class="field-label">Correo</label>
 
-          <input 
-            [type]="showPassword ? 'text' : 'password'"
-            id="password"
-            name="password"
-            [(ngModel)]="password"
-            placeholder="Ingresa tu contraseña"
-            required
-          />
+          <div class="field-input-wrap">
+            <span class="field-icon">@</span>
 
-          <i 
-            class="fas toggle-password-icon"
-            [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"
-            (click)="togglePasswordVisibility()">
-          </i>
+            <input
+              type="email"
+              [(ngModel)]="correo"
+              name="correo"
+              class="field-input"
+              placeholder="admin@antojitosmaps.com"
+              required>
+          </div>
+
+          <div *ngIf="form.submitted && !correo" class="error">
+            El correo no puede estar vacío
+          </div>
+
+          <div *ngIf="correo && !correo.includes('@')" class="error">
+            El correo debe contener "@"
+          </div>
         </div>
 
-        <div *ngIf="form.submitted && !password" class="error">
-          La contraseña no puede estar vacía
-        </div>
-      </div>
+        <!-- PASSWORD -->
+        <div class="field-group">
+          <label class="field-label">Contraseña</label>
 
-      <div class="button-group">
-        <button type="button" class="btn btn-primary" (click)="login(form)">
-          Iniciar Sesión
+          <div class="field-input-wrap">
+
+            <span class="field-icon">🔒</span>
+
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              [(ngModel)]="password"
+              name="password"
+              class="field-input"
+              placeholder="Ingresa tu contraseña"
+              required>
+
+            <button type="button" class="toggle-pwd" (click)="togglePasswordVisibility()">
+              <span *ngIf="!showPassword">👁</span>
+              <span *ngIf="showPassword">🙈</span>
+            </button>
+
+          </div>
+
+          <div *ngIf="form.submitted && !password" class="error">
+            La contraseña no puede estar vacía
+          </div>
+        </div>
+
+        <!-- BOTÓN LOGIN -->
+        <button type="button" class="btn-login" (click)="login(form)">
+          <span *ngIf="!cargando">Iniciar sesión</span>
+          <span *ngIf="cargando">Cargando...</span>
         </button>
-      </div>
 
-    </form>
+        <!-- ERROR -->
+        <div *ngIf="errorMsg" class="error">
+          {{ errorMsg }}
+        </div>
+
+      </form>
+
+    </div>
   </div>
+
 </div>

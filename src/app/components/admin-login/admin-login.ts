@@ -17,8 +17,11 @@ export class AdminLogin {
   password: string = '';
   showPassword = false;
 
+  errorMsg: string = '';
+  cargando: boolean = false;
+
   constructor(
-    private router: Router,
+    public router: Router,
     private logger: LoggerService
   ) {}
 
@@ -27,12 +30,16 @@ export class AdminLogin {
 
     this.logger.info('Toggle password admin', {
       role: 'ADMIN',
-      action: 'TOGGLE_PASSWORD'
+      action: 'TOGGLE_PASSWORD',
+      email: this.correo
     });
   }
 
   login(form: NgForm) {
+
     if (form.invalid) return;
+
+    this.cargando = true;
 
     this.logger.info('Intento login admin', {
       email: this.correo,
@@ -40,22 +47,34 @@ export class AdminLogin {
       action: 'LOGIN_ATTEMPT'
     });
 
+    // simulación (igual que antes, pero estructurado)
     const success = true;
 
-    if (success) {
-      this.logger.info('Login admin exitoso', {
-        email: this.correo,
-        role: 'ADMIN',
-        action: 'LOGIN_SUCCESS'
-      });
+    setTimeout(() => {
 
-      this.router.navigate(['/restaurant']);
-    } else {
-      this.logger.error('Login admin fallido', {
-        email: this.correo,
-        role: 'ADMIN',
-        action: 'LOGIN_ERROR'
-      });
-    }
+      this.cargando = false;
+
+      if (success) {
+
+        this.logger.info('Login admin exitoso', {
+          email: this.correo,
+          role: 'ADMIN',
+          action: 'LOGIN_SUCCESS'
+        });
+
+        this.router.navigate(['/restaurant']);
+
+      } else {
+
+        this.logger.error('Login admin fallido', {
+          email: this.correo,
+          role: 'ADMIN',
+          action: 'LOGIN_ERROR'
+        });
+
+        this.errorMsg = 'Credenciales incorrectas';
+      }
+
+    }, 800); // simula llamada async
   }
 }
