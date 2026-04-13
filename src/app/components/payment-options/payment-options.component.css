@@ -4,160 +4,269 @@
   font-family: var(--font-body);
 }
 
-.wrapper {
-  background: var(--color-neutral);
+.po-page {
+  background: var(--color-secondary);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.header h1 {
-  color: var(--color-primary);
-  font-family: var(--font-heading);
-  font-size: clamp(1.8rem, 4vw, 3rem);
-  font-weight: 900;
-  margin: 0 0 8px;
-}
-
-.header p {
-  font-size: 14px;
-  color: rgba(2,51,45,0.55);
-  margin: 0;
-}
-
-.container {
-  background: var(--color-white);
-  border: 2px solid var(--color-accent);
-  border-radius: 20px;
-  padding: 2rem;
-  width: 100%;
-  max-width: 640px;
-  box-shadow: 0 8px 32px rgba(2,51,45,0.1);
-  text-align: center;
-}
-
-.container h2 {
-  font-family: var(--font-heading);
-  font-size: 1.2rem;
-  color: var(--color-secondary);
-  margin: 0 0 1.5rem;
-}
-
-.plans {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.plan-card {
-  border: 2px solid rgba(191,152,97,0.35);
-  border-radius: 14px;
-  padding: 1.5rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  transition: border-color 0.2s, transform 0.2s;
+  padding: 2.5rem 1.5rem 3rem;
   position: relative;
 }
 
-.plan-card:hover {
-  border-color: var(--color-accent);
-  transform: translateY(-3px);
-}
-
-.plan-card.featured {
-  border-color: var(--color-accent);
-  background: rgba(191,152,97,0.05);
-}
-
-.plan-badge {
+/* ── Botón volver ── */
+.btn-back {
   position: absolute;
-  top: -10px;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(191,152,97,0.3);
+  border-radius: 10px;
+  color: var(--color-neutral);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.btn-back:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: rgba(191,152,97,0.1);
+}
+
+/* ── Header ── */
+.po-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  margin-top: 2rem;
+}
+
+.po-logo {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--color-neutral);
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.3px;
+}
+
+.po-logo span { color: var(--color-accent); }
+
+.po-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 900;
+  color: var(--color-neutral);
+  margin: 0 0 10px;
+  line-height: 1.1;
+}
+
+.po-sub {
+  font-size: 14px;
+  color: rgba(218,207,189,0.55);
+  margin: 0;
+}
+
+/* ── Grid de planes ── */
+.po-plans {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 860px;
+  align-items: start;
+}
+
+/* ── Card de plan ── */
+.po-plan-card {
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(218,207,189,0.1);
+  border-radius: 18px;
+  padding: 1.75rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.po-plan-card:hover {
+  border-color: rgba(191,152,97,0.4);
+  transform: translateY(-4px);
+}
+
+.po-plan-featured {
+  background: var(--color-white);
+  border-color: var(--color-accent);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.25);
+}
+
+.po-plan-featured:hover {
+  transform: translateY(-12px);
+}
+
+/* ── Badge ── */
+.po-plan-badge {
+  position: absolute;
+  top: -12px;
   left: 50%;
   transform: translateX(-50%);
   background: var(--color-accent);
   color: var(--color-secondary);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
-  padding: 3px 10px;
+  padding: 4px 14px;
   border-radius: 100px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   white-space: nowrap;
 }
 
-.plan-card h3 {
+/* ── Contenido del plan ── */
+.po-plan-top {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.po-plan-nombre {
   font-family: var(--font-heading);
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 700;
+  color: var(--color-neutral);
+  margin: 0;
+}
+
+.po-plan-featured .po-plan-nombre {
   color: var(--color-secondary);
-  margin: 0;
 }
 
-.price {
+.po-plan-precio {
   font-family: var(--font-heading);
-  font-size: 1.6rem;
+  font-size: 2rem;
   font-weight: 900;
+  color: var(--color-accent);
+  line-height: 1;
+}
+
+.po-plan-featured .po-plan-precio {
   color: var(--color-primary);
+}
+
+.po-plan-desc {
+  font-size: 12px;
+  color: rgba(218,207,189,0.5);
+  line-height: 1.5;
   margin: 0;
 }
 
-.price span {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: rgba(2,51,45,0.45);
+.po-plan-featured .po-plan-desc {
+  color: rgba(2,51,45,0.55);
 }
 
-.plan-desc {
-  font-size: 11px;
-  color: rgba(2,51,45,0.5);
-  line-height: 1.5;
+/* ── Lista de features ── */
+.po-plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   flex: 1;
 }
 
-.btn {
-  background: var(--color-secondary);
-  color: var(--color-white);
-  border: none;
-  padding: 10px;
+.po-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(218,207,189,0.7);
+}
+
+.po-feature-item svg {
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.po-plan-featured .po-feature-item {
+  color: rgba(2,51,45,0.7);
+}
+
+.po-plan-featured .po-feature-item svg {
+  color: var(--color-secondary);
+}
+
+/* ── Botón ── */
+.po-btn {
   width: 100%;
-  border-radius: 10px;
+  padding: 12px;
+  background: rgba(255,255,255,0.08);
+  color: var(--color-neutral);
+  border: 1.5px solid rgba(218,207,189,0.2);
+  border-radius: 12px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   font-family: var(--font-body);
-  transition: background 0.2s;
+  transition: all 0.2s;
   margin-top: auto;
 }
 
-.btn:hover { background: #011f1b; }
-
-/* ── Responsive ── */
-@media (max-width: 600px) {
-  .plans {
-    grid-template-columns: 1fr;
-    max-width: 320px;
-    margin: 1rem auto 0;
-  }
-
-  .container {
-    padding: 1.5rem 1rem;
-    border-radius: 16px;
-  }
-
-  .plan-card { padding: 1.25rem 1rem; }
+.po-btn:hover {
+  background: rgba(255,255,255,0.14);
+  border-color: rgba(218,207,189,0.4);
 }
 
-@media (max-width: 360px) {
-  .container { padding: 1.25rem 0.75rem; }
-  .header h1 { font-size: 1.6rem; }
+.po-btn-featured {
+  background: var(--color-secondary);
+  color: var(--color-white);
+  border-color: var(--color-secondary);
+}
+
+.po-btn-featured:hover {
+  background: #011f1b;
+  border-color: #011f1b;
+  box-shadow: 0 4px 14px rgba(2,51,45,0.3);
+}
+
+/* ── Nota al pie ── */
+.po-footer-note {
+  font-size: 12px;
+  color: rgba(218,207,189,0.3);
+  margin-top: 2rem;
+  text-align: center;
+  max-width: 400px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 760px) {
+  .po-plans {
+    grid-template-columns: 1fr;
+    max-width: 360px;
+  }
+
+  .po-plan-featured {
+    transform: none;
+    order: -1;
+  }
+
+  .po-plan-featured:hover {
+    transform: translateY(-4px);
+  }
+
+  .po-page { padding: 2rem 1rem 3rem; }
+}
+
+@media (max-width: 400px) {
+  .po-title { font-size: 1.6rem; }
+  .btn-back span { display: none; }
+  .btn-back { padding: 8px 10px; }
 }

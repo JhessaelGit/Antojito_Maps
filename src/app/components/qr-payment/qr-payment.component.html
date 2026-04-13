@@ -1,25 +1,84 @@
-<div class="wrapper">
+<div class="qr-page">
 
-  <div class="header">
-    <h1>Antojitos<span>Maps</span></h1>
-  </div>
+  <!-- Botón volver -->
+  <button class="btn-back" (click)="volver()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2.5"
+      stroke-linecap="round" stroke-linejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12"/>
+      <polyline points="12 19 5 12 12 5"/>
+    </svg>
+    Volver
+  </button>
 
-  <div class="container">
-    <h2>{{ 'PAYMENTS.TITLE_QR' | translate }}</h2>
+  <div class="qr-card">
 
-    <div class="qr-box">
-      <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PagoAntojitos_' + (plan || 'General')" 
-           [alt]="'PAYMENTS.QR_ALT' | translate">
+    <!-- Logo -->
+    <div class="qr-logo">Antojitos<span>Maps</span></div>
+
+    <!-- Plan seleccionado -->
+    <div class="qr-plan-pill">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      Plan {{ plan }} · {{ precio }}
     </div>
 
-    <div class="plan-info" *ngIf="plan">
-      <p><strong>{{ 'PAYMENTS.SELECTED_PLAN' | translate }}:</strong> {{ plan }}</p>
+    <!-- Título -->
+    <h1 class="qr-title">Completa tu pago</h1>
+    <p class="qr-sub">Escanea el código QR con tu aplicación de pagos para activar tu cuenta.</p>
+
+    <!-- QR -->
+    <div class="qr-image-wrap">
+      <img [src]="qrUrl" alt="Código QR de pago" class="qr-image">
+      <div class="qr-corner qr-tl"></div>
+      <div class="qr-corner qr-tr"></div>
+      <div class="qr-corner qr-bl"></div>
+      <div class="qr-corner qr-br"></div>
     </div>
 
-    <button class="btn" (click)="pagoRealizado()">
-      <i class="fas fa-check"></i>
-      {{ 'PAYMENTS.BTN_CONFIRM' | translate }}
+    <!-- Instrucción -->
+    <div class="qr-steps">
+      <div class="qr-step-item">
+        <span class="qr-step-num">1</span>
+        <span>Abre tu app de pagos</span>
+      </div>
+      <div class="qr-step-sep">→</div>
+      <div class="qr-step-item">
+        <span class="qr-step-num">2</span>
+        <span>Escanea el código</span>
+      </div>
+      <div class="qr-step-sep">→</div>
+      <div class="qr-step-item">
+        <span class="qr-step-num">3</span>
+        <span>Confirma el pago</span>
+      </div>
+    </div>
+
+    <!-- Botón confirmar -->
+    <button
+      class="qr-btn-confirm"
+      [disabled]="confirmando"
+      (click)="pagoRealizado()">
+      @if (confirmando) {
+        <span class="qr-spinner"></span>
+        Activando tu cuenta...
+      } @else {
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Ya pagué — Activar mi cuenta
+      }
     </button>
+
+    <p class="qr-disclaimer">
+      Al confirmar, aceptas que este es un entorno de pruebas. Tu cuenta se activará de inmediato.
+    </p>
+
   </div>
 
 </div>
