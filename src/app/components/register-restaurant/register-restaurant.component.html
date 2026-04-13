@@ -1,77 +1,231 @@
-<div class="login-wrapper">
-  
-  <div class="app-header">
-    <h1>Antojitos Maps</h1>
-  </div>
+<div class="rr-page">
 
-  <div class="login-container">
-    <form class="login-form" (ngSubmit)="register()">
-      <h2>Registro de Restaurante</h2>
+  <nav class="rr-nav">
+    <div class="rr-logo">Antojitos<span>Maps</span></div>
+    <button class="rr-nav-back" type="button" (click)="goToLogin()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
+      {{ 'REGISTER.NAV_BACK' | translate }}
+    </button>
+  </nav>
 
-      <!-- Nombre -->
-      <div class="form-group">
-        <label>Nombre del Restaurante</label>
-        <div class="input-with-icon">
-          <i class="fas fa-store input-icon"></i>
-          <input 
-            type="text" 
-            [(ngModel)]="name"
-            name="name"
-            placeholder="Ingresa el nombre">
+  <div class="rr-body">
+
+    <aside class="rr-left">
+      <div class="rr-left-title" [innerHTML]="'REGISTER.SIDE_TITLE' | translate">
         </div>
-        <small class="error" *ngIf="errorName">{{ errorName }}</small>
-      </div>
+      <p class="rr-left-sub">
+        {{ 'REGISTER.SIDE_SUB' | translate }}
+      </p>
 
-      <!-- Correo -->
-      <div class="form-group">
-        <label>Correo</label>
-        <div class="input-with-icon">
-          <i class="fas fa-envelope input-icon"></i>
-          <input 
-            type="email" 
-            [(ngModel)]="email"
-            name="email"
-            placeholder="Ingresa el correo">
+      <div class="rr-step">
+        <div class="rr-step-num">1</div>
+        <div>
+          <div class="rr-step-title">{{ 'REGISTER.STEP1_TITLE' | translate }}</div>
+          <div class="rr-step-desc">{{ 'REGISTER.STEP1_DESC' | translate }}</div>
         </div>
-        <small class="error" *ngIf="errorEmail">{{ errorEmail }}</small>
       </div>
-
-      <!-- Contraseña -->
-      <div class="form-group">
-        <label>Contraseña</label>
-        <div class="input-with-icon">
-          <i class="fas fa-lock input-icon"></i>
-
-          <input 
-            [type]="showPassword ? 'text' : 'password'"
-            [(ngModel)]="password"
-            name="password"
-            placeholder="Ingresa la contraseña">
-
-          <i 
-            class="fas toggle-password-icon" 
-            [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" 
-            (click)="togglePasswordVisibility()">
-          </i>
+      <div class="rr-step">
+        <div class="rr-step-num">2</div>
+        <div>
+          <div class="rr-step-title">{{ 'REGISTER.STEP2_TITLE' | translate }}</div>
+          <div class="rr-step-desc">{{ 'REGISTER.STEP2_DESC' | translate }}</div>
         </div>
-        <small class="error" *ngIf="errorPassword">{{ errorPassword }}</small>
       </div>
-
-      <div class="button-group">
-        <button 
-          type="submit" 
-          class="btn btn-primary">
-          Registrarse
-        </button>
-
-        <button 
-          type="button" 
-          class="btn btn-secondary" 
-          (click)="goToLogin()">
-          Volver al Login
-        </button>
+      <div class="rr-step">
+        <div class="rr-step-num">3</div>
+        <div>
+          <div class="rr-step-title">{{ 'REGISTER.STEP3_TITLE' | translate }}</div>
+          <div class="rr-step-desc">{{ 'REGISTER.STEP3_DESC' | translate }}</div>
+        </div>
       </div>
+      <div class="rr-step">
+        <div class="rr-step-num">4</div>
+        <div>
+          <div class="rr-step-title">{{ 'REGISTER.STEP4_TITLE' | translate }}</div>
+          <div class="rr-step-desc">{{ 'REGISTER.STEP4_DESC' | translate }}</div>
+        </div>
+      </div>
+    </aside>
 
-    </form>
+    <div class="rr-steps-mobile" style="display:none">
+      <span class="mobile-step">1. {{ 'REGISTER.STEP1_TITLE' | translate }}</span>
+      <span class="mobile-step">2. {{ 'REGISTER.STEP2_TITLE' | translate }}</span>
+    </div>
+
+    <div class="rr-right">
+      <div class="rr-form-card">
+        <h2 class="rr-form-title">{{ 'REGISTER.FORM_TITLE' | translate }}</h2>
+        <p class="rr-form-sub">{{ 'REGISTER.FORM_SUB' | translate }}</p>
+
+        <form (ngSubmit)="register()">
+
+          <div class="rr-divider">
+            <div class="rr-divider-line"></div>
+            <span class="rr-divider-txt">{{ 'REGISTER.STEP1_TITLE' | translate }}</span>
+            <div class="rr-divider-line"></div>
+          </div>
+
+          <div class="fg">
+            <label>{{ 'REGISTER.LBL_NAME' | translate }}</label>
+            <div class="input-wrap">
+              <i class="fas fa-store inp-icon"></i>
+              <input type="text" [(ngModel)]="name" name="name"
+                     [placeholder]="'REGISTER.PLACEHOLDER_NAME' | translate"
+                     [class.is-error]="errorName">
+            </div>
+            <small class="err" *ngIf="errorName">{{ errorName }}</small>
+          </div>
+
+          <div class="rr-row">
+            <div class="fg">
+              <label>{{ 'REGISTER.LBL_CAT' | translate }}</label>
+              <select [(ngModel)]="category" name="category"
+                      [class.is-error]="errorCategory">
+                <option value="">{{ 'REGISTER.ERR_CAT' | translate }}</option>
+                <option value="Salteñas">{{ 'CATEGORIES.SALTEÑAS' | translate }}</option>
+                <option value="Chicharron">{{ 'CATEGORIES.CHICHARRON' | translate }}</option>
+                <option value="Sushi">{{ 'CATEGORIES.SUSHI' | translate }}</option>
+                <option value="Comida Tipica">{{ 'CATEGORIES.TYPICAL' | translate }}</option>
+                <option value="Pizzeria">{{ 'CATEGORIES.PIZZA' | translate }}</option>
+                <option value="Hamburguesas">{{ 'CATEGORIES.BURGERS' | translate }}</option>
+                <option value="Tacos">{{ 'CATEGORIES.TACOS' | translate }}</option>
+                <option value="Parrilla">{{ 'CATEGORIES.GRILL' | translate }}</option>
+              </select>
+              <small class="err" *ngIf="errorCategory">{{ errorCategory }}</small>
+            </div>
+            <div class="fg">
+              <label>{{ 'REGISTER.LBL_PHONE' | translate }}</label>
+              <div class="input-wrap">
+                <i class="fas fa-phone inp-icon"></i>
+                <input type="tel" [(ngModel)]="phone" name="phone"
+                       placeholder="76543210">
+              </div>
+            </div>
+          </div>
+
+          <div class="fg">
+            <label>{{ 'REGISTER.LBL_DESC' | translate }}</label>
+            <textarea rows="3" [(ngModel)]="description" name="description"
+                      [placeholder]="'REGISTER.PLACEHOLDER_DESC' | translate"></textarea>
+          </div>
+
+          <div class="rr-divider">
+            <div class="rr-divider-line"></div>
+            <span class="rr-divider-txt">Acceso</span>
+            <div class="rr-divider-line"></div>
+          </div>
+
+          <div class="fg">
+            <label>{{ 'REGISTER.LBL_EMAIL' | translate }}</label>
+            <div class="input-wrap">
+              <i class="fas fa-envelope inp-icon"></i>
+              <input type="email" [(ngModel)]="email" name="email"
+                     placeholder="correo@negocio.com"
+                     [class.is-error]="errorEmail">
+            </div>
+            <small class="err" *ngIf="errorEmail">{{ errorEmail }}</small>
+          </div>
+
+          <div class="fg">
+            <label>{{ 'REGISTER.LBL_PASS' | translate }}</label>
+            <div class="input-wrap">
+              <i class="fas fa-lock inp-icon"></i>
+              <input [type]="showPassword ? 'text' : 'password'"
+                     [(ngModel)]="password" name="password"
+                     [placeholder]="'REGISTER.ERR_PASS' | translate"
+                     class="has-eye" [class.is-error]="errorPassword">
+              <button type="button" class="btn-eye"
+                      (click)="togglePasswordVisibility()">
+                <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+              </button>
+            </div>
+            <small class="err" *ngIf="errorPassword">{{ errorPassword }}</small>
+          </div>
+
+          <div class="rr-divider">
+            <div class="rr-divider-line"></div>
+            <span class="rr-divider-txt">{{ 'REGISTER.STEP2_TITLE' | translate }}</span>
+            <div class="rr-divider-line"></div>
+          </div>
+
+          <div class="rr-upload-zone"
+               [class.has-image]="imagePreview"
+               (click)="fileInput.click()"
+               (dragover)="$event.preventDefault()"
+               (drop)="onDrop($event)">
+            <div class="rr-upload-content" *ngIf="!imagePreview">
+              <div class="rr-upload-icon">
+                <i class="fas fa-camera"></i>
+              </div>
+              <div class="rr-upload-txt">{{ 'REGISTER.UPLOAD_TXT' | translate }}</div>
+              <div class="rr-upload-sub">{{ 'REGISTER.UPLOAD_SUB' | translate }}</div>
+            </div>
+            <div class="rr-upload-preview" *ngIf="imagePreview">
+              <img [src]="imagePreview" alt="Preview restaurante">
+              <button type="button" class="rr-remove-img"
+                      (click)="removeImage($event)">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <input #fileInput type="file" accept="image/*"
+                 style="display:none" (change)="onFileSelected($event)">
+          <small class="err" *ngIf="errorImage">{{ errorImage }}</small>
+
+          <div class="rr-divider">
+            <div class="rr-divider-line"></div>
+            <span class="rr-divider-txt">{{ 'REGISTER.STEP3_TITLE' | translate }}</span>
+            <div class="rr-divider-line"></div>
+          </div>
+
+          <div class="rr-map-container">
+            <div id="register-map" class="rr-map"></div>
+            <div class="rr-map-hint-bar">
+              <i class="fas fa-info-circle"></i>
+              {{ 'REGISTER.MAP_HINT' | translate }}
+            </div>
+          </div>
+
+          <div class="rr-coords">
+            <div class="rr-coord-chip" [class.active]="latitude !== null">
+              <i class="fas fa-location-arrow"></i>
+              <div>
+                <div class="rr-coord-lbl">LATITUD</div>
+                <div class="rr-coord-val">
+                  {{ formatCoord(latitude) }}
+                </div>
+              </div>
+            </div>
+            <div class="rr-coord-chip" [class.active]="longitude !== null">
+              <i class="fas fa-compass"></i>
+              <div>
+                <div class="rr-coord-lbl">LONGITUD</div>
+                <div class="rr-coord-val">
+                  {{ formatCoord(longitude) }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <small class="err" *ngIf="errorLocation">{{ errorLocation }}</small>
+
+          <div class="rr-btns">
+            <button type="submit" class="rr-btn-primary">
+              <i class="fas fa-check-circle"></i>
+              {{ 'REGISTER.BTN_CREATE' | translate }}
+            </button>
+            <button type="button" class="rr-btn-outline" (click)="goToLogin()">
+              {{ 'REGISTER.BTN_HAS_ACCOUNT' | translate }}
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
   </div>
 </div>

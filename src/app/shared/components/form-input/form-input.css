@@ -1,0 +1,37 @@
+.input-group {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--color-secondary);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+input {
+  padding: 0.8rem 1rem;
+  border: 2px solid rgba(0,0,0,0.1);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  transition: all 0.3s ease;
+  background: var(--color-white);
+  color: var(--color-secondary);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--color-accent); 
+  box-shadow: 0 0 0 3px rgba(191, 152, 97, 0.2);
+}
+
+input.error { border-color: var(--color-danger); }
+
+.error-msg {
+  color: var(--color-danger);
+  font-size: 0.75rem;
+  margin-top: 0.3rem;
+}

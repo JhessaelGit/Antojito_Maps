@@ -1,0 +1,16 @@
+<div class="card" [ngClass]="variant" (click)="cardClick.emit()">
+  <div class="card-image" *ngIf="imageUrl">
+    <img [src]="imageUrl" [alt]="title">
+    <span class="badge" *ngIf="badgeText">{{ badgeText }}</span>
+  </div>
+  
+  <div class="card-content">
+    <h3 class="card-title">{{ title }}</h3>
+    <p class="card-subtitle">{{ subtitle }}</p>
+    
+    <div class="card-actions" *ngIf="showActions" (click)="$event.stopPropagation()">
+      <button class="btn-icon edit" (click)="editClick.emit()">✏️</button>
+      <button class="btn-icon delete" (click)="deleteClick.emit()">🗑️</button>
+    </div>
+  </div>
+</div>

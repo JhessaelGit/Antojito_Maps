@@ -1,0 +1,143 @@
+<div class="pg">
+
+  <nav class="am-nav">
+    <div class="am-logo">Antojitos<span>Maps</span></div>
+    <div class="am-nav-actions" style="display: flex; align-items: center; gap: 1rem;">
+      <app-language-switch></app-language-switch>
+      <button class="am-nav-btn" (click)="selectRole('restaurante')">
+        {{ 'LANDING.LOGIN_BTN' | translate }}
+      </button>
+    </div>
+  </nav>
+
+  <section class="am-hero">
+    <div class="am-hero-left">
+      <div class="am-pill"><span class="am-pill-dot"></span>Cochabamba · Bolivia</div>
+      <h1 class="am-hero-title" [innerHTML]="'LANDING.HERO_TITLE' | translate"></h1>
+      <p class="am-hero-sub">{{ 'LANDING.HERO_SUB' | translate }}</p>
+      
+      <div class="am-hero-cta">
+        <button class="am-btn-p" (click)="irAlMapa()">
+          <i class="fas fa-map-marked-alt"></i> {{ 'LANDING.HERO_MAP_BTN' | translate }}
+        </button>
+        <button class="am-btn-o" (click)="selectRole('registroRestaurante')">
+          {{ 'LANDING.HERO_REG_BTN' | translate }}
+        </button>
+      </div>
+
+      <div class="am-stats">
+        <div>
+          <div class="am-stat-num">200+</div>
+          <div class="am-stat-lbl">{{ 'LANDING.STATS_BIZ' | translate }}</div>
+        </div>
+        <div class="am-stat-div"></div>
+        <div>
+          <div class="am-stat-num">15</div>
+          <div class="am-stat-lbl">{{ 'LANDING.STATS_ZONES' | translate }}</div>
+        </div>
+        <div class="am-stat-div"></div>
+        <div>
+          <div class="am-stat-num">{{ 'LANDING.STATS_FREE_NUM' | translate }}</div>
+          <div class="am-stat-lbl">{{ 'LANDING.STATS_FREE_LBL' | translate }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="am-hero-right">
+      <div class="am-food-card tall">
+        <span class="am-food-emoji">🥟</span>
+        <div class="am-food-name">Salteñas</div>
+        <div class="am-food-tag">{{ 'LANDING.FOOD.SALTEÑA_TAG' | translate }}</div>
+      </div>
+      <div class="am-food-card">
+        <span class="am-food-emoji">🍔</span>
+        <div class="am-food-name">Hamburguesas</div>
+        <div class="am-food-tag">{{ 'LANDING.FOOD.BURGER_TAG' | translate }}</div>
+      </div>
+      <div class="am-food-card">
+        <span class="am-food-emoji">🍣</span>
+        <div class="am-food-name">Sushi</div>
+        <div class="am-food-tag">{{ 'LANDING.FOOD.SUSHI_TAG' | translate }}</div>
+      </div>
+      <div class="am-food-card">
+        <span class="am-food-emoji">🍕</span>
+        <div class="am-food-name">Pizza</div>
+        <div class="am-food-tag">{{ 'LANDING.FOOD.PIZZA_TAG' | translate }}</div>
+      </div>
+      <div class="am-food-card">
+        <span class="am-food-emoji">🍗</span>
+        <div class="am-food-name">Pollo a la brasa</div>
+        <div class="am-food-tag">{{ 'LANDING.FOOD.CHICKEN_TAG' | translate }}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="am-strip">
+    <h2 class="am-strip-title">{{ 'LANDING.STRIP_TITLE' | translate }}</h2>
+    <p class="am-strip-sub">{{ 'LANDING.STRIP_SUB' | translate }}</p>
+    <div class="am-strip-scroll">
+      <div class="am-dish-card" *ngFor="let dish of categorias" (click)="irAlMapa()">
+        <div class="am-dish-img" [ngClass]="dish.bg">{{ dish.emoji }}</div>
+        <div class="am-dish-body">
+          <div class="am-dish-name">{{ dish.nombre }}</div>
+          <div class="am-dish-cat">{{ dish.categoria }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="am-how" id="como-funciona">
+    <h2 class="am-how-title">{{ 'LANDING.HOW_TITLE' | translate }}</h2>
+    <p class="am-how-sub">{{ 'LANDING.HOW_SUB' | translate }}</p>
+    <div class="am-how-steps">
+      <div class="am-step">
+        <div class="am-step-num">01</div>
+        <div class="am-step-title">{{ 'LANDING.STEP1_TITLE' | translate }}</div>
+        <p class="am-step-desc">{{ 'LANDING.STEP1_DESC' | translate }}</p>
+      </div>
+      <div class="am-step">
+        <div class="am-step-num">02</div>
+        <div class="am-step-title">{{ 'LANDING.STEP2_TITLE' | translate }}</div>
+        <p class="am-step-desc">{{ 'LANDING.STEP2_DESC' | translate }}</p>
+      </div>
+      <div class="am-step">
+        <div class="am-step-num">03</div>
+        <div class="am-step-title">{{ 'LANDING.STEP3_TITLE' | translate }}</div>
+        <p class="am-step-desc">{{ 'LANDING.STEP3_DESC' | translate }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="am-roles">
+    <div class="am-roles-header">
+      <h2 class="am-roles-title">{{ 'LANDING.ROLES_TITLE' | translate }}</h2>
+      <p class="am-roles-sub">{{ 'LANDING.ROLES_SUB' | translate }}</p>
+    </div>
+    <div class="am-roles-grid">
+      <div class="am-role-card r1" (click)="selectRole('usuario')">
+        <div class="am-role-icon"><i class="fas fa-map-marked-alt"></i></div>
+        <h3 class="am-role-h">{{ 'LANDING.ROLE_EATER' | translate }}</h3>
+        <p class="am-role-p">{{ 'LANDING.ROLE_EATER_DESC' | translate }}</p>
+        <div class="am-role-link">{{ 'LANDING.NAV_EXPLORE' | translate }} <i class="fas fa-arrow-right"></i></div>
+      </div>
+      <div class="am-role-card r2" (click)="selectRole('restaurante')">
+        <div class="am-role-icon"><i class="fas fa-store"></i></div>
+        <h3 class="am-role-h">{{ 'LANDING.ROLE_BIZ' | translate }}</h3>
+        <p class="am-role-p">{{ 'LANDING.ROLE_BIZ_DESC' | translate }}</p>
+        <div class="am-role-link">{{ 'LANDING.LOGIN_BTN' | translate }} <i class="fas fa-arrow-right"></i></div>
+      </div>
+      <div class="am-role-card r3" (click)="selectRole('administrador')">
+        <div class="am-role-icon"><i class="fas fa-clipboard-list"></i></div>
+        <h3 class="am-role-h">{{ 'LANDING.ROLE_ADMIN' | translate }}</h3>
+        <p class="am-role-p">{{ 'LANDING.ROLE_ADMIN_DESC' | translate }}</p>
+        <div class="am-role-link">{{ 'LANDING.LOGIN_BTN2' | translate }} <i class="fas fa-arrow-right"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="am-footer">
+    <div class="am-logo">Antojitos<span>Maps</span></div>
+    <div class="am-footer-txt">{{ 'LANDING.FOOTER_MADE' | translate }}</div>
+  </footer>
+
+</div>

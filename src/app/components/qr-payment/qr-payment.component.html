@@ -1,20 +1,24 @@
 <div class="wrapper">
 
   <div class="header">
-    <h1>Antojitos Maps</h1>
+    <h1>Antojitos<span>Maps</span></h1>
   </div>
 
   <div class="container">
-    <h2>Escanea el QR para pagar</h2>
+    <h2>{{ 'PAYMENTS.TITLE_QR' | translate }}</h2>
 
     <div class="qr-box">
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PagoAntojitosMaps" alt="QR">
+      <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PagoAntojitos_' + (plan || 'General')" 
+           [alt]="'PAYMENTS.QR_ALT' | translate">
     </div>
 
-    <p *ngIf="plan">Plan seleccionado: {{ plan }}</p>
+    <div class="plan-info" *ngIf="plan">
+      <p><strong>{{ 'PAYMENTS.SELECTED_PLAN' | translate }}:</strong> {{ plan }}</p>
+    </div>
 
     <button class="btn" (click)="pagoRealizado()">
-      Ya pagué
+      <i class="fas fa-check"></i>
+      {{ 'PAYMENTS.BTN_CONFIRM' | translate }}
     </button>
   </div>
 
