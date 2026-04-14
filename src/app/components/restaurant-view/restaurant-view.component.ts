@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RestauranteService } from '../../core/services/restaurante.service';
+import { Subject, finalize, takeUntil, timeout } from 'rxjs';
 
 @Component({
   selector: 'app-restaurant-view',
@@ -10,11 +11,12 @@ import { RestauranteService } from '../../core/services/restaurante.service';
   templateUrl: './restaurant-view.html',
   styleUrl: './restaurant-view.css'
 })
-export class RestaurantView implements OnInit {
+export class RestaurantView implements OnInit, OnDestroy {
 
   restaurante: any = null;
   cargando = true;
   error    = false;
+  private readonly destroy$ = new Subject<void>();
 
   // Datos de ejemplo hasta que el backend tenga endpoint de promociones
   promociones: any[] = [
@@ -25,28 +27,57 @@ export class RestaurantView implements OnInit {
   constructor(
     private route:   ActivatedRoute,
     private router:  Router,
-    private restauranteService: RestauranteService
+    private restauranteService: RestauranteService,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) this.cargar(id);
-    else    this.error = true;
+    const uuid = this.route.snapshot.paramMap.get('uuid') ?? this.route.snapshot.paramMap.get('id');
+    if (uuid) {
+      this.cargar(uuid);
+    } else {
+      this.error = true;
+      this.cargando = false;
+      this.refreshView();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   cargar(id: string) {
     this.cargando = true;
-    this.restauranteService.getRestauranteById(id).subscribe({
-      next: (data: any) => {
-        this.restaurante = data;
-        this.cargando    = false;
-      },
-      error: () => {
-        this.error    = true;
-        this.cargando = false;
-      }
-    });
+    this.error = false;
+    this.restauranteService
+      .getRestauranteById(id)
+      .pipe(
+        timeout(15000),
+        takeUntil(this.destroy$),
+        finalize(() => {
+          this.cargando = false;
+          this.refreshView();
+        })
+      )
+      .subscribe({
+        next: (data: any) => {
+          this.restaurante = data?.data ?? data;
+          this.error = false;
+        },
+        error: () => {
+          this.error = true;
+        }
+      });
+  }
+
+  private refreshView(): void {
+    try {
+      this.cd.detectChanges();
+    } catch {
+      // No-op: evita errores de detección al navegar rápidamente entre vistas.
+    }
   }
 
   volverAlMapa() {
