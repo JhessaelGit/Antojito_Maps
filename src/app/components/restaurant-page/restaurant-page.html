@@ -19,41 +19,50 @@
 
   <div class="rp-body">
 
+    <!-- Sidebar -->
     <aside class="rp-sidebar">
       <div class="rp-restaurant-card">
         <div class="rp-restaurant-avatar">
-          <img *ngIf="restaurantImage" [src]="restaurantImage" alt="Logo">
+          <img *ngIf="restaurantImage" [src]="restaurantImage" alt="Logo" class="rp-avatar-img">
           <span *ngIf="!restaurantImage">🍽️</span>
         </div>
         <div class="rp-restaurant-name">{{ restaurantName }}</div>
         <div class="rp-restaurant-cat">{{ restaurantCategory }}</div>
-        <div class="rp-plan-badge">BASIC</div>
+        <div class="rp-plan-badge">{{ selectedPlan }}</div>
       </div>
 
       <nav class="rp-sidebar-nav">
-        <a class="rp-nav-item rp-nav-item-active">
+        <a class="rp-nav-item" [class.rp-nav-item-active]="vistaActiva === 'promos'"
+          (click)="cambiarVista('promos')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
           </svg>
           {{ 'OWNER.SIDE_PROMOS' | translate }}
         </a>
-        <a class="rp-nav-item">
+        <a class="rp-nav-item" [class.rp-nav-item-active]="vistaActiva === 'menu'"
+          (click)="cambiarVista('menu')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
           </svg>
           {{ 'OWNER.SIDE_MENU' | translate }}
         </a>
+        <a class="rp-nav-item" [class.rp-nav-item-active]="vistaActiva === 'perfil'"
+          (click)="cambiarVista('perfil')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          {{ 'OWNER.SIDE_PROFILE' | translate }}
+        </a>
         <a class="rp-nav-item" (click)="router.navigate(['/mapa'])">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polygon points="10 8 16 12 10 16 10 8"></polygon>
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="10 8 16 12 10 16 10 8"/>
           </svg>
           {{ 'OWNER.SIDE_VIEW_MAP' | translate }}
         </a>
@@ -71,125 +80,282 @@
       </div>
     </aside>
 
+    <!-- Main -->
     <main class="rp-main">
 
-      <section class="rp-section">
-        <div class="rp-section-header">
-          <div>
-            <h2 class="rp-section-title">{{ 'OWNER.SECTION_PROMOS_TITLE' | translate }}</h2>
-            <p class="rp-section-sub">{{ 'OWNER.SECTION_PROMOS_SUB' | translate }}</p>
+      <!-- ── VISTA PROMOCIONES ── -->
+      @if (vistaActiva === 'promos') {
+        <section class="rp-section">
+          <div class="rp-section-header">
+            <div>
+              <h2 class="rp-section-title">{{ 'OWNER.SECTION_PROMOS_TITLE' | translate }}</h2>
+              <p class="rp-section-sub">{{ 'OWNER.SECTION_PROMOS_SUB' | translate }}</p>
+            </div>
+            <button class="rp-btn-add" (click)="crearPromo()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              {{ 'OWNER.BTN_NEW_PROMO' | translate }}
+            </button>
           </div>
-          <button class="rp-btn-add" (click)="crearPromo()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="3"
-              stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            {{ 'OWNER.BTN_NEW_PROMO' | translate }}
-          </button>
-        </div>
 
-        @if (promociones.length === 0) {
-          <div class="rp-empty">
-            <span class="rp-empty-icon">🏷️</span>
-            <p class="rp-empty-txt">{{ 'OWNER.EMPTY_PROMOS' | translate }}</p>
-            <p class="rp-empty-sub">{{ 'OWNER.EMPTY_PROMOS_SUB' | translate }}</p>
-          </div>
-        }
-
-        <div class="rp-promos-grid">
-          @for (promo of promociones; track promo.id) {
-            <div class="rp-promo-card">
-              <div class="rp-promo-top">
-                <span class="rp-promo-badge">OFERTA</span>
-                <div class="rp-card-actions">
-                  <button class="rp-btn-icon rp-btn-edit" (click)="editarPromo(promo)">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                  </button>
-                  <button class="rp-btn-icon rp-btn-delete" (click)="eliminarPromo(promo.id)">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2">
-                      <polyline points="3 6 5 6 21 6"></polyline>
-                      <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <h3 class="rp-promo-name">{{ promo.nombre }}</h3>
-              <p class="rp-promo-desc">{{ promo.descripcion }}</p>
-              <div class="rp-promo-footer">
-                <span class="rp-promo-price">Bs {{ promo.precio }}</span>
-                <span class="rp-promo-exp">
-                  {{ promo.fechaExpiracion | date:'dd/MM/yyyy HH:mm' }}
-                </span>
-              </div>
+          @if (promociones.length === 0) {
+            <div class="rp-empty">
+              <span class="rp-empty-icon">🏷️</span>
+              <p class="rp-empty-txt">{{ 'OWNER.EMPTY_PROMOS' | translate }}</p>
+              <p class="rp-empty-sub">{{ 'OWNER.EMPTY_PROMOS_SUB' | translate }}</p>
             </div>
           }
-        </div>
-      </section>
 
-      <section class="rp-section">
-        <div class="rp-section-header">
-          <div>
-            <h2 class="rp-section-title">{{ 'OWNER.SECTION_MENU_TITLE' | translate }}</h2>
-            <p class="rp-section-sub">{{ 'OWNER.SECTION_MENU_SUB' | translate }}</p>
-          </div>
-        </div>
-
-        <div class="rp-menu-list">
-          @for (item of menu; track item.id) {
-            <div class="rp-menu-item">
-              <div class="rp-menu-left">
-                <div class="rp-menu-avatar">🍽️</div>
-                <div class="rp-menu-info">
-                  <span class="rp-menu-name">{{ item.nombre }}</span>
-                  <span class="rp-menu-desc">{{ item.descripcion }}</span>
+          <div class="rp-promos-grid">
+            @for (promo of promociones; track promo.id) {
+              <div class="rp-promo-card">
+                <div class="rp-promo-top">
+                  <span class="rp-promo-badge">{{ 'OWNER.PROMO_BADGE' | translate }}</span>
+                  <div class="rp-card-actions">
+                    <button class="rp-btn-icon rp-btn-edit"
+                      [title]="'OWNER.BTN_EDIT' | translate"
+                      (click)="editarPromo(promo)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
+                    </button>
+                    <button class="rp-btn-icon rp-btn-delete"
+                      [title]="'OWNER.BTN_DELETE' | translate"
+                      (click)="eliminarPromo(promo.id)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <h3 class="rp-promo-name">{{ promo.nombre }}</h3>
+                <p class="rp-promo-desc">{{ promo.descripcion }}</p>
+                <div class="rp-promo-footer">
+                  <span class="rp-promo-price">Bs {{ promo.precio }}</span>
+                  <span class="rp-promo-exp">
+                    {{ 'OWNER.EXPIRES' | translate }} {{ promo.fechaExpiracion | date:'dd/MM HH:mm' }}
+                  </span>
                 </div>
               </div>
-              <div class="rp-menu-right">
-                <span class="rp-menu-price">Bs {{ item.precio }}</span>
-                <div class="rp-card-actions">
-                  <button class="rp-btn-icon rp-btn-edit" (click)="editarMenu(item)">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                  </button>
-                  <button class="rp-btn-icon rp-btn-delete" (click)="eliminarMenu(item.id)">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="3 6 5 6 21 6"></polyline>
-                      <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
-                    </svg>
-                  </button>
+            }
+          </div>
+        </section>
+      }
+
+      <!-- ── VISTA MENÚ ── -->
+      @if (vistaActiva === 'menu') {
+        <section class="rp-section">
+          <div class="rp-section-header">
+            <div>
+              <h2 class="rp-section-title">{{ 'OWNER.SECTION_MENU_TITLE' | translate }}</h2>
+              <p class="rp-section-sub">{{ 'OWNER.SECTION_MENU_SUB' | translate }}</p>
+            </div>
+            <button class="rp-btn-add" (click)="crearMenu()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              {{ 'OWNER.BTN_ADD_DISH' | translate }}
+            </button>
+          </div>
+
+          @if (menu.length === 0) {
+            <div class="rp-empty">
+              <span class="rp-empty-icon">🍽️</span>
+              <p class="rp-empty-txt">{{ 'OWNER.EMPTY_MENU' | translate }}</p>
+              <p class="rp-empty-sub">{{ 'OWNER.EMPTY_MENU_SUB' | translate }}</p>
+            </div>
+          }
+
+          <div class="rp-menu-list">
+            @for (item of menu; track item.id) {
+              <div class="rp-menu-item">
+                <div class="rp-menu-left">
+                  <div class="rp-menu-avatar">🍽️</div>
+                  <div class="rp-menu-info">
+                    <span class="rp-menu-name">{{ item.nombre }}</span>
+                    <span class="rp-menu-desc">{{ item.descripcion }}</span>
+                  </div>
+                </div>
+                <div class="rp-menu-right">
+                  <span class="rp-menu-price">Bs {{ item.precio }}</span>
+                  <div class="rp-card-actions">
+                    <button class="rp-btn-icon rp-btn-edit"
+                      [title]="'OWNER.BTN_EDIT' | translate"
+                      (click)="editarMenu(item)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
+                    </button>
+                    <button class="rp-btn-icon rp-btn-delete"
+                      [title]="'OWNER.BTN_DELETE' | translate"
+                      (click)="eliminarMenu(item.id)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      <!-- ── VISTA PERFIL ── -->
+      @if (vistaActiva === 'perfil') {
+        <section class="rp-section">
+          <div class="rp-section-header">
+            <div>
+              <h2 class="rp-section-title">{{ 'OWNER.SECTION_PROFILE_TITLE' | translate }}</h2>
+              <p class="rp-section-sub">{{ 'OWNER.SECTION_PROFILE_SUB' | translate }}</p>
+            </div>
+          </div>
+
+          <div class="rp-perfil-form">
+
+            <!-- Foto -->
+            <div class="rp-perfil-field">
+              <label class="rp-perfil-label">{{ 'OWNER.PROFILE_LBL_PHOTO' | translate }}</label>
+              <div class="rp-upload-zone"
+                [class.has-image]="perfilImagePreview"
+                (click)="perfilFileInput.click()"
+                (dragover)="$event.preventDefault()"
+                (drop)="onPerfilDrop($event)">
+                @if (!perfilImagePreview) {
+                  <div class="rp-upload-content">
+                    <div class="rp-upload-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
+                      </svg>
+                    </div>
+                    <span class="rp-upload-txt">{{ 'OWNER.UPLOAD_TXT' | translate }}</span>
+                    <span class="rp-upload-sub">{{ 'OWNER.UPLOAD_SUB' | translate }}</span>
+                  </div>
+                } @else {
+                  <div class="rp-upload-preview">
+                    <img [src]="perfilImagePreview" [alt]="'OWNER.PROFILE_LBL_PHOTO' | translate">
+                    <button type="button" class="rp-remove-img"
+                      (click)="quitarImagenPerfil($event)">✕</button>
+                  </div>
+                }
+              </div>
+              <input #perfilFileInput type="file" accept="image/*"
+                style="display:none" (change)="onPerfilFileSelected($event)">
+            </div>
+
+            <!-- Nombre -->
+            <div class="rp-perfil-field">
+              <label class="rp-perfil-label">{{ 'OWNER.PROFILE_LBL_NAME' | translate }}</label>
+              <input class="rp-perfil-input" type="text"
+                [(ngModel)]="perfilNombre"
+                [placeholder]="'OWNER.PROFILE_PLACEHOLDER_NAME' | translate">
+            </div>
+
+            <!-- Categoría -->
+            <div class="rp-perfil-field">
+              <label class="rp-perfil-label">{{ 'OWNER.PROFILE_LBL_CAT' | translate }}</label>
+              <select class="rp-perfil-input" [(ngModel)]="perfilCategoria">
+                <option value="">{{ 'OWNER.PROFILE_CAT_SELECT' | translate }}</option>
+                <option value="Comida Tipica">{{ 'OWNER.CAT_TYPICAL' | translate }}</option>
+                <option value="Sushi">{{ 'OWNER.CAT_SUSHI' | translate }}</option>
+                <option value="Pizzeria">{{ 'OWNER.CAT_PIZZA' | translate }}</option>
+                <option value="Hamburguesas">{{ 'OWNER.CAT_BURGERS' | translate }}</option>
+                <option value="Parrilla">{{ 'OWNER.CAT_GRILL' | translate }}</option>
+                <option value="Tacos">{{ 'OWNER.CAT_TACOS' | translate }}</option>
+                <option value="Salteñas">{{ 'OWNER.CAT_SALTEÑAS' | translate }}</option>
+                <option value="Cafeterias">{{ 'OWNER.CAT_CAFE' | translate }}</option>
+              </select>
+            </div>
+
+            <!-- Descripción -->
+            <div class="rp-perfil-field">
+              <label class="rp-perfil-label">{{ 'OWNER.PROFILE_LBL_DESC' | translate }}</label>
+              <textarea class="rp-perfil-input rp-perfil-textarea"
+                [(ngModel)]="perfilDescripcion"
+                [placeholder]="'OWNER.PROFILE_PLACEHOLDER_DESC' | translate"></textarea>
+            </div>
+
+            <!-- Mapa -->
+            <div class="rp-perfil-field">
+              <label class="rp-perfil-label">{{ 'OWNER.PROFILE_LBL_LOCATION' | translate }}</label>
+              <p class="rp-perfil-hint">{{ 'OWNER.PROFILE_MAP_HINT' | translate }}</p>
+              <div class="rp-perfil-map-wrap">
+                <div id="perfil-map" class="rp-perfil-map"></div>
+              </div>
+              <div class="rp-coords">
+                <div class="rp-coord-chip" [class.active]="restaurantLat !== null">
+                  <span class="rp-coord-lbl">LAT</span>
+                  <span class="rp-coord-val">{{ formatCoord(restaurantLat) }}</span>
+                </div>
+                <div class="rp-coord-chip" [class.active]="restaurantLng !== null">
+                  <span class="rp-coord-lbl">LNG</span>
+                  <span class="rp-coord-val">{{ formatCoord(restaurantLng) }}</span>
                 </div>
               </div>
             </div>
-          }
-        </div>
-      </section>
+
+            <!-- Guardar -->
+            <button class="rp-btn-save-perfil"
+              [disabled]="guardandoPerfil"
+              (click)="guardarPerfil()">
+              @if (guardandoPerfil) {
+                <span class="rp-spinner"></span>
+                {{ 'OWNER.SAVING' | translate }}
+              } @else {
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                {{ 'OWNER.BTN_SAVE_PROFILE' | translate }}
+              }
+            </button>
+
+          </div>
+        </section>
+      }
+
     </main>
   </div>
 
+  <!-- Modal edición -->
   @if (editandoItem) {
     <div class="rp-modal-overlay" (click)="cerrarModal()">
       <div class="rp-modal" (click)="$event.stopPropagation()">
         <div class="rp-modal-header">
           <h3 class="rp-modal-title">
-            {{ esPromo ? 
-               (itemTemporal.id && promociones.find(p => p.id === itemTemporal.id) ? 
-               ('OWNER.MODAL_EDIT_PROMO' | translate) : ('OWNER.MODAL_NEW_PROMO' | translate)) 
-               : ('OWNER.MODAL_EDIT_DISH' | translate) 
+            {{ esPromo
+              ? (promociones.find(p => p.id === itemTemporal.id)
+                  ? ('OWNER.MODAL_EDIT_PROMO' | translate)
+                  : ('OWNER.MODAL_NEW_PROMO'  | translate))
+              : (menu.find(m => m.id === itemTemporal.id)
+                  ? ('OWNER.MODAL_EDIT_DISH'  | translate)
+                  : ('OWNER.MODAL_NEW_DISH'   | translate))
             }}
           </h3>
           <button class="rp-modal-close" (click)="cerrarModal()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
           </button>
         </div>
@@ -197,39 +363,60 @@
         <div class="rp-modal-body">
           <div class="rp-field">
             <label class="rp-field-label">{{ 'OWNER.LBL_NAME' | translate }}</label>
-            <input class="rp-field-input" type="text" [(ngModel)]="itemTemporal.nombre">
+            <input class="rp-field-input" type="text"
+              [(ngModel)]="itemTemporal.nombre"
+              [placeholder]="'OWNER.MODAL_PLACEHOLDER_NAME' | translate">
           </div>
           <div class="rp-field">
             <label class="rp-field-label">{{ 'OWNER.LBL_DESC' | translate }}</label>
-            <textarea class="rp-field-input rp-field-textarea" [(ngModel)]="itemTemporal.descripcion"></textarea>
+            <textarea class="rp-field-input rp-field-textarea"
+              [(ngModel)]="itemTemporal.descripcion"
+              [placeholder]="'OWNER.MODAL_PLACEHOLDER_DESC' | translate"></textarea>
           </div>
           <div class="rp-field">
             <label class="rp-field-label">{{ 'OWNER.LBL_PRICE' | translate }}</label>
-            <input class="rp-field-input" type="number" [(ngModel)]="itemTemporal.precio">
+            <input class="rp-field-input" type="number"
+              [(ngModel)]="itemTemporal.precio" min="0" step="0.5">
           </div>
           @if (esPromo) {
             <div class="rp-field">
               <label class="rp-field-label">{{ 'OWNER.LBL_EXPIRATION' | translate }}</label>
-              <input class="rp-field-input" type="datetime-local" [(ngModel)]="itemTemporal.fechaExpiracionFormateada">
+              <input class="rp-field-input" type="datetime-local"
+                [(ngModel)]="itemTemporal.fechaExpiracionFormateada">
               <p class="rp-field-hint">{{ 'OWNER.HINT_EXPIRATION' | translate }}</p>
             </div>
           }
         </div>
 
         <div class="rp-modal-footer">
-          <button class="rp-btn-cancel" (click)="cerrarModal()">{{ 'OWNER.BTN_CANCEL' | translate }}</button>
-          <button class="rp-btn-save" (click)="guardarCambios()">{{ 'OWNER.BTN_SAVE' | translate }}</button>
+          <button class="rp-btn-cancel" (click)="cerrarModal()">
+            {{ 'OWNER.BTN_CANCEL' | translate }}
+          </button>
+          <button class="rp-btn-save" (click)="guardarCambios()">
+            {{ 'OWNER.BTN_SAVE' | translate }}
+          </button>
         </div>
       </div>
     </div>
   }
 
+  <!-- Snackbar -->
   @if (mostrandoUndo) {
     <div class="rp-snackbar">
       <div class="rp-snackbar-content">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+        </svg>
         <span>{{ 'OWNER.UNDO_MSG' | translate }}</span>
-        <button class="rp-snackbar-btn" (click)="deshacerEliminar()">{{ 'OWNER.UNDO_BTN' | translate }}</button>
+        <button class="rp-snackbar-btn" (click)="deshacerEliminar()">
+          {{ 'OWNER.UNDO_BTN' | translate }}
+        </button>
       </div>
+      <div class="rp-snackbar-bar"></div>
     </div>
   }
+
 </div>

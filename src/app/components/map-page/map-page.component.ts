@@ -182,13 +182,13 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     filtrados.forEach(r => {
       const lat = r.latitude ?? r.lat ?? r.latitud;
       const lng = r.longitude ?? r.lng ?? r.longitud;
-      if (!lat || !lng) return;
+      if (lat === null || lat === undefined || lng === null || lng === undefined) return;
 
       const icono = L.divIcon({
         className: 'custom-restaurant-marker',
         html: `<div class="marker-pin"><div class="marker-inner"></div></div>`,
-        iconSize: [28, 36],
-        iconAnchor: [14, 36]
+        iconSize: [36, 46],
+        iconAnchor: [18, 42]
       });
 
       // Traducciones para el Popup
@@ -196,26 +196,88 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
       const nombre = r.name ?? r.nombre ?? 'Restaurante';
       const descripcion = r.description ?? r.descripcion ?? noDesc;
       const categoria = r.category ?? r.categoria ?? '';
-      const imagen = r.image_url ?? r.imageUrl ?? '';
+      const imagen = r.imagenUrl ?? r.image_url ?? r.imageUrl ?? r.imagen_url ?? '';
+      const uuid = r.uuid ?? r.id ?? '';
+      const popupHtml = this.buildPopupHtml(nombre, descripcion, categoria, imagen, uuid);
 
-      const imagenHtml = imagen 
-        ? `<img src="${imagen}" style="width:100%;height:110px;object-fit:cover;border-radius:10px 10px 0 0;display:block;">`
-        : `<div style="width:100%;height:70px;background:#f0ebe3;border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:center;font-size:32px;">🍽️</div>`;
+      const marker = L.marker([lat, lng], { icon: icono })
+        .bindPopup(popupHtml, { maxWidth: 290, className: 'custom-popup' });
 
-      const popupHtml = `
-        <div style="font-family:'Inter',sans-serif; width:210px; border-radius:10px; overflow:hidden; margin:-14px -20px -14px;">
-          ${imagenHtml}
-          <div style="padding:12px 14px 14px;">
-            <span style="font-size:10px;font-weight:700; color:#BF9861;text-transform:uppercase; letter-spacing:0.8px;">${categoria}</span>
-            <p style="margin:5px 0 5px;font-size:14px; font-weight:700;color:#02332D;line-height:1.2;">${nombre}</p>
-            <p style="margin:0 0 12px;font-size:12px; color:#666;line-height:1.4;">${descripcion}</p>
-          </div>
-        </div>
-      `;
+      marker.on('popupopen', () => {
+        setTimeout(() => {
+          const btn = document.querySelector<HTMLButtonElement>(
+            `.restaurant-popup-btn[data-uuid="${r.uuid ?? r.id ?? ''}"]`
+          );
+          if (btn) {
+            btn.addEventListener('click', () => {
+              this.router.navigate(['/restaurant-view', btn.dataset['uuid']]);
+            });
+          }
+        }, 50);
+      });
 
-      const marker = L.marker([lat, lng], { icon: icono }).bindPopup(popupHtml, { maxWidth: 230, className: 'custom-popup' });
       this.markersLayer.addLayer(marker);
     });
+  }
+
+  private buildPopupHtml(
+    nombre: string,
+    descripcion: string,
+    categoria: string,
+    imagen: string,
+    uuid: string
+  ): string {
+    const safeNombre     = this.escapeHtml(nombre      || 'Restaurante');
+    const safeDescripcion = this.escapeHtml(descripcion || this.translate.instant('MAP.NO_DESC'));
+    const safeCategoria  = this.escapeHtml(categoria   || 'Sin categoría');
+    const safeImagen     = this.escapeHtml(imagen      || '');
+    const btnLabel       = 'Ver restaurante';
+
+    const mediaHtml = safeImagen
+      ? `<div class="restaurant-popup-media">
+           <img
+             class="restaurant-popup-image"
+             src="${safeImagen}"
+             alt="Foto de ${safeNombre}"
+             loading="lazy"
+             onerror="this.parentElement.classList.add('no-image'); this.remove();">
+           <div class="restaurant-popup-fallback" aria-hidden="true">🍽️</div>
+         </div>`
+      : `<div class="restaurant-popup-media no-image">
+           <div class="restaurant-popup-fallback only" aria-hidden="true">🍽️</div>
+         </div>`;
+
+    return `
+      <article class="restaurant-popup-card">
+        ${mediaHtml}
+        <div class="restaurant-popup-body">
+          <span class="restaurant-popup-category">${safeCategoria}</span>
+          <h3 class="restaurant-popup-title">${safeNombre}</h3>
+          <p class="restaurant-popup-desc">${safeDescripcion}</p>
+          <button
+            class="restaurant-popup-btn"
+            data-uuid="${uuid}"
+            type="button">
+            ${btnLabel}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+        </div>
+      </article>
+    `;
+  }
+
+  private escapeHtml(value: string): string {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   buscarRestaurante(texto: string): void {

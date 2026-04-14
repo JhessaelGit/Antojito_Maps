@@ -1,0 +1,42 @@
+<div class="form-page">
+
+  <div class="form-card">
+
+    <div class="header-row">
+      <button class="btn-back" (click)="volver()">← Volver</button>
+    </div>
+
+    <h2 class="title">{{ 'ADMIN_CREATE.TITLE' | translate }}</h2>
+
+    <div class="field-group">
+      <input 
+        [(ngModel)]="correo" 
+        [placeholder]="'ADMIN_CREATE.PLACEHOLDER_EMAIL' | translate">
+      <div class="error" *ngIf="errorCorreo">{{ errorCorreo }}</div>
+      <div class="error" *ngIf="fieldErrors['mail']">{{ fieldErrors['mail'] }}</div>
+    </div>
+
+    <div class="field-group">
+      <div class="password-wrap">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          [(ngModel)]="password"
+          [placeholder]="'ADMIN_LOGIN.PASS_PLACEHOLDER' | translate">
+        <button type="button" class="btn-eye" (click)="togglePasswordVisibility()">
+          {{ showPassword ? '🙈' : '👁' }}
+        </button>
+      </div>
+      <div class="error" *ngIf="errorPassword">{{ errorPassword }}</div>
+      <div class="error" *ngIf="fieldErrors['password']">{{ fieldErrors['password'] }}</div>
+    </div>
+
+    <button class="btn-primary" (click)="agregar()" [disabled]="cargando">
+      {{ cargando ? ('ADMIN_LOGIN.BTN_LOADING' | translate) : ('ADMIN_CREATE.BTN_ADD' | translate) }}
+    </button>
+
+    <div class="error" *ngIf="errorMsg">{{ errorMsg }}</div>
+    <div class="ok" *ngIf="successMsg">{{ successMsg }}</div>
+
+  </div>
+
+</div>

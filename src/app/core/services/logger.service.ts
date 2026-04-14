@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 export type LogLevel = 'INFO' | 'WARN' | 'ERROR';
 
@@ -7,7 +8,7 @@ export type LogLevel = 'INFO' | 'WARN' | 'ERROR';
   providedIn: 'root'
 })
 export class LoggerService {
-  private readonly apiUrl: string = '/api/log';
+  private readonly apiUrl: string = `${environment.apiBaseUrl}/log`;
 
   constructor(private http: HttpClient) {}
 

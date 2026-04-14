@@ -35,45 +35,41 @@ export class RestaurantLoginComponent {
   }
 
   login() {
-    this.logger.info('Intento de login');
-    const success = true; 
+    this.errorMsg = '';
 
-    if (success) {
-      this.logger.info('Login exitoso', {
-        email: this.email
-      });
-      this.router.navigate(['/restaurant']);
-    } else {
-      this.logger.error('Login fallido');
+    if (!this.email.trim() || !this.password.trim()) {
+      this.errorMsg = 'Ingresa correo y contraseña';
+      return;
     }
 
     this.cargando = true;
-    this.logger.info('Intento de login', { email: this.email });
+    const normalizedEmail = this.email.trim().toLowerCase();
+    this.logger.info('Intento de login', { email: normalizedEmail });
 
-    this.restauranteService.login(this.email, this.password).subscribe({
+    this.restauranteService.login(normalizedEmail, this.password).subscribe({
       next: (data: any) => {
         this.cargando = false;
-        this.logger.info('Login exitoso', { email: this.email });
+        this.logger.info('Login exitoso', { email: normalizedEmail });
 
         // Guardar uuid si el backend lo devuelve
         if (data?.uuid) {
           localStorage.setItem('restaurant_uuid', data.uuid);
         }
         // Guardar email para referencia
-        localStorage.setItem('restaurant_email', this.email);
+        localStorage.setItem('restaurant_email', normalizedEmail);
 
         this.router.navigate(['/restaurant']);
       },
       error: (err) => {
         this.cargando = false;
-        this.logger.error('Login fallido');
+        this.logger.error('Login fallido', { status: err?.status });
 
         if (err.status === 401) {
           this.errorMsg = 'Correo o contraseña incorrectos';
         } else if (err.status === 0) {
           this.errorMsg = 'No se pudo conectar con el servidor';
         } else {
-          this.errorMsg = 'Error al iniciar sesión. Intenta nuevamente';
+          this.errorMsg = err?.error?.message || 'Error al iniciar sesión. Intenta nuevamente';
         }
       }
     });

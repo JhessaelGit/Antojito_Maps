@@ -1,0 +1,29 @@
+<div class="page">
+
+  <div class="card">
+
+    <div class="header">
+      <h2>{{ 'ADMIN_LIST.TITLE' | translate }}</h2>
+      <button class="btn-back" (click)="volver()">{{ 'ADMIN_DELETED.BACK' | translate }}</button>
+    </div>
+
+    <div class="edit-self">
+      <h3>Actualizar correo y contraseña</h3>
+      <div class="field-group">
+        <input [(ngModel)]="editMail" [placeholder]="'ADMIN_CREATE.PLACEHOLDER_EMAIL' | translate">
+        <div class="error" *ngIf="fieldErrors['mail']">{{ fieldErrors['mail'] }}</div>
+      </div>
+      <div class="field-group">
+        <input [(ngModel)]="editPassword" type="password" [placeholder]="'ADMIN_LOGIN.PASS_PLACEHOLDER' | translate">
+        <div class="error" *ngIf="fieldErrors['password']">{{ fieldErrors['password'] }}</div>
+      </div>
+      <button class="btn-save" (click)="guardarEdicionPropia()" [disabled]="guardando">
+        {{ guardando ? ('ADMIN_LOGIN.BTN_LOADING' | translate) : ('ADMIN_LIST.BTN_SAVE' | translate) }}
+      </button>
+      <div class="error" *ngIf="errorMsg">{{ errorMsg }}</div>
+      <div class="ok" *ngIf="successMsg">{{ successMsg }}</div>
+    </div>
+
+  </div>
+
+</div>

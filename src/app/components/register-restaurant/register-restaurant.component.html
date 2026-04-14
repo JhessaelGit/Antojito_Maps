@@ -214,13 +214,15 @@
           <small class="err" *ngIf="errorLocation">{{ errorLocation }}</small>
 
           <div class="rr-btns">
-            <button type="submit" class="rr-btn-primary">
-              <i class="fas fa-check-circle"></i>
-              {{ 'REGISTER.BTN_CREATE' | translate }}
+            <button type="submit" class="rr-btn-primary" [disabled]="cargando">
+              <i class="fas" [ngClass]="cargando ? 'fa-spinner fa-spin' : 'fa-check-circle'"></i>
+              {{ cargando ? 'Registrando...' : ('REGISTER.BTN_CREATE' | translate) }}
             </button>
             <button type="button" class="rr-btn-outline" (click)="goToLogin()">
               {{ 'REGISTER.BTN_HAS_ACCOUNT' | translate }}
             </button>
+            <small class="err" *ngIf="errorMsg">{{ errorMsg }}</small>
+            <small class="ok" *ngIf="successMsg">{{ successMsg }}</small>
           </div>
 
         </form>

@@ -1,21 +1,144 @@
-<div class="container" *ngIf="restaurante">
-  <header class="res-header">
-    <app-button variant="outline" label="← Volver al Mapa" (clicked)="volverAlMapa()"></app-button>
-    <h1>{{ restaurante.nombre }}</h1>
-    <p class="category-badge">{{ restaurante.categoria }}</p>
-  </header>
+<div class="rv-page">
 
-  <section class="promo-section">
-    <h2>Promociones Disponibles</h2>
-    <div class="grid">
-      <app-card 
-        *ngFor="let promo of promociones"
-        variant="promotion"
-        [title]="promo.nombre"
-        [subtitle]="promo.desc"
-        [badgeText]="'$' + promo.precio"
-        [showActions]="false"> 
-      </app-card>
+  <!-- Botón volver -->
+  <button class="rv-back-btn" (click)="volverAlMapa()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2.5"
+      stroke-linecap="round" stroke-linejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12"/>
+      <polyline points="12 19 5 12 12 5"/>
+    </svg>
+    <span>Volver al mapa</span>
+  </button>
+
+  <!-- Loading -->
+  @if (cargando) {
+    <div class="rv-loading">
+      <div class="rv-spinner"></div>
+      <p>Cargando restaurante...</p>
     </div>
-  </section>
+  }
+
+  <!-- Error -->
+  @if (error && !cargando) {
+    <div class="rv-error">
+      <span class="rv-error-icon">😕</span>
+      <p class="rv-error-txt">No se pudo cargar el restaurante</p>
+      <button class="rv-btn-back" (click)="volverAlMapa()">Volver al mapa</button>
+    </div>
+  }
+
+  <!-- Contenido -->
+  @if (restaurante && !cargando) {
+
+    <!-- Header con imagen -->
+    <div class="rv-header" [style.backgroundImage]="restaurante.imagenUrl ? 'url(' + restaurante.imagenUrl + ')' : 'none'">
+      <div class="rv-header-overlay"></div>
+      <div class="rv-header-content">
+        <div class="rv-avatar-wrap">
+          @if (restaurante.imagenUrl) {
+            <img class="rv-avatar" [src]="restaurante.imagenUrl" [alt]="restaurante.name">
+          } @else {
+            <div class="rv-avatar rv-avatar-placeholder">🍽️</div>
+          }
+        </div>
+        <h1 class="rv-nombre">{{ restaurante.name }}</h1>
+        <div class="rv-tags">
+          @if (restaurante.category) {
+            <span class="rv-tag">{{ restaurante.category }}</span>
+          }
+          @if (restaurante.planSuscription) {
+            <span class="rv-tag rv-tag-plan">{{ restaurante.planSuscription }}</span>
+          }
+        </div>
+        @if (restaurante.description) {
+          <p class="rv-descripcion">{{ restaurante.description }}</p>
+        }
+      </div>
+    </div>
+
+    <!-- Cuerpo -->
+    <div class="rv-body">
+
+      <!-- Sección promociones -->
+      <section class="rv-section">
+        <h2 class="rv-section-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          Promociones activas
+        </h2>
+
+        @if (promociones.length === 0) {
+          <div class="rv-empty">
+            <span>🏷️</span>
+            <p>Este restaurante no tiene promociones activas por ahora.</p>
+          </div>
+        }
+
+        <div class="rv-promos-grid">
+          @for (promo of promociones; track promo.id) {
+            <div class="rv-promo-card">
+              <div class="rv-promo-header">
+                <span class="rv-promo-badge">{{ promo.descuento }} OFF</span>
+              </div>
+              <div class="rv-promo-body">
+                <h3 class="rv-promo-nombre">{{ promo.nombre }}</h3>
+                <p class="rv-promo-desc">{{ promo.descripcion }}</p>
+                <span class="rv-promo-precio">Bs {{ promo.precio }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- Información del restaurante -->
+      <section class="rv-section">
+        <h2 class="rv-section-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          Información
+        </h2>
+
+        <div class="rv-info-grid">
+          @if (restaurante.category) {
+            <div class="rv-info-item">
+              <span class="rv-info-icon">🍴</span>
+              <div>
+                <span class="rv-info-lbl">Categoría</span>
+                <span class="rv-info-val">{{ restaurante.category }}</span>
+              </div>
+            </div>
+          }
+          @if (restaurante.planSuscription) {
+            <div class="rv-info-item">
+              <span class="rv-info-icon">⭐</span>
+              <div>
+                <span class="rv-info-lbl">Plan</span>
+                <span class="rv-info-val">{{ restaurante.planSuscription }}</span>
+              </div>
+            </div>
+          }
+          @if (restaurante.latitude && restaurante.longitude) {
+            <div class="rv-info-item">
+              <span class="rv-info-icon">📍</span>
+              <div>
+                <span class="rv-info-lbl">Coordenadas</span>
+                <span class="rv-info-val">{{ restaurante.latitude | number:'1.4-4' }}, {{ restaurante.longitude | number:'1.4-4' }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+
+    </div>
+  }
+
 </div>

@@ -96,9 +96,11 @@
           </div>
         </div>
 
-        <button type="button" class="btn-login" (click)="login()">
-          {{ 'LOGIN.SUBMIT_BTN' | translate }}
+        <button type="button" class="btn-login" (click)="login()" [disabled]="cargando">
+          {{ cargando ? 'Ingresando...' : ('LOGIN.SUBMIT_BTN' | translate) }}
         </button>
+
+        <p class="login-error" *ngIf="errorMsg">{{ errorMsg }}</p>
 
         <div class="form-divider">
           <span>{{ 'LOGIN.DIVIDER' | translate }}</span>

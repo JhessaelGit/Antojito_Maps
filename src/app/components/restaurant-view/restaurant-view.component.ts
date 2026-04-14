@@ -2,52 +2,54 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RestauranteService } from '../../core/services/restaurante.service';
-import { Restaurante } from '../../core/models/restaurant.model';
-import { CardComponent } from '../../shared/components/card/card.component';
-import { ButtonComponent } from '../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-restaurant-view',
   standalone: true,
-  imports: [CommonModule, CardComponent, ButtonComponent], // Importamos los nuevos componentes
+  imports: [CommonModule],
   templateUrl: './restaurant-view.html',
   styleUrl: './restaurant-view.css'
 })
 export class RestaurantView implements OnInit {
-  restaurante?: Restaurante;
-  promociones: any[] = []; // Esto vendrá del backend después
+
+  restaurante: any = null;
+  cargando = true;
+  error    = false;
+
+  // Datos de ejemplo hasta que el backend tenga endpoint de promociones
+  promociones: any[] = [
+    { id: 1, nombre: 'Combo Especial',  descripcion: 'Papas + Arroz + 2 Presas + Refresco', precio: 21.6,  descuento: '10%' },
+    { id: 2, nombre: 'Duo Pack',        descripcion: 'Ideal para compartir — 2 platos + 2 bebidas',       precio: 45, descuento: '15%' }
+  ];
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
+    private route:   ActivatedRoute,
+    private router:  Router,
     private restauranteService: RestauranteService
   ) {}
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      // Le pasamos el 'id' directamente como string, ya no usamos Number(id)
-      this.cargarDatosRestaurante(id);
-    }
+    if (id) this.cargar(id);
+    else    this.error = true;
   }
 
-  cargarDatosRestaurante(id: string) {
+  cargar(id: string) {
+    this.cargando = true;
     this.restauranteService.getRestauranteById(id).subscribe({
-      next: (data: Restaurante) => {
+      next: (data: any) => {
         this.restaurante = data;
-        this.promociones = [
-          { id: 1, nombre: 'Combo Especial', desc: 'Descripción breve', precio: 25 },
-          { id: 2, nombre: 'Duo Pack', desc: 'Ideal para compartir', precio: 45 }
-        ];
+        this.cargando    = false;
       },
-      error: (err: any) => { 
-        console.error('Error al cargar restaurante', err);
+      error: () => {
+        this.error    = true;
+        this.cargando = false;
       }
     });
   }
 
   volverAlMapa() {
-    this.router.navigate(['/map-page']); 
+    this.router.navigate(['/mapa']);
   }
 }

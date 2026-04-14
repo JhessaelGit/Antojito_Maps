@@ -1,35 +1,67 @@
-<div class="wrapper">
+<div class="po-page">
 
-  <div class="header">
-    <h1>Antojitos Maps</h1>
+  <!-- Botón volver -->
+  <button class="btn-back" (click)="volver()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2.5"
+      stroke-linecap="round" stroke-linejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12"/>
+      <polyline points="12 19 5 12 12 5"/>
+    </svg>
+    Volver
+  </button>
+
+  <!-- Header -->
+  <div class="po-header">
+    <div class="po-logo">Antojitos<span>Maps</span></div>
+    <h1 class="po-title">Elige tu plan</h1>
+    <p class="po-sub">Lleva tu negocio al siguiente nivel en Cochabamba</p>
   </div>
 
-  <div class="container">
-    <h2>{{ 'PAYMENTS.TITLE' | translate }}</h2>
+  <!-- Cards de planes -->
+  <div class="po-plans">
 
-    <div class="plans">
+    @for (plan of planes; track plan.id) {
+      <div class="po-plan-card" [class.po-plan-featured]="plan.destacado">
 
-      <div class="plan-card">
-        <h3>{{ 'PAYMENTS.MONTHLY_PLAN' | translate }}</h3>
-        <p>{{ 'PAYMENTS.PROMO_TEXT' | translate }}</p>
-        <p class="price">99 {{ 'PAYMENTS.CURRENCY' | translate }}</p>
+        @if (plan.badge) {
+          <div class="po-plan-badge">{{ plan.badge }}</div>
+        }
 
-        <button (click)="seleccionar('mensual')" class="btn">
-          {{ 'PAYMENTS.SELECT_BTN' | translate }}
+        <div class="po-plan-top">
+          <h3 class="po-plan-nombre">{{ plan.nombre }}</h3>
+          <div class="po-plan-precio">{{ plan.precio }}</div>
+          <p class="po-plan-desc">{{ plan.descripcion }}</p>
+        </div>
+
+        <ul class="po-plan-features">
+          @for (f of plan.features; track f) {
+            <li class="po-feature-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              {{ f }}
+            </li>
+          }
+        </ul>
+
+        <button
+          class="po-btn"
+          [class.po-btn-featured]="plan.destacado"
+          (click)="seleccionar(plan)">
+          {{ plan.btnLabel }}
         </button>
+
       </div>
+    }
 
-      <div class="plan-card">
-        <h3>{{ 'PAYMENTS.ANNUAL_PLAN' | translate }}</h3>
-        <p>{{ 'PAYMENTS.VISIBILITY_TEXT' | translate }}</p>
-        <p class="price">1000 {{ 'PAYMENTS.CURRENCY' | translate }}</p>
-
-        <button (click)="seleccionar('anual')" class="btn">
-          {{ 'PAYMENTS.SELECT_BTN' | translate }}
-        </button>
-      </div>
-
-    </div>
   </div>
+
+  <!-- Nota al pie -->
+  <p class="po-footer-note">
+    Puedes cambiar tu plan en cualquier momento desde tu panel de restaurante.
+  </p>
 
 </div>
