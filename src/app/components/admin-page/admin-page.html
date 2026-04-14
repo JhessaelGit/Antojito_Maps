@@ -1,31 +1,29 @@
 <div class="admin-container">
 
-  <!-- HEADER -->
   <div class="header">
     <h2>Antojitos<span>Maps</span></h2>
   </div>
 
-  <!-- CONTENIDO -->
   <div class="content">
 
-    <h1>Panel de administración</h1>
-    <p>Gestiona los administradores del sistema</p>
+    <h1>{{ 'ADMIN_DASHBOARD.TITLE' | translate }}</h1>
+    <p>{{ 'ADMIN_DASHBOARD.SUBTITLE' | translate }}</p>
 
     <div class="cards">
 
       <div class="card" (click)="irAgregar()">
         <div class="icon">👤➕</div>
-        <p>Agregar Administrador</p>
+        <p>{{ 'ADMIN_DASHBOARD.CARD_ADD' | translate }}</p>
       </div>
 
       <div class="card" (click)="irEditar()">
         <div class="icon">🔍</div>
-        <p>Editar Administrador</p>
+        <p>{{ 'ADMIN_DASHBOARD.CARD_EDIT' | translate }}</p>
       </div>
 
       <div class="card" (click)="irEliminados()">
         <div class="icon">🗑️</div>
-        <p>Administradores eliminados</p>
+        <p>{{ 'ADMIN_DASHBOARD.CARD_DELETED' | translate }}</p>
       </div>
 
     </div>

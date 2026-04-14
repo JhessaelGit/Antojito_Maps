@@ -3,14 +3,14 @@
   <div class="header">
     <h2 class="logo">Antojitos<span>Maps</span></h2>
     <button class="btn-back" (click)="volver()">
-  <span class="arrow">←</span>
-  <span>Volver</span>
-</button>
+      <span class="arrow">←</span>
+      <span>{{ 'ADMIN_DELETED.BACK' | translate }}</span>
+    </button>
   </div>
 
   <div class="title">
-    <h1>Administradores eliminados</h1>
-    <p>Gestiona administradores eliminados</p>
+    <h1>{{ 'ADMIN_DELETED.TITLE' | translate }}</h1>
+    <p>{{ 'ADMIN_DELETED.SUBTITLE' | translate }}</p>
   </div>
 
   <div class="list">
@@ -20,11 +20,13 @@
       <div class="info">
         <h3>{{ admin.nombre }}</h3>
         <p>{{ admin.email }}</p>
-        <span class="estado">Eliminado</span>
+        <span class="estado">{{ 'ADMIN_DELETED.STATUS_DELETED' | translate }}</span>
       </div>
 
       <div class="actions">
-        <button (click)="restaurar(admin)">Restaurar</button>
+        <button (click)="restaurar(admin)">
+          {{ 'ADMIN_DELETED.BTN_RESTORE' | translate }}
+        </button>
       </div>
 
     </div>

@@ -1,49 +1,48 @@
 <div class="container">
 
-  
   <div class="header">
     <h2 class="logo">
       Antojitos<span>Maps</span>
     </h2>
 
     <button class="btn-admin" (click)="irAdmin()">
-      Administrar
+      {{ 'ADMIN_RESTAURANTS.BTN_MANAGE_ADMINS' | translate }}
     </button>
   </div>
 
-  
   <div class="location">
     📍 COCHABAMBA - BOLIVIA
   </div>
 
-  
   <div class="title">
-    <h1>Panel de restaurantes</h1>
+    <h1>{{ 'ADMIN_RESTAURANTS.TITLE' | translate }}</h1>
     <p class="subtexto">
-      Administra el estado y suscripciones de los restaurantes.
+      {{ 'ADMIN_RESTAURANTS.SUBTITLE' | translate }}
     </p>
   </div>
 
-  
   <div class="grid">
 
     <div class="card" *ngFor="let r of restaurantes">
 
-     
       <div class="lock">
         {{ r.bloqueado ? '🔒' : '🔓' }}
       </div>
 
-      
       <h3>{{ r.nombre }}</h3>
 
-     
-      <p><strong>Suscripción:</strong> {{ r.plan }}</p>
-      <p><strong>Tiempo restante:</strong> {{ r.tiempo }}</p>
+      <p>
+        <strong>{{ 'ADMIN_RESTAURANTS.LABEL_SUBSCRIPTION' | translate }}:</strong> 
+        {{ 'ADMIN_RESTAURANTS.' + r.plan | translate }}
+      </p>
+      
+      <p>
+        <strong>{{ 'ADMIN_RESTAURANTS.LABEL_TIME' | translate }}:</strong> 
+        {{ r.tiempo }} {{ 'ADMIN_RESTAURANTS.DAYS' | translate }}
+      </p>
 
-   
-      <button (click)="toggleBloqueo(r)">
-        {{ r.bloqueado ? 'Desbloquear' : 'Bloquear' }}
+      <button (click)="toggleBloqueo(r)" [class.blocked]="r.bloqueado">
+        {{ (r.bloqueado ? 'ADMIN_RESTAURANTS.BTN_UNBLOCK' : 'ADMIN_RESTAURANTS.BTN_BLOCK') | translate }}
       </button>
 
     </div>

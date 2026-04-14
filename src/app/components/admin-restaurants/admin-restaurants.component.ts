@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-restaurants',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './admin-restaurants.html',
   styleUrls: ['./admin-restaurants.css']
 })
@@ -13,13 +14,14 @@ export class AdminRestaurantsComponent {
 
   constructor(private router: Router) {}
 
+  // Nota: En una app real, 'plan' vendría como un ID o slug ('none', 'monthly')
   restaurantes = [
-    { nombre: 'MAMA CHICKEN', plan: 'Ninguna', tiempo: '0 días', bloqueado: false },
-    { nombre: 'ROAST AND ROLL', plan: 'Mensual', tiempo: '5 días', bloqueado: false },
-    { nombre: 'SUBWAY', plan: 'Anual', tiempo: '125 días', bloqueado: true },
-    { nombre: 'POLLOS COPACABANA', plan: 'Ninguna', tiempo: '0 días', bloqueado: false },
-    { nombre: 'BURGER KING', plan: 'Mensual', tiempo: '11 días', bloqueado: true },
-    { nombre: 'PIZZA ELIS', plan: 'Mensual', tiempo: '1 día', bloqueado: false }
+    { nombre: 'MAMA CHICKEN', plan: 'PLAN_NONE', tiempo: 0, bloqueado: false },
+    { nombre: 'ROAST AND ROLL', plan: 'PLAN_MONTHLY', tiempo: 5, bloqueado: false },
+    { nombre: 'SUBWAY', plan: 'PLAN_ANNUAL', tiempo: 125, bloqueado: true },
+    { nombre: 'POLLOS COPACABANA', plan: 'PLAN_NONE', tiempo: 0, bloqueado: false },
+    { nombre: 'BURGER KING', plan: 'PLAN_MONTHLY', tiempo: 11, bloqueado: true },
+    { nombre: 'PIZZA ELIS', plan: 'PLAN_MONTHLY', tiempo: 1, bloqueado: false }
   ];
 
   toggleBloqueo(r: any) {

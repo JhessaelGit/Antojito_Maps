@@ -193,5 +193,63 @@
     "UPLOAD_SUB": "JPG, PNG o WEBP · Máx. 5MB",
     "SAVING": "Guardando...",
     "BTN_SAVE_PROFILE": "Guardar cambios"
+  },
+  "ADMIN_LOGIN": {
+    "BACK": "Volver",
+    "SIDE_TITLE": "Panel de administración",
+    "SIDE_SUB": "Gestiona restaurantes, usuarios y el contenido de la plataforma.",
+    "FEATURE_SYSTEM": "Control total del sistema",
+    "FEATURE_RESTAURANTS": "Gestión de restaurantes",
+    "FEATURE_MONITOR": "Monitoreo de actividad",
+    "FORM_TITLE": "Administrador",
+    "FORM_SUB": "Accede al panel de control",
+    "EMAIL": "Correo",
+    "PASSWORD": "Contraseña",
+    "PASS_PLACEHOLDER": "Ingresa tu contraseña",
+    "BTN_LOGIN": "Iniciar sesión",
+    "BTN_LOADING": "Cargando...",
+    "ERR_EMAIL_EMPTY": "El correo no puede estar vacío",
+    "ERR_EMAIL_INVALID": "El correo debe contener '@'",
+    "ERR_PASS_EMPTY": "La contraseña no puede estar vacía",
+    "ERR_CREDENTIALS": "Credenciales incorrectas"
+  },
+  "ADMIN_DASHBOARD": {
+    "TITLE": "Panel de administración",
+    "SUBTITLE": "Gestiona los administradores del sistema",
+    "CARD_ADD": "Agregar Administrador",
+    "CARD_EDIT": "Editar Administrador",
+    "CARD_DELETED": "Administradores eliminados"
+  },
+  "ADMIN_CREATE": {
+    "TITLE": "Agregar Administrador",
+    "IMAGE_LABEL": "Subir imagen",
+    "PLACEHOLDER_NAME": "Nombre completo",
+    "PLACEHOLDER_EMAIL": "Correo",
+    "PLACEHOLDER_FUNCTIONS": "Funciones",
+    "BTN_ADD": "Agregar",
+    "ERR_NAME": "Nombre requerido",
+    "ERR_EMAIL": "Correo inválido",
+    "ERR_FUNCTIONS": "Funciones requeridas"
+  },
+  "ADMIN_DELETED": {
+    "BACK": "Volver",
+    "TITLE": "Administradores eliminados",
+    "SUBTITLE": "Gestiona administradores eliminados",
+    "STATUS_DELETED": "Eliminado",
+    "BTN_RESTORE": "Restaurar",
+    "ALERT_RESTORED": "Restaurado"
+  },
+  "ADMIN_RESTAURANTS": {
+    "BTN_MANAGE_ADMINS": "Administrar",
+    "TITLE": "Panel de restaurantes",
+    "SUBTITLE": "Administra el estado y suscripciones de los restaurantes.",
+    "LABEL_SUBSCRIPTION": "Suscripción",
+    "LABEL_TIME": "Tiempo restante",
+    "BTN_BLOCK": "Bloquear",
+    "BTN_UNBLOCK": "Desbloquear",
+    "DAYS": "días",
+    "PLAN_NONE": "Ninguna",
+    "PLAN_MONTHLY": "Mensual",
+    "PLAN_ANNUAL": "Anual"
   }
 }

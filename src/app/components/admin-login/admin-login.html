@@ -1,56 +1,52 @@
 <div class="login-page">
 
-  <!-- Botón volver -->
   <button class="btn-back" (click)="router.navigate(['/inicio'])">
-    ← Volver
+    ← {{ 'ADMIN_LOGIN.BACK' | translate }}
   </button>
 
-  <!-- Panel izquierdo -->
   <div class="login-side-panel">
     <div class="side-content">
       <div class="side-logo">Antojitos<span>Maps</span></div>
 
       <h2 class="side-title">
-        Panel de administración
+        {{ 'ADMIN_LOGIN.SIDE_TITLE' | translate }}
       </h2>
 
       <p class="side-sub">
-        Gestiona restaurantes, usuarios y el contenido de la plataforma.
+        {{ 'ADMIN_LOGIN.SIDE_SUB' | translate }}
       </p>
 
       <div class="side-features">
         <div class="feature-item">
           <span class="feature-dot"></span>
-          Control total del sistema
+          {{ 'ADMIN_LOGIN.FEATURE_SYSTEM' | translate }}
         </div>
         <div class="feature-item">
           <span class="feature-dot"></span>
-          Gestión de restaurantes
+          {{ 'ADMIN_LOGIN.FEATURE_RESTAURANTS' | translate }}
         </div>
         <div class="feature-item">
           <span class="feature-dot"></span>
-          Monitoreo de actividad
+          {{ 'ADMIN_LOGIN.FEATURE_MONITOR' | translate }}
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Panel derecho -->
   <div class="login-form-panel">
     <div class="form-card">
 
       <div class="form-header">
-        <h1 class="form-title">Administrador</h1>
+        <h1 class="form-title">{{ 'ADMIN_LOGIN.FORM_TITLE' | translate }}</h1>
         <p class="form-subtitle">
-          Accede al panel de control
+          {{ 'ADMIN_LOGIN.FORM_SUB' | translate }}
         </p>
       </div>
 
       <form class="form-body" #form="ngForm">
 
-        <!-- EMAIL -->
         <div class="field-group">
-          <label class="field-label">Correo</label>
+          <label class="field-label">{{ 'ADMIN_LOGIN.EMAIL' | translate }}</label>
 
           <div class="field-input-wrap">
             <span class="field-icon">@</span>
@@ -65,20 +61,18 @@
           </div>
 
           <div *ngIf="form.submitted && !correo" class="error">
-            El correo no puede estar vacío
+            {{ 'ADMIN_LOGIN.ERR_EMAIL_EMPTY' | translate }}
           </div>
 
           <div *ngIf="correo && !correo.includes('@')" class="error">
-            El correo debe contener "@"
+            {{ 'ADMIN_LOGIN.ERR_EMAIL_INVALID' | translate }}
           </div>
         </div>
 
-        <!-- PASSWORD -->
         <div class="field-group">
-          <label class="field-label">Contraseña</label>
+          <label class="field-label">{{ 'ADMIN_LOGIN.PASSWORD' | translate }}</label>
 
           <div class="field-input-wrap">
-
             <span class="field-icon">🔒</span>
 
             <input
@@ -86,28 +80,25 @@
               [(ngModel)]="password"
               name="password"
               class="field-input"
-              placeholder="Ingresa tu contraseña"
+              [placeholder]="'ADMIN_LOGIN.PASS_PLACEHOLDER' | translate"
               required>
 
             <button type="button" class="toggle-pwd" (click)="togglePasswordVisibility()">
               <span *ngIf="!showPassword">👁</span>
               <span *ngIf="showPassword">🙈</span>
             </button>
-
           </div>
 
           <div *ngIf="form.submitted && !password" class="error">
-            La contraseña no puede estar vacía
+            {{ 'ADMIN_LOGIN.ERR_PASS_EMPTY' | translate }}
           </div>
         </div>
 
-        <!-- BOTÓN LOGIN -->
         <button type="button" class="btn-login" (click)="login(form)">
-          <span *ngIf="!cargando">Iniciar sesión</span>
-          <span *ngIf="cargando">Cargando...</span>
+          <span *ngIf="!cargando">{{ 'ADMIN_LOGIN.BTN_LOGIN' | translate }}</span>
+          <span *ngIf="cargando">{{ 'ADMIN_LOGIN.BTN_LOADING' | translate }}</span>
         </button>
 
-        <!-- ERROR -->
         <div *ngIf="errorMsg" class="error">
           {{ errorMsg }}
         </div>
