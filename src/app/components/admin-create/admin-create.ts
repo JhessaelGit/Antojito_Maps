@@ -14,34 +14,18 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 })
 export class AdminCreate {
 
-  nombre: string = '';
   correo: string = '';
-  funciones: string = '';
-  foto: File | null = null;
-  preview: string | null = null;
+  password: string = '';
+  showPassword = false;
 
-  errorNombre = '';
   errorCorreo = '';
-  errorFunciones = '';
+  errorPassword = '';
 
   constructor(
     private router: Router,
     private logger: LoggerService,
     private translate: TranslateService
   ) {}
-
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    this.foto = file;
-
-    const reader = new FileReader();
-    reader.onload = e => {
-      this.preview = e.target?.result as string;
-    };
-    reader.readAsDataURL(file);
-  }
 
   agregar() {
     this.clearErrors();
@@ -76,12 +60,11 @@ export class AdminCreate {
       email: this.correo
     });
 
-    this.router.navigate(['/admin']); 
+    this.router.navigate(['/admin']);
   }
 
   clearErrors() {
-    this.errorNombre = '';
     this.errorCorreo = '';
-    this.errorFunciones = '';
+    this.errorPassword = '';
   }
 }
