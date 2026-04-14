@@ -251,5 +251,10 @@
     "PLAN_NONE": "Ninguna",
     "PLAN_MONTHLY": "Mensual",
     "PLAN_ANNUAL": "Anual"
+  },
+  "ADMIN_LIST": {
+    "TITLE": "Administradores",
+    "BTN_ADD": "+ Agregar",
+    "CONFIRM_DELETE": "¿Estás seguro de que deseas eliminar a este administrador?"
   }
 }

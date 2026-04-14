@@ -3,8 +3,10 @@
   <div class="card">
 
     <div class="header">
-      <h2>Administradores</h2>
-      <button class="btn-add" (click)="irCrear()">+ Agregar</button>
+      <h2>{{ 'ADMIN_LIST.TITLE' | translate }}</h2>
+      <button class="btn-add" (click)="irCrear()">
+        {{ 'ADMIN_LIST.BTN_ADD' | translate }}
+      </button>
     </div>
 
     <div class="list">
