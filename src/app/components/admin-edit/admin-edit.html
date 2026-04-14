@@ -1,0 +1,27 @@
+<div class="page">
+
+  <div class="card">
+
+    <div class="header">
+      <h2>Administradores</h2>
+      <button class="btn-add" (click)="irCrear()">+ Agregar</button>
+    </div>
+
+    <div class="list">
+
+      <div class="item" *ngFor="let admin of admins">
+
+        <span class="name">{{ admin.nombre }}</span>
+
+        <div class="actions">
+          <button class="btn-icon edit" (click)="editar(admin)">✏️</button>
+          <button class="btn-icon delete" (click)="eliminar(admin)">🗑️</button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
