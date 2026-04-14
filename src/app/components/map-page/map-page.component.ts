@@ -204,14 +204,13 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
         .bindPopup(popupHtml, { maxWidth: 290, className: 'custom-popup' });
 
       marker.on('popupopen', () => {
-        
         setTimeout(() => {
           const btn = document.querySelector<HTMLButtonElement>(
             `.restaurant-popup-btn[data-uuid="${r.uuid ?? r.id ?? ''}"]`
           );
           if (btn) {
             btn.addEventListener('click', () => {
-              this.router.navigate(['restaurant-view/:uuid', btn.dataset['uuid']]);
+              this.router.navigate(['/restaurant-view', btn.dataset['uuid']]);
             });
           }
         }, 50);
@@ -232,7 +231,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     const safeDescripcion = this.escapeHtml(descripcion || this.translate.instant('MAP.NO_DESC'));
     const safeCategoria  = this.escapeHtml(categoria   || 'Sin categoría');
     const safeImagen     = this.escapeHtml(imagen      || '');
-    const btnLabel       = this.translate.instant('MAP.VIEW_RESTAURANT') || 'Ver restaurante';
+    const btnLabel       = 'Ver restaurante';
 
     const mediaHtml = safeImagen
       ? `<div class="restaurant-popup-media">
