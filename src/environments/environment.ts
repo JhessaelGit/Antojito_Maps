@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
-  apiBaseUrl: '/api'
+  production: true,
+  apiBaseUrl: 'https://antojitos-maps-6fafc945e691.herokuapp.com'
 };
