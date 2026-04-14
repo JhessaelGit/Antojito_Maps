@@ -58,4 +58,8 @@ export class PaginaPrincipalComponent {
   irAlMapa(): void {
     this.router.navigate(['/mapa']);
   }
+
+  irAlMapaConCategoria(slug: string): void {
+    this.router.navigate(['/mapa'], { queryParams: { categoria: slug } });
+  }
 }

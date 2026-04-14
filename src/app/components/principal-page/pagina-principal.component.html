@@ -76,7 +76,7 @@
     <h2 class="am-strip-title">{{ 'LANDING.STRIP_TITLE' | translate }}</h2>
     <p class="am-strip-sub">{{ 'LANDING.STRIP_SUB' | translate }}</p>
     <div class="am-strip-scroll">
-      <div class="am-dish-card" *ngFor="let dish of categorias" (click)="irAlMapa()">
+      <div class="am-dish-card" *ngFor="let dish of categorias" (click)="irAlMapaConCategoria(dish.slug)">
         <div class="am-dish-img" [ngClass]="dish.bg">{{ dish.emoji }}</div>
         <div class="am-dish-body">
           <div class="am-dish-name">{{ dish.nombre }}</div>
