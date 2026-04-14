@@ -219,5 +219,16 @@
     "CARD_ADD": "Add Administrator",
     "CARD_EDIT": "Edit Administrator",
     "CARD_DELETED": "Deleted Administrators"
+  },
+  "ADMIN_CREATE": {
+    "TITLE": "Add Administrator",
+    "IMAGE_LABEL": "Upload image",
+    "PLACEHOLDER_NAME": "Full name",
+    "PLACEHOLDER_EMAIL": "Email",
+    "PLACEHOLDER_FUNCTIONS": "Functions",
+    "BTN_ADD": "Add",
+    "ERR_NAME": "Name required",
+    "ERR_EMAIL": "Invalid email",
+    "ERR_FUNCTIONS": "Functions required"
   }
 }

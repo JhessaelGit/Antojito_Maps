@@ -219,5 +219,16 @@
     "CARD_ADD": "Agregar Administrador",
     "CARD_EDIT": "Editar Administrador",
     "CARD_DELETED": "Administradores eliminados"
+  },
+  "ADMIN_CREATE": {
+    "TITLE": "Agregar Administrador",
+    "IMAGE_LABEL": "Subir imagen",
+    "PLACEHOLDER_NAME": "Nombre completo",
+    "PLACEHOLDER_EMAIL": "Correo",
+    "PLACEHOLDER_FUNCTIONS": "Funciones",
+    "BTN_ADD": "Agregar",
+    "ERR_NAME": "Nombre requerido",
+    "ERR_EMAIL": "Correo inválido",
+    "ERR_FUNCTIONS": "Funciones requeridas"
   }
 }
