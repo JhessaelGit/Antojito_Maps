@@ -10,27 +10,11 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subject, finalize, takeUntil, timeout } from 'rxjs';
 import * as L from 'leaflet';
 
-/* ────────────────────────────────────────────────────────────────
-   INTERFACES — listas para conectar con el chatbot real
-   ──────────────────────────────────────────────────────────────── */
-
 export interface ChatMensaje {
   id: string;
   rol: 'bot' | 'user';
   texto: string;
   hora: string;
-}
-
-/**
- * Interfaz esperada del ChatbotService real.
- * Tus compañeros deben crear un servicio Angular con esta firma:
- *
- *   chatbotService.enviarMensaje(texto: string): Promise<string>
- *
- * Luego inyectarlo en el constructor y reemplazar mockResponder().
- */
-export interface IChatbotService {
-  enviarMensaje(texto: string): Promise<string>;
 }
 
 @Component({
@@ -45,6 +29,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   /* ── Mapa ──────────────────────────────────────────────────── */
   private map!: L.Map;
   private markersLayer = L.layerGroup();
+  private chatbotMarkersLayer = L.layerGroup(); // Capa para recomendaciones del bot
   private locationMarker?: L.Marker;
 
   categorias = [
@@ -69,7 +54,6 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   private restaurantes: any[] = [];
 
   /* ── Chatbot ───────────────────────────────────────────────── */
-
   @ViewChild('chatMessages') private chatMessagesRef!: ElementRef<HTMLDivElement>;
 
   chatbotAbierto: boolean = false;
@@ -95,20 +79,18 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     '🍔 Una buena hamburguesa',
   ];
 
-  /* ── Respuestas mock ────────────────────────────────────────
-     TODO: eliminar cuando el ChatbotService real esté listo.
-     ─────────────────────────────────────────────────────────── */
-  private mockRespuestas: Record<string, string> = {
-    taco:     '¡Buena elección! 🌮 En el mapa encontrarás varias taquerías con excelente sazón. Te recomiendo filtrar por la categoría "Tacos" para verlos todos.',
-    pizza:    '🍕 ¡Perfecto! Hay un par de pizzerías muy bien valoradas cerca. Activa el filtro "Pizzería" y los verás destacados en el mapa.',
-    sushi:    '🍣 ¡Amo el sushi! Hay opciones frescas disponibles. Filtra por "Sushi" para ubicarlas en el mapa.',
-    burger:   '🍔 ¡Hamburguesas! Selecciona "Hamburguesas" en las categorías y encuentra las mejores del área.',
-    tipic:    '🇧🇴 ¡Comida boliviana! Nada como un buen plato típico. Activa "Comida Típica" en los filtros.',
-    salteña:  '☀️ ¡Las salteñas son perfectas a esta hora! Filtra por "Salteñas" y encuentra las más cercanas.',
-    chicharr: '🥩 ¡Chicharrón, qué buena idea! Selecciona "Chicharrón" en el menú de categorías.',
-    default:  'Entendido 🤔 Puedo ayudarte a encontrar restaurantes según tu antojo. Cuéntame más o usa los filtros del mapa para explorar.'
+  /* ── Respuestas mock con Metadata de Categoría ──────────────── */
+  private mockRespuestas: Record<string, { texto: string, slug: string }> = {
+    taco:     { texto: '¡Buena elección! 🌮 He marcado las mejores taquerías en el mapa para ti.', slug: 'Tacos' },
+    pizza:    { texto: '🍕 ¡Perfecto! He ubicado las pizzerías más cercanas en el mapa.', slug: 'Pizzeria' },
+    sushi:    { texto: '🍣 ¡Amo el sushi! Mira los puntos dorados destacados en el mapa.', slug: 'Sushi' },
+    burger:   { texto: '🍔 ¡Hamburguesas! Aquí tienes las opciones disponibles ahora mismo.', slug: 'Hamburguesas' },
+    tipic:    { texto: '🇧🇴 ¡Comida boliviana! He marcado los lugares de comida típica en el mapa.', slug: 'Comida Tipica' },
+    salteña:  { texto: '☀️ ¡Salteñas! Los puntos amarillos te muestran dónde encontrarlas.', slug: 'Salteñas' },
+    chicharr: { texto: '🥩 ¡Chicharrón! Mira las opciones que han aparecido en el mapa.', slug: 'Chicharron' },
+    default:  { texto: 'Entendido 🤔 Puedo ayudarte a encontrar restaurantes. Prueba con: Tacos, Pizza o Sushi.', slug: '' }
   };
-
+  
   private readonly destroy$ = new Subject<void>();
 
   constructor(
@@ -118,10 +100,6 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     private translate: TranslateService,
     private cd: ChangeDetectorRef
   ) {}
-
-  /* ══════════════════════════════════════════════════════════════
-     CICLO DE VIDA
-     ══════════════════════════════════════════════════════════════ */
 
   ngOnInit(): void {
     this.route.queryParams
@@ -146,7 +124,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /* ══════════════════════════════════════════════════════════════
-     MAPA
+      MAPA
      ══════════════════════════════════════════════════════════════ */
 
   private initMap(): void {
@@ -158,7 +136,9 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(this.map);
+    
     this.markersLayer.addTo(this.map);
+    this.chatbotMarkersLayer.addTo(this.map);
   }
 
   private obtenerUbicacion(): void {
@@ -186,8 +166,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   cargarRestaurantes(): void {
     this.cargando = true;
     this.errorApi = false;
-    this.restauranteService
-      .getRestaurantes()
+    this.restauranteService.getRestaurantes()
       .pipe(
         timeout(15000),
         takeUntil(this.destroy$),
@@ -195,9 +174,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
       )
       .subscribe({
         next: (data: any) => {
-          if (Array.isArray(data))   this.restaurantes = data;
-          else if (data?.data)       this.restaurantes = data.data;
-          else                       this.restaurantes = [];
+          this.restaurantes = Array.isArray(data) ? data : (data?.data || []);
           this.filtrarRestaurantes();
         },
         error: (err) => {
@@ -206,6 +183,51 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
           this.refreshView();
         }
       });
+  }
+
+  private mostrarRecomendacionesEnMapa(slug: string): void {
+    if (!slug) return;
+    this.chatbotMarkersLayer.clearLayers();
+
+    const recomendados = this.restaurantes.filter(r => 
+      (r.category ?? r.categoria ?? '').toLowerCase() === slug.toLowerCase()
+    );
+
+    recomendados.forEach(r => {
+      const lat = r.latitude ?? r.lat ?? r.latitud;
+      const lng = r.longitude ?? r.lng ?? r.longitud;
+      if (lat == null || lng == null) return;
+
+      const iconoChatbot = L.divIcon({
+        className: 'chatbot-recommendation-marker',
+        html: `<div class="marker-pin-bot"><div class="marker-inner-bot"></div></div>`,
+        iconSize: [38, 48], iconAnchor: [19, 44]
+      });
+
+      const uuid = r.uuid ?? r.id ?? '';
+      const marker = L.marker([lat, lng], { icon: iconoChatbot })
+        .bindPopup(this.buildPopupHtml(
+          r.name ?? 'Recomendado', 
+          r.description ?? '', 
+          r.category ?? '', 
+          r.imagenUrl ?? '', 
+          uuid
+        ), { maxWidth: 290, className: 'custom-popup' });
+
+      marker.on('popupopen', () => {
+        setTimeout(() => {
+          const btn = document.querySelector<HTMLButtonElement>(`.restaurant-popup-btn[data-uuid="${uuid}"]`);
+          btn?.addEventListener('click', () => this.router.navigate(['/restaurant-view', uuid]));
+        }, 50);
+      });
+
+      this.chatbotMarkersLayer.addLayer(marker);
+    });
+
+    if (recomendados.length > 0) {
+      const group = L.featureGroup(this.chatbotMarkersLayer.getLayers() as L.Marker[]);
+      this.map.fitBounds(group.getBounds().pad(0.3));
+    }
   }
 
   filtrarRestaurantes(): void {
@@ -220,7 +242,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
 
     const currentCat = this.categorias.find(c => c.slug.toLowerCase() === this.categoriaSeleccionada.toLowerCase());
     this.categoriaSinResultados = currentCat ? currentCat.label : this.categoriaSeleccionada;
-    this.sinResultados     = filtrados.length === 0 && !!this.categoriaSeleccionada;
+    this.sinResultados = filtrados.length === 0 && !!this.categoriaSeleccionada;
     this.mostrarBienvenida = filtrados.length === 0 && !this.categoriaSeleccionada;
 
     filtrados.forEach(r => {
@@ -234,26 +256,20 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
         iconSize: [36, 46], iconAnchor: [18, 42]
       });
 
-      const noDesc      = this.translate.instant('MAP.NO_DESC');
-      const nombre      = r.name ?? r.nombre ?? 'Restaurante';
-      const descripcion = r.description ?? r.descripcion ?? noDesc;
-      const categoria   = r.category ?? r.categoria ?? '';
-      const imagen      = r.imagenUrl ?? r.image_url ?? r.imageUrl ?? r.imagen_url ?? '';
-      const uuid        = r.uuid ?? r.id ?? '';
-
+      const uuid = r.uuid ?? r.id ?? '';
       const marker = L.marker([lat, lng], { icon: icono })
-        .bindPopup(this.buildPopupHtml(nombre, descripcion, categoria, imagen, uuid), {
-          maxWidth: 290, className: 'custom-popup'
-        });
+        .bindPopup(this.buildPopupHtml(
+          r.name ?? r.nombre ?? 'Restaurante', 
+          r.description ?? r.descripcion ?? '', 
+          r.category ?? r.categoria ?? '', 
+          r.imagenUrl ?? r.image_url ?? '', 
+          uuid
+        ), { maxWidth: 290, className: 'custom-popup' });
 
       marker.on('popupopen', () => {
         setTimeout(() => {
-          const btn = document.querySelector<HTMLButtonElement>(
-            `.restaurant-popup-btn[data-uuid="${uuid}"]`
-          );
-          btn?.addEventListener('click', () => {
-            this.router.navigate(['/restaurant-view', btn.dataset['uuid']]);
-          });
+          const btn = document.querySelector<HTMLButtonElement>(`.restaurant-popup-btn[data-uuid="${uuid}"]`);
+          btn?.addEventListener('click', () => this.router.navigate(['/restaurant-view', uuid]));
         }, 50);
       });
 
@@ -261,55 +277,21 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  private buildPopupHtml(
-    nombre: string, descripcion: string,
-    categoria: string, imagen: string, uuid: string
-  ): string {
-    const sN = this.escapeHtml(nombre      || 'Restaurante');
-    const sD = this.escapeHtml(descripcion || this.translate.instant('MAP.NO_DESC'));
-    const sC = this.escapeHtml(categoria   || 'Sin categoría');
-    const sI = this.escapeHtml(imagen      || '');
+  private buildPopupHtml(n: string, d: string, c: string, i: string, u: string): string {
+    const sN = this.escapeHtml(n);
+    const sD = this.escapeHtml(d || this.translate.instant('MAP.NO_DESC'));
+    const sC = this.escapeHtml(c || 'General');
+    const mediaHtml = i ? `<div class="restaurant-popup-media"><img src="${this.escapeHtml(i)}" class="restaurant-popup-image" onerror="this.parentElement.classList.add('no-image'); this.remove();"><div class="restaurant-popup-fallback">🍽️</div></div>` : `<div class="restaurant-popup-media no-image"><div class="restaurant-popup-fallback only">🍽️</div></div>`;
 
-    const mediaHtml = sI
-      ? `<div class="restaurant-popup-media">
-           <img class="restaurant-popup-image" src="${sI}" alt="Foto de ${sN}" loading="lazy"
-                onerror="this.parentElement.classList.add('no-image'); this.remove();">
-           <div class="restaurant-popup-fallback" aria-hidden="true">🍽️</div>
-         </div>`
-      : `<div class="restaurant-popup-media no-image">
-           <div class="restaurant-popup-fallback only" aria-hidden="true">🍽️</div>
-         </div>`;
-
-    return `
-      <article class="restaurant-popup-card">
-        ${mediaHtml}
-        <div class="restaurant-popup-body">
-          <span class="restaurant-popup-category">${sC}</span>
-          <h3 class="restaurant-popup-title">${sN}</h3>
-          <p class="restaurant-popup-desc">${sD}</p>
-          <button class="restaurant-popup-btn" data-uuid="${uuid}" type="button">
-            Ver restaurante
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"/>
-              <polyline points="12 5 19 12 12 19"/>
-            </svg>
-          </button>
-        </div>
-      </article>`;
+    return `<article class="restaurant-popup-card">${mediaHtml}<div class="restaurant-popup-body"><span class="restaurant-popup-category">${sC}</span><h3 class="restaurant-popup-title">${sN}</h3><p class="restaurant-popup-desc">${sD}</p><button class="restaurant-popup-btn" data-uuid="${u}" type="button">Ver restaurante</button></div></article>`;
   }
 
-  private escapeHtml(value: string): string {
-    return value
-      .replace(/&/g,  '&amp;')
-      .replace(/</g,  '&lt;')
-      .replace(/>/g,  '&gt;')
-      .replace(/"/g,  '&quot;')
-      .replace(/'/g,  '&#39;');
+  private escapeHtml(v: string): string {
+    return v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
   /* ══════════════════════════════════════════════════════════════
-     CHATBOT
+      CHATBOT
      ══════════════════════════════════════════════════════════════ */
 
   toggleChatbot(): void {
@@ -330,38 +312,22 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     this.chatbotEscribiendo = true;
     this.refreshView();
 
-    // ══════════════════════════════════════════════════════════
-    // PUNTO DE CONEXIÓN — reemplazar cuando el servicio esté listo
-    //
-    //   Cambiar esta línea:
-    //     const respuesta = await this.mockResponder(trimmed);
-    //   Por:
-    //     const respuesta = await this.chatbotService.enviarMensaje(trimmed);
-    //
-    //   El servicio debe devolver Promise<string> u Observable<string>.
-    //   Recuerda inyectarlo en el constructor y eliminar mockResponder().
-    // ══════════════════════════════════════════════════════════
-    const respuesta = await this.mockResponder(trimmed);
-
+    const resData = await this.mockResponderData(trimmed);
     this.chatbotEscribiendo = false;
-    this.agregarMensaje('bot', respuesta);
+    this.agregarMensaje('bot', resData.texto);
+
+    // Activamos la visualización en mapa
+    this.mostrarRecomendacionesEnMapa(resData.slug);
 
     if (!this.chatbotAbierto) this.mensajesNoLeidos++;
     this.refreshView();
     setTimeout(() => this.scrollAlFinal(), 50);
   }
 
-  enviarSugerencia(texto: string): void {
-    this.enviarMensaje(texto);
-  }
+  enviarSugerencia(texto: string): void { this.enviarMensaje(texto); }
 
   private agregarMensaje(rol: 'bot' | 'user', texto: string): void {
-    this.chatMensajes.push({
-      id: Date.now().toString(),
-      rol,
-      texto,
-      hora: this.horaActual()
-    });
+    this.chatMensajes.push({ id: Date.now().toString(), rol, texto, hora: this.horaActual() });
   }
 
   private scrollAlFinal(): void {
@@ -375,44 +341,25 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     return new Date().toLocaleTimeString('es-BO', { hour: '2-digit', minute: '2-digit' });
   }
 
-  /* ── Mock — ELIMINAR cuando el chatbot real esté listo ──────── */
-  private mockResponder(texto: string): Promise<string> {
+  private mockResponderData(texto: string): Promise<{texto: string, slug: string}> {
     const lower = texto.toLowerCase();
-    const respuesta =
-      lower.includes('taco')                           ? this.mockRespuestas['taco']     :
-      lower.includes('pizza')                          ? this.mockRespuestas['pizza']    :
-      lower.includes('sushi')                          ? this.mockRespuestas['sushi']    :
-      lower.includes('burger') || lower.includes('hambur') ? this.mockRespuestas['burger'] :
-      lower.includes('típic')  || lower.includes('tipic')  ? this.mockRespuestas['tipic']  :
-      lower.includes('salteña')                        ? this.mockRespuestas['salteña']  :
-      lower.includes('chichar')                        ? this.mockRespuestas['chicharr'] :
-      this.mockRespuestas['default'];
+    let key = 'default';
+    if (lower.includes('taco')) key = 'taco';
+    else if (lower.includes('pizza') || lower.includes('italia')) key = 'pizza';
+    else if (lower.includes('sushi')) key = 'sushi';
+    else if (lower.includes('burger') || lower.includes('hambur')) key = 'burger';
+    else if (lower.includes('típic') || lower.includes('tipic')) key = 'tipic';
+    else if (lower.includes('salteña')) key = 'salteña';
+    else if (lower.includes('chichar')) key = 'chicharr';
 
-    const delay = 800 + Math.random() * 700;
-    return new Promise(resolve => setTimeout(() => resolve(respuesta), delay));
-  }
-  /* ─────────────────────────────────────────────────────────── */
-
-  /* ══════════════════════════════════════════════════════════════
-     HELPERS
-     ══════════════════════════════════════════════════════════════ */
-
-  private refreshView(): void {
-    try { this.cd.detectChanges(); } catch { /* vista destruida */ }
+    const res = this.mockRespuestas[key];
+    return new Promise(resolve => setTimeout(() => resolve(res), 1200));
   }
 
-  buscarRestaurante(texto: string): void {
-    this.textoBusqueda = texto;
-    this.filtrarRestaurantes();
-  }
-
-  seleccionarCategoria(slug: string): void {
-    this.categoriaSeleccionada = slug;
-    this.router.navigate([], { queryParams: { categoria: slug || null }, queryParamsHandling: 'merge' });
-    this.filtrarRestaurantes();
-  }
-
+  private refreshView(): void { try { this.cd.detectChanges(); } catch {} }
+  buscarRestaurante(texto: string): void { this.textoBusqueda = texto; this.filtrarRestaurantes(); }
+  seleccionarCategoria(slug: string): void { this.categoriaSeleccionada = slug; this.router.navigate([], { queryParams: { categoria: slug || null }, queryParamsHandling: 'merge' }); this.filtrarRestaurantes(); }
   verTodasLasCategorias(): void { this.seleccionarCategoria(''); }
-  volverAlInicio(): void        { this.router.navigate(['/inicio']); }
-  centrarEnMiUbicacion(): void  { this.obtenerUbicacion(); }
+  volverAlInicio(): void { this.router.navigate(['/inicio']); }
+  centrarEnMiUbicacion(): void { this.obtenerUbicacion(); }
 }
