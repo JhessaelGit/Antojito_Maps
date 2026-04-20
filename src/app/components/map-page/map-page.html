@@ -38,6 +38,30 @@
           (keyup.enter)="buscarRestaurante(txtBuscar.value)"
           (input)="buscarRestaurante(txtBuscar.value)">
       </div>
+
+      <button
+        class="btn-chatbot"
+        [class.btn-chatbot--active]="chatbotAbierto"
+        (click)="toggleChatbot()"
+        [title]="'CHATBOT.TOOLTIP' | translate">
+        <span class="btn-chatbot__icon">
+          <svg *ngIf="!chatbotAbierto" width="17" height="17" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <svg *ngIf="chatbotAbierto" width="17" height="17" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </span>
+        <span class="btn-chatbot__label">{{ (chatbotAbierto ? 'CHATBOT.CLOSE' : 'CHATBOT.RECOMMENDATIONS') | translate }}</span>
+        <span class="btn-chatbot__badge" *ngIf="!chatbotAbierto && mensajesNoLeidos > 0">
+          {{ mensajesNoLeidos }}
+        </span>
+      </button>
     </div>
   </header>
 
@@ -91,5 +115,92 @@
         </button>
       </div>
     }
+
+    <div class="chatbot-panel" [class.chatbot-panel--open]="chatbotAbierto">
+      <div class="chatbot-header">
+        <div class="chatbot-header__info">
+          <div class="chatbot-avatar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2z"/>
+              <path d="M12 14c-5.33 0-8 2.67-8 4v1h16v-1c0-1.33-2.67-4-8-4z"/>
+            </svg>
+          </div>
+          <div>
+            <p class="chatbot-header__name">{{ 'CHATBOT.ASSISTANT_NAME' | translate }}</p>
+            <span class="chatbot-header__status">
+              <span class="status-dot"></span>{{ 'CHATBOT.STATUS_ONLINE' | translate }}
+            </span>
+          </div>
+        </div>
+        <button class="chatbot-header__close" (click)="toggleChatbot()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="chatbot-messages" #chatMessages>
+        @for (msg of chatMensajes; track msg.id) {
+          <div class="chat-msg" [class.chat-msg--bot]="msg.rol === 'bot'" [class.chat-msg--user]="msg.rol === 'user'">
+            <div class="chat-msg__bubble">
+              <p class="chat-msg__text">{{ msg.texto }}</p>
+              <span class="chat-msg__time">{{ msg.hora }}</span>
+            </div>
+          </div>
+        }
+        @if (chatbotEscribiendo) {
+          <div class="chat-msg chat-msg--bot">
+            <div class="chat-msg__bubble chat-msg__bubble--typing">
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+            </div>
+          </div>
+        }
+      </div>
+
+      @if (mostrarSugerencias) {
+        <div class="chatbot-suggestions">
+          @for (sug of sugerenciasRapidas; track sug) {
+            <button class="suggestion-chip" (click)="enviarSugerencia(sug)">
+              {{ 'CHATBOT.SUGGESTIONS.' + sug | translate }}
+            </button>
+          }
+        </div>
+      }
+
+      <div class="chatbot-input-area">
+        <input
+          class="chatbot-input"
+          type="text"
+          #chatInput
+          [(ngModel)]="mensajeActual"
+          [placeholder]="'CHATBOT.INPUT_PLACEHOLDER' | translate"
+          (keyup.enter)="enviarMensaje(chatInput.value); chatInput.value = ''; mensajeActual = ''"
+          [disabled]="chatbotEscribiendo">
+        <button
+          class="chatbot-send"
+          (click)="enviarMensaje(chatInput.value); chatInput.value = ''; mensajeActual = ''"
+          [disabled]="!mensajeActual.trim() || chatbotEscribiendo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+      <p class="chatbot-footer">{{ 'CHATBOT.FOOTER' | translate }}</p>
+    </div>
+
+    <div class="chatbot-backdrop"
+         [class.chatbot-backdrop--visible]="chatbotAbierto"
+         (click)="toggleChatbot()">
+    </div>
   </div>
 </div>

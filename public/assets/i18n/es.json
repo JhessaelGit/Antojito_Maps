@@ -268,5 +268,25 @@
   "LABEL_CATEGORY": "Categoría",
   "LABEL_PLAN": "Plan",
   "LABEL_COORDS": "Coordenadas"
+  },
+  "CHATBOT": {
+    "TOOLTIP": "Asistente de recomendaciones",
+    "RECOMMENDATIONS": "Recomendaciones",
+    "CLOSE": "Cerrar",
+    "ASSISTANT_NAME": "Asistente Antojitos",
+    "STATUS_ONLINE": "En línea",
+    "INPUT_PLACEHOLDER": "Escribe tu preferencia...",
+    "FOOTER": "Impulsado por IA · Solo recomendaciones",
+    "SUGGESTIONS": {
+      "🌮 Quiero tacos": "🌮 Quiero tacos",
+      "🍕 Algo italiano": "🍕 Algo italiano",
+      "🥩 Comida típica boliviana": "🥩 Comida típica boliviana",
+      "🍣 Me apetece sushi": "🍣 Me apetece sushi",
+      "🍔 Una buena hamburguesa": "🍔 Una buena hamburguesa"
+    },
+    "RESPONSES": {
+      "WELCOME": "¡Hola! Soy tu asistente de Antojitos. ¿Qué te apetece comer hoy en Cochabamba?",
+      "MOCK_REPLY": "¡Excelente elección! Estoy buscando las mejores opciones de {{preference}} para ti..."
+    }
   }
 }

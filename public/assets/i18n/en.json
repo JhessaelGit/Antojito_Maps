@@ -268,5 +268,25 @@
   "LABEL_CATEGORY": "Category",
   "LABEL_PLAN": "Plan",
   "LABEL_COORDS": "Coordinates"
+  },
+  "CHATBOT": {
+    "TOOLTIP": "Recommendation assistant",
+    "RECOMMENDATIONS": "Recommendations",
+    "CLOSE": "Close",
+    "ASSISTANT_NAME": "Antojitos Assistant",
+    "STATUS_ONLINE": "Online",
+    "INPUT_PLACEHOLDER": "Type your preference...",
+    "FOOTER": "Powered by AI · Recommendations only",
+    "SUGGESTIONS": {
+      "🌮 Quiero tacos": "🌮 I want tacos",
+      "🍕 Algo italiano": "🍕 Something Italian",
+      "🥩 Comida típica boliviana": "🥩 Typical Bolivian food",
+      "🍣 Me apetece sushi": "🍣 I feel like sushi",
+      "🍔 Una buena hamburguesa": "🍔 A good burger"
+    },
+    "RESPONSES": {
+      "WELCOME": "Hi! I'm your Antojitos assistant. What do you feel like eating today in Cochabamba?",
+      "MOCK_REPLY": "Great choice! I'm looking for the best {{preference}} options for you..."
+    }
   }
 }
