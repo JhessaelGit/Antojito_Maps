@@ -35,13 +35,13 @@ export class RestauranteService {
   }
 
   // GET /restaurant/get/{id}
-  getRestauranteById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.BASE_URL}/restaurant/get/${id}`);
+  getRestauranteById(uuid: string): Observable<any> {
+    return this.http.get<any>(`${this.BASE_URL}/restaurant/get/${uuid}`);
   }
 
   // DELETE /restaurant/delete/{id}
-  eliminarRestaurante(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.BASE_URL}/restaurant/delete/${id}`);
+  eliminarRestaurante(uuid: string): Observable<any> {
+    return this.http.delete<any>(`${this.BASE_URL}/restaurant/delete/${uuid}`);
   }
 
   // POST /restaurant/create

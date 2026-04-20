@@ -257,5 +257,16 @@
     "BTN_ADD": "+ Add",
     "BTN_SAVE": "Save changes",
     "CONFIRM_DELETE": "Are you sure you want to delete this administrator?"
+  },
+  "RESTAURANT_VIEW": {
+  "BACK_MAP": "Back to map",
+  "LOADING": "Loading restaurant...",
+  "ERROR_LOAD": "Could not load restaurant",
+  "PROMOS_TITLE": "Active Promotions",
+  "PROMOS_EMPTY": "This restaurant has no active promotions for now.",
+  "INFO_TITLE": "Information",
+  "LABEL_CATEGORY": "Category",
+  "LABEL_PLAN": "Plan",
+  "LABEL_COORDS": "Coordinates"
   }
 }

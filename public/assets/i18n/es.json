@@ -257,5 +257,16 @@
     "BTN_ADD": "+ Agregar",
     "BTN_SAVE": "Guardar cambios",
     "CONFIRM_DELETE": "¿Estás seguro de que deseas eliminar a este administrador?"
+  },
+  "RESTAURANT_VIEW": {
+  "BACK_MAP": "Volver al mapa",
+  "LOADING": "Cargando restaurante...",
+  "ERROR_LOAD": "No se pudo cargar el restaurante",
+  "PROMOS_TITLE": "Promociones activas",
+  "PROMOS_EMPTY": "Este restaurante no tiene promociones activas por ahora.",
+  "INFO_TITLE": "Información",
+  "LABEL_CATEGORY": "Categoría",
+  "LABEL_PLAN": "Plan",
+  "LABEL_COORDS": "Coordenadas"
   }
 }
