@@ -39,12 +39,11 @@
           (input)="buscarRestaurante(txtBuscar.value)">
       </div>
 
-      <!-- ── BOTÓN CHATBOT ─────────────────────────────────── -->
       <button
         class="btn-chatbot"
         [class.btn-chatbot--active]="chatbotAbierto"
         (click)="toggleChatbot()"
-        title="Asistente de recomendaciones">
+        [title]="'CHATBOT.TOOLTIP' | translate">
         <span class="btn-chatbot__icon">
           <svg *ngIf="!chatbotAbierto" width="17" height="17" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="2.2"
@@ -58,12 +57,11 @@
             <line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </span>
-        <span class="btn-chatbot__label">{{ chatbotAbierto ? 'Cerrar' : 'Recomendaciones' }}</span>
+        <span class="btn-chatbot__label">{{ (chatbotAbierto ? 'CHATBOT.CLOSE' : 'CHATBOT.RECOMMENDATIONS') | translate }}</span>
         <span class="btn-chatbot__badge" *ngIf="!chatbotAbierto && mensajesNoLeidos > 0">
           {{ mensajesNoLeidos }}
         </span>
       </button>
-      <!-- ──────────────────────────────────────────────────── -->
     </div>
   </header>
 
@@ -118,12 +116,7 @@
       </div>
     }
 
-    <!-- ══════════════════════════════════════════════════════
-         PANEL CHATBOT
-         ══════════════════════════════════════════════════════ -->
     <div class="chatbot-panel" [class.chatbot-panel--open]="chatbotAbierto">
-
-      <!-- Cabecera del panel -->
       <div class="chatbot-header">
         <div class="chatbot-header__info">
           <div class="chatbot-avatar">
@@ -135,23 +128,22 @@
             </svg>
           </div>
           <div>
-            <p class="chatbot-header__name">Asistente Antojitos</p>
+            <p class="chatbot-header__name">{{ 'CHATBOT.ASSISTANT_NAME' | translate }}</p>
             <span class="chatbot-header__status">
-              <span class="status-dot"></span>En línea
+              <span class="status-dot"></span>{{ 'CHATBOT.STATUS_ONLINE' | translate }}
             </span>
           </div>
         </div>
         <button class="chatbot-header__close" (click)="toggleChatbot()">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2.5"
-               stroke-linecap="round" stroke-linejoin="round">
+                 stroke="currentColor" stroke-width="2.5"
+                 stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"/>
             <line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </button>
       </div>
 
-      <!-- Mensajes -->
       <div class="chatbot-messages" #chatMessages>
         @for (msg of chatMensajes; track msg.id) {
           <div class="chat-msg" [class.chat-msg--bot]="msg.rol === 'bot'" [class.chat-msg--user]="msg.rol === 'user'">
@@ -161,7 +153,6 @@
             </div>
           </div>
         }
-
         @if (chatbotEscribiendo) {
           <div class="chat-msg chat-msg--bot">
             <div class="chat-msg__bubble chat-msg__bubble--typing">
@@ -173,23 +164,23 @@
         }
       </div>
 
-      <!-- Sugerencias rápidas -->
       @if (mostrarSugerencias) {
         <div class="chatbot-suggestions">
           @for (sug of sugerenciasRapidas; track sug) {
-            <button class="suggestion-chip" (click)="enviarSugerencia(sug)">{{ sug }}</button>
+            <button class="suggestion-chip" (click)="enviarSugerencia(sug)">
+              {{ 'CHATBOT.SUGGESTIONS.' + sug | translate }}
+            </button>
           }
         </div>
       }
 
-      <!-- Input -->
       <div class="chatbot-input-area">
         <input
           class="chatbot-input"
           type="text"
           #chatInput
           [(ngModel)]="mensajeActual"
-          placeholder="Escribe tu preferencia..."
+          [placeholder]="'CHATBOT.INPUT_PLACEHOLDER' | translate"
           (keyup.enter)="enviarMensaje(chatInput.value); chatInput.value = ''; mensajeActual = ''"
           [disabled]="chatbotEscribiendo">
         <button
@@ -197,23 +188,19 @@
           (click)="enviarMensaje(chatInput.value); chatInput.value = ''; mensajeActual = ''"
           [disabled]="!mensajeActual.trim() || chatbotEscribiendo">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2.5"
-               stroke-linecap="round" stroke-linejoin="round">
+                 stroke="currentColor" stroke-width="2.5"
+                 stroke-linecap="round" stroke-linejoin="round">
             <line x1="22" y1="2" x2="11" y2="13"/>
             <polygon points="22 2 15 22 11 13 2 9 22 2"/>
           </svg>
         </button>
       </div>
-
-      <p class="chatbot-footer">Impulsado por IA · Solo recomendaciones</p>
+      <p class="chatbot-footer">{{ 'CHATBOT.FOOTER' | translate }}</p>
     </div>
-    <!-- ════════════════ FIN PANEL CHATBOT ════════════════ -->
 
-    <!-- Overlay oscuro en móvil -->
     <div class="chatbot-backdrop"
          [class.chatbot-backdrop--visible]="chatbotAbierto"
          (click)="toggleChatbot()">
     </div>
-
   </div>
 </div>
