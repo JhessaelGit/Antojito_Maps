@@ -1,10 +1,11 @@
 import { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
+import { apiAuthInterceptor } from './core/interceptors/api-auth.interceptor';
 
 export class CustomTranslateLoader implements TranslateLoader {
   constructor(private http: HttpClient) {}
@@ -23,7 +24,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([apiAuthInterceptor])),
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {

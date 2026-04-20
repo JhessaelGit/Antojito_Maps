@@ -32,6 +32,26 @@
   margin-bottom: 1.2rem; /* menos espacio */
 }
 
+.header-row {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 0.6rem;
+}
+
+.btn-back {
+  border: none;
+  background: transparent;
+  color: var(--color-secondary);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-back:hover {
+  color: #011f1b;
+  text-decoration: underline;
+}
+
 /* IMAGEN */
 .image-upload {
   width: 130px;
@@ -76,6 +96,10 @@
   margin-bottom: 1.3rem; /* mejor spacing */
 }
 
+.password-wrap {
+  position: relative;
+}
+
 input,
 textarea {
   width: 100%;
@@ -104,6 +128,16 @@ textarea:focus {
   box-shadow: 0 0 0 3px rgba(191,152,97,0.15);
 }
 
+.btn-eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
 /* BOTÓN */
 .btn-primary {
   width: 100%;
@@ -125,9 +159,21 @@ textarea:focus {
   box-shadow: 0 6px 16px rgba(2,51,45,0.25);
 }
 
+.btn-primary:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* ERROR */
 .error {
   font-size: 12px;
   color: var(--color-primary);
+  margin-top: 4px;
+}
+
+.ok {
+  font-size: 12px;
+  color: #1F7A3D;
   margin-top: 4px;
 }

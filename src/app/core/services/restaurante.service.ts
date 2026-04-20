@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface CreateRestaurantRequest {
   ownerMail: string;
@@ -24,7 +25,7 @@ export interface UploadImageResponse {
 })
 export class RestauranteService {
 
-  private readonly BASE_URL = '/api';
+  private readonly BASE_URL = environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
 

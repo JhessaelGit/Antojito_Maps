@@ -191,6 +191,11 @@
   background: #011f1b;
 }
 
+.btn-login:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
 /* Error */
 .error {
   color: var(--color-primary);

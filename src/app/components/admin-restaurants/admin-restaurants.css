@@ -117,6 +117,10 @@
   transform: scale(1.05);
 }
 
+.card button.blocked {
+  background: #375f5b;
+}
+
 @media (max-width: 768px) {
   .grid {
     grid-template-columns: 1fr;

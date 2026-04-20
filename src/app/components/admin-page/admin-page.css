@@ -6,6 +6,9 @@
 
 .header {
   padding: 30px 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .header h2 {
@@ -16,6 +19,21 @@
 
 .header span {
   color: var(--color-accent);
+}
+
+.btn-logout {
+  border: 1px solid var(--color-accent);
+  background: transparent;
+  color: var(--color-accent);
+  border-radius: 999px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.btn-logout:hover {
+  background: var(--color-accent);
+  color: var(--color-secondary);
 }
 
 .content {
@@ -111,6 +129,10 @@
 }
 
 @media (max-width: 768px) {
+  .header {
+    padding: 20px;
+  }
+
   .cards {
     flex-direction: column;
     align-items: center;

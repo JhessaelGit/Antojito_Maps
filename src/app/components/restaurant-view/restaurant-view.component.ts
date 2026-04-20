@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RestauranteService } from '../../core/services/restaurante.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-restaurant-view',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './restaurant-view.html',
   styleUrl: './restaurant-view.css'
 })
@@ -16,7 +17,6 @@ export class RestaurantView implements OnInit {
   cargando = true;
   error    = false;
 
-  // Datos de ejemplo hasta que el backend tenga endpoint de promociones
   promociones: any[] = [
     { id: 1, nombre: 'Combo Especial',  descripcion: 'Papas + Arroz + 2 Presas + Refresco', precio: 21.6,  descuento: '10%' },
     { id: 2, nombre: 'Duo Pack',        descripcion: 'Ideal para compartir — 2 platos + 2 bebidas',       precio: 45, descuento: '15%' }
