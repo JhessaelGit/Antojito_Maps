@@ -1,6 +1,6 @@
 [build]
   command = "npm run build"
-  publish = "dist/Proyecto_Antogito_Maps/*"
+  publish = "dist/Proyecto_Antogito_Maps/browser"
 
 [[redirects]]
   from = "/*"
