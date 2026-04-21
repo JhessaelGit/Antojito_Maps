@@ -20,6 +20,27 @@ export interface UploadImageResponse {
   imageUrl: string;
 }
 
+export interface PromotionResponse {
+  uuid: string;
+  restaurantId: string;
+  title: string;
+  description?: string;
+  percentDiscount: number;
+  dateStartPromotion: string;
+  dateEndPromotion: string;
+  isActivePromotion: boolean;
+}
+
+export interface CreatePromotionRequest {
+  ownerMail: string;
+  title: string;
+  description?: string;
+  percentDiscount: number;
+  dateStartPromotion: string;
+  dateEndPromotion: string;
+  isActivePromotion?: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -69,5 +90,15 @@ export class RestauranteService {
   // POST /restaurant/logout
   logout(mail: string): Observable<any> {
     return this.http.post<any>(`${this.BASE_URL}/restaurant/logout`, { mail });
+  }
+
+  // GET /promotion/restaurant/{restaurantId}
+  getPromocionesPorRestaurante(restaurantId: string): Observable<PromotionResponse[]> {
+    return this.http.get<PromotionResponse[]>(`${this.BASE_URL}/promotion/restaurant/${restaurantId}`);
+  }
+
+  // POST /promotion/restaurant/{restaurantId}
+  crearPromocion(restaurantId: string, payload: CreatePromotionRequest): Observable<PromotionResponse> {
+    return this.http.post<PromotionResponse>(`${this.BASE_URL}/promotion/restaurant/${restaurantId}`, payload);
   }
 }

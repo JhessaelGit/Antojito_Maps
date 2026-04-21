@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { LoggerService} from '../../core/services/logger.service';
 import { TranslateModule } from '@ngx-translate/core'; // IMPORTANTE
 import { RestauranteService } from '../../core/services/restaurante.service';
+import { catchError, forkJoin, map, of, take, timeout } from 'rxjs';
 
 @Component({
   selector: 'app-restaurant-login',
@@ -48,17 +49,20 @@ export class RestaurantLoginComponent {
 
     this.restauranteService.login(normalizedEmail, this.password).subscribe({
       next: (data: any) => {
-        this.cargando = false;
         this.logger.info('Login exitoso', { email: normalizedEmail });
 
-        // Guardar uuid si el backend lo devuelve
-        if (data?.uuid) {
-          localStorage.setItem('restaurant_uuid', data.uuid);
+        const resolvedUuid = `${data?.uuid ?? data?.restaurantId ?? data?.id ?? ''}`.trim();
+        if (resolvedUuid) {
+          localStorage.setItem('restaurant_uuid', resolvedUuid);
         }
-        // Guardar email para referencia
         localStorage.setItem('restaurant_email', normalizedEmail);
 
-        this.router.navigate(['/restaurant']);
+        if (resolvedUuid) {
+          this.navegarARestaurant();
+          return;
+        }
+
+        this.resolverRestaurantUuidAntesDeNavegar(normalizedEmail);
       },
       error: (err) => {
         this.cargando = false;
@@ -78,5 +82,68 @@ export class RestaurantLoginComponent {
   goToRegister() {
     this.logger.info('Navegación a registro de restaurante');
     this.router.navigate(['/restaurant/register']);
+  }
+
+  private resolverRestaurantUuidAntesDeNavegar(normalizedEmail: string): void {
+    this.restauranteService.getRestaurantes().subscribe({
+      next: (restaurants: any[]) => {
+        const list = Array.isArray(restaurants) ? restaurants : [];
+        const byOwner = list.find((r: any) => {
+          const owner = `${r?.ownerMail ?? r?.mail ?? r?.email ?? r?.owner_email ?? ''}`.trim().toLowerCase();
+          return owner === normalizedEmail;
+        });
+
+        const resolvedByOwner = `${byOwner?.uuid ?? byOwner?.restaurantId ?? byOwner?.id ?? ''}`.trim();
+        if (resolvedByOwner) {
+          localStorage.setItem('restaurant_uuid', resolvedByOwner);
+          this.navegarARestaurant();
+          return;
+        }
+
+        if (list.length === 1) {
+          const onlyUuid = `${list[0]?.uuid ?? list[0]?.restaurantId ?? list[0]?.id ?? ''}`.trim();
+          if (onlyUuid) {
+            localStorage.setItem('restaurant_uuid', onlyUuid);
+          }
+          this.navegarARestaurant();
+          return;
+        }
+
+        const candidateIds = list
+          .map((r: any) => `${r?.uuid ?? r?.restaurantId ?? r?.id ?? ''}`.trim())
+          .filter((id: string) => !!id);
+
+        if (!candidateIds.length) {
+          this.navegarARestaurant();
+          return;
+        }
+
+        const checks = candidateIds.map((id) =>
+          this.restauranteService.getPromocionesPorRestaurante(id).pipe(
+            take(1),
+            timeout(5000),
+            map((items: any[]) => ({ id, total: Array.isArray(items) ? items.length : 0 })),
+            catchError(() => of({ id, total: 0 }))
+          )
+        );
+
+        forkJoin(checks).pipe(take(1)).subscribe({
+          next: (results) => {
+            const resolved = results.find((x) => x.total > 0)?.id ?? '';
+            if (resolved) {
+              localStorage.setItem('restaurant_uuid', resolved);
+            }
+            this.navegarARestaurant();
+          },
+          error: () => this.navegarARestaurant()
+        });
+      },
+      error: () => this.navegarARestaurant()
+    });
+  }
+
+  private navegarARestaurant(): void {
+    this.cargando = false;
+    this.router.navigate(['/restaurant'], { replaceUrl: true });
   }
 }

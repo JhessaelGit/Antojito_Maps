@@ -577,6 +577,11 @@
   margin: 0;
 }
 
+.rp-field-error {
+  color: #b42318;
+  font-style: normal;
+}
+
 .rp-modal-footer {
   display: flex;
   gap: 10px;
@@ -620,6 +625,12 @@
 .rp-btn-save:hover {
   background: #011f1b;
   box-shadow: 0 4px 12px rgba(2,51,45,0.25);
+}
+
+.rp-btn-save:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* ── Snackbar ── */
