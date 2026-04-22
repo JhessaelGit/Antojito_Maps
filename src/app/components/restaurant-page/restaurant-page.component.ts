@@ -58,7 +58,9 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
   mapaListo = false;
 
   private restaurantUuid: string | null = null;
+  private ownerUuid: string | null = null;
   private ownerMail: string | null = null;
+  private restaurantIds: string[] = [];
   private promocionesLoadSub?: Subscription;
   private promocionesSafetyTimer: any;
   private guardadoSafetyTimer: any;
@@ -73,8 +75,15 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.restaurantUuid = localStorage.getItem('restaurant_uuid');
+    this.restaurantUuid = localStorage.getItem('restaurant_uuid')?.trim() || null;
+    this.ownerUuid = localStorage.getItem('owner_id')?.trim() || null;
     this.ownerMail = localStorage.getItem('restaurant_email')?.trim().toLowerCase() ?? null;
+    this.restaurantIds = this.readRestaurantIdsFromSession();
+
+    if (!this.restaurantUuid && this.restaurantIds.length > 0) {
+      this.restaurantUuid = this.restaurantIds[0];
+      localStorage.setItem('restaurant_uuid', this.restaurantUuid);
+    }
 
     if (this.restaurantUuid) {
       this.cargarRestaurantePorId(this.restaurantUuid);
@@ -229,6 +238,11 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private resolverRestauranteDeSesion(): void {
+    if (this.restaurantIds.length > 0) {
+      this.asignarRestaurantUuid(this.restaurantIds[0]);
+      return;
+    }
+
     if (!this.ownerMail) {
       this.cargarDesdeLocalStorage();
       this.promocionesErrorMsg = this.translate.instant('OWNER.ERR_PROMO_CONTEXT');
@@ -386,7 +400,7 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
   private guardarNuevaPromocion(): void {
     this.errorMsg = '';
 
-    if (!this.restaurantUuid || !this.ownerMail) {
+    if (!this.restaurantUuid || (!this.ownerUuid && !this.ownerMail)) {
       this.errorMsg = this.translate.instant('OWNER.ERR_PROMO_CONTEXT');
       return;
     }
@@ -422,7 +436,8 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     const payload: CreatePromotionRequest = {
-      ownerMail: this.ownerMail,
+      ownerUuid: this.ownerUuid ?? undefined,
+      ownerMail: this.ownerMail ?? undefined,
       title,
       description: description || undefined,
       percentDiscount,
@@ -603,5 +618,20 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
     const month = `${date.getMonth() + 1}`.padStart(2, '0');
     const day = `${date.getDate()}`.padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  private readRestaurantIdsFromSession(): string[] {
+    const raw = localStorage.getItem('restaurant_ids');
+    if (!raw) return [];
+
+    try {
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed
+        .map((id) => `${id ?? ''}`.trim())
+        .filter((id) => !!id);
+    } catch {
+      return [];
+    }
   }
 }
