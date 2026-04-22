@@ -4,8 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoggerService} from '../../core/services/logger.service';
 import { TranslateModule } from '@ngx-translate/core'; // IMPORTANTE
-import { RestauranteService } from '../../core/services/restaurante.service';
-import { catchError, forkJoin, map, of, take, timeout } from 'rxjs';
+import { RestaurantLoginResponse, RestauranteService } from '../../core/services/restaurante.service';
 
 @Component({
   selector: 'app-restaurant-login',
@@ -48,21 +47,27 @@ export class RestaurantLoginComponent {
     this.logger.info('Intento de login', { email: normalizedEmail });
 
     this.restauranteService.login(normalizedEmail, this.password).subscribe({
-      next: (data: any) => {
+      next: (data: RestaurantLoginResponse) => {
         this.logger.info('Login exitoso', { email: normalizedEmail });
+        const ownerId = `${data?.ownerId ?? ''}`.trim();
+        const loginMail = `${data?.mail ?? normalizedEmail}`.trim().toLowerCase();
+        const restaurantIds = Array.isArray(data?.restaurantIds)
+          ? data.restaurantIds.map((id) => `${id ?? ''}`.trim()).filter((id) => !!id)
+          : [];
 
-        const resolvedUuid = `${data?.uuid ?? data?.restaurantId ?? data?.id ?? ''}`.trim();
-        if (resolvedUuid) {
-          localStorage.setItem('restaurant_uuid', resolvedUuid);
+        if (ownerId) {
+          localStorage.setItem('owner_id', ownerId);
         }
-        localStorage.setItem('restaurant_email', normalizedEmail);
+        localStorage.setItem('restaurant_email', loginMail);
+        localStorage.setItem('restaurant_ids', JSON.stringify(restaurantIds));
 
-        if (resolvedUuid) {
-          this.navegarARestaurant();
-          return;
+        if (restaurantIds.length > 0) {
+          localStorage.setItem('restaurant_uuid', restaurantIds[0]);
+        } else {
+          localStorage.removeItem('restaurant_uuid');
         }
 
-        this.resolverRestaurantUuidAntesDeNavegar(normalizedEmail);
+        this.navegarARestaurant();
       },
       error: (err) => {
         this.cargando = false;
@@ -82,64 +87,6 @@ export class RestaurantLoginComponent {
   goToRegister() {
     this.logger.info('Navegación a registro de restaurante');
     this.router.navigate(['/restaurant/register']);
-  }
-
-  private resolverRestaurantUuidAntesDeNavegar(normalizedEmail: string): void {
-    this.restauranteService.getRestaurantes().subscribe({
-      next: (restaurants: any[]) => {
-        const list = Array.isArray(restaurants) ? restaurants : [];
-        const byOwner = list.find((r: any) => {
-          const owner = `${r?.ownerMail ?? r?.mail ?? r?.email ?? r?.owner_email ?? ''}`.trim().toLowerCase();
-          return owner === normalizedEmail;
-        });
-
-        const resolvedByOwner = `${byOwner?.uuid ?? byOwner?.restaurantId ?? byOwner?.id ?? ''}`.trim();
-        if (resolvedByOwner) {
-          localStorage.setItem('restaurant_uuid', resolvedByOwner);
-          this.navegarARestaurant();
-          return;
-        }
-
-        if (list.length === 1) {
-          const onlyUuid = `${list[0]?.uuid ?? list[0]?.restaurantId ?? list[0]?.id ?? ''}`.trim();
-          if (onlyUuid) {
-            localStorage.setItem('restaurant_uuid', onlyUuid);
-          }
-          this.navegarARestaurant();
-          return;
-        }
-
-        const candidateIds = list
-          .map((r: any) => `${r?.uuid ?? r?.restaurantId ?? r?.id ?? ''}`.trim())
-          .filter((id: string) => !!id);
-
-        if (!candidateIds.length) {
-          this.navegarARestaurant();
-          return;
-        }
-
-        const checks = candidateIds.map((id) =>
-          this.restauranteService.getPromocionesPorRestaurante(id).pipe(
-            take(1),
-            timeout(5000),
-            map((items: any[]) => ({ id, total: Array.isArray(items) ? items.length : 0 })),
-            catchError(() => of({ id, total: 0 }))
-          )
-        );
-
-        forkJoin(checks).pipe(take(1)).subscribe({
-          next: (results) => {
-            const resolved = results.find((x) => x.total > 0)?.id ?? '';
-            if (resolved) {
-              localStorage.setItem('restaurant_uuid', resolved);
-            }
-            this.navegarARestaurant();
-          },
-          error: () => this.navegarARestaurant()
-        });
-      },
-      error: () => this.navegarARestaurant()
-    });
   }
 
   private navegarARestaurant(): void {

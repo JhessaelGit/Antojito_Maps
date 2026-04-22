@@ -32,13 +32,21 @@ export interface PromotionResponse {
 }
 
 export interface CreatePromotionRequest {
-  ownerMail: string;
+  ownerUuid?: string;
+  ownerMail?: string;
   title: string;
   description?: string;
   percentDiscount: number;
   dateStartPromotion: string;
   dateEndPromotion: string;
   isActivePromotion?: boolean;
+}
+
+export interface RestaurantLoginResponse {
+  ownerId: string;
+  mail: string;
+  restaurantIds: string[];
+  message?: string;
 }
 
 @Injectable({
@@ -78,8 +86,8 @@ export class RestauranteService {
   }
 
   // POST /restaurant/login
-  login(mail: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.BASE_URL}/restaurant/login`, { mail, password });
+  login(mail: string, password: string): Observable<RestaurantLoginResponse> {
+    return this.http.post<RestaurantLoginResponse>(`${this.BASE_URL}/restaurant/login`, { mail, password });
   }
 
   // POST /restaurant/registry
