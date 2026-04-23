@@ -9,12 +9,17 @@ export type LogLevel = 'INFO' | 'WARN' | 'ERROR';
 })
 export class LoggerService {
   private readonly apiUrl: string = `${environment.apiBaseUrl}/log`;
+  private readonly sendRemoteLogs = false;
 
   constructor(private http: HttpClient) {}
 
   private sendToServer(email: string) {
     this.http.post(this.apiUrl, { email }).subscribe({
-      error: err => console.error(err)
+      error: err => {
+        if (err?.status !== 404) {
+          console.error(err);
+        }
+      }
     });
   }
 
@@ -22,7 +27,7 @@ export class LoggerService {
 
     console.log({ level, message, context });
 
-    if (context?.email) {
+    if (this.sendRemoteLogs && context?.email) {
       this.sendToServer(context.email);
     }
   }
