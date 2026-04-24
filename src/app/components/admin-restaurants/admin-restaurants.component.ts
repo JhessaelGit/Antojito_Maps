@@ -76,6 +76,10 @@ export class AdminRestaurantsComponent implements OnInit {
     this.router.navigate(['/admin']);
   }
 
+  cerrarSesion() {
+    this.router.navigate(['/admin/login']);
+  }
+
   private normalizePlan(plan: string): string {
     const value = `${plan}`.toUpperCase();
     if (value.includes('ANNUAL')) return 'PLAN_ANNUAL';
@@ -93,4 +97,15 @@ export class AdminRestaurantsComponent implements OnInit {
     const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
     return Math.max(0, diffDays);
   }
+
+  get totalActivos(): number {
+    return this.restaurantes.filter(r => !r.bloqueado).length;
+  }
+
+  get totalBloqueados(): number {
+    return this.restaurantes.filter(r => r.bloqueado).length;
+  }
+
+  readonly Math = Math;
+
 }

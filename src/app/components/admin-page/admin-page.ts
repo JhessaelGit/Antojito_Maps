@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { AdminSessionService } from '../../core/services/admin-session.service';
 
@@ -14,24 +14,24 @@ import { AdminSessionService } from '../../core/services/admin-session.service';
 export class AdminPageComponent {
 
   constructor(
-    private router: Router,
+    private router:       Router,
+    private location:     Location,
     private adminSession: AdminSessionService
   ) {}
 
-  irAgregar() {
+  volverAtras(): void {
+    this.location.back();
+  }
+
+  irAgregar(): void {
     this.router.navigate(['/admin/agregar']);
   }
 
-  irEditar() {
+  irEditar(): void {
     this.router.navigate(['/admin/editar']);
   }
 
-  irEliminados() {
+  irEliminados(): void {
     this.router.navigate(['/admin/eliminados']);
-  }
-
-  logout(): void {
-    this.adminSession.clearSession();
-    this.router.navigate(['/admin/login']);
   }
 }

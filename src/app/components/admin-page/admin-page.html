@@ -1,34 +1,97 @@
-<div class="admin-container">
+<div class="ap-page">
 
-  <div class="header">
-    <h2>Antojitos<span>Maps</span></h2>
-    <button class="btn-logout" (click)="logout()">Cerrar sesión</button>
+  <!-- NAV -->
+  <nav class="ap-nav">
+    <div class="ap-logo">Antojitos<span>Maps</span></div>
+    <button class="ap-back" (click)="volverAtras()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Volver
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <div class="ap-hero">
+    <div class="ap-pill">
+      <span class="ap-pill-dot"></span>
+      Panel de Control
+    </div>
+    <h1 class="ap-title">
+      {{ 'ADMIN_DASHBOARD.TITLE' | translate }}
+    </h1>
+    <p class="ap-sub">
+      {{ 'ADMIN_DASHBOARD.SUBTITLE' | translate }}
+    </p>
   </div>
 
-  <div class="content">
-
-    <h1>{{ 'ADMIN_DASHBOARD.TITLE' | translate }}</h1>
-    <p>{{ 'ADMIN_DASHBOARD.SUBTITLE' | translate }}</p>
-
-    <div class="cards">
-
-      <div class="card" (click)="irAgregar()">
-        <div class="icon">👤➕</div>
-        <p>{{ 'ADMIN_DASHBOARD.CARD_ADD' | translate }}</p>
+  <!-- CARDS -->
+  <div class="ap-cards">
+    <div class="ap-card c1" (click)="irAgregar()">
+      <div class="ap-card-icon">
+        <i class="fas fa-user-plus"></i>
       </div>
-
-      <div class="card" (click)="irEditar()">
-        <div class="icon">🔍</div>
-        <p>{{ 'ADMIN_DASHBOARD.CARD_EDIT' | translate }}</p>
+      <h3 class="ap-card-title">
+        {{ 'ADMIN_DASHBOARD.CARD_ADD' | translate }}
+      </h3>
+      <p class="ap-card-desc">
+        Registra un nuevo administrador con acceso al panel del sistema.
+      </p>
+      <div class="ap-card-link">
+        Ir a agregar
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
       </div>
-
-      <div class="card" (click)="irEliminados()">
-        <div class="icon">🗑️</div>
-        <p>{{ 'ADMIN_DASHBOARD.CARD_DELETED' | translate }}</p>
-      </div>
-
     </div>
 
+    <div class="ap-card c2" (click)="irEditar()">
+      <div class="ap-card-icon">
+        <i class="fas fa-user-edit"></i>
+      </div>
+      <h3 class="ap-card-title">
+        {{ 'ADMIN_DASHBOARD.CARD_EDIT' | translate }}
+      </h3>
+      <p class="ap-card-desc">
+        Consulta y modifica los datos de los administradores existentes.
+      </p>
+      <div class="ap-card-link">
+        Ir a editar
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="ap-card c3" (click)="irEliminados()">
+      <div class="ap-card-icon">
+        <i class="fas fa-user-slash"></i>
+      </div>
+      <h3 class="ap-card-title">
+        {{ 'ADMIN_DASHBOARD.CARD_DELETED' | translate }}
+      </h3>
+      <p class="ap-card-desc">
+        Revisa el historial de administradores eliminados del sistema.
+      </p>
+      <div class="ap-card-link">
+        Ver eliminados
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </div>
+    </div>
   </div>
 
 </div>
