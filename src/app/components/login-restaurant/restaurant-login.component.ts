@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoggerService} from '../../core/services/logger.service';
 import { TranslateModule } from '@ngx-translate/core'; // IMPORTANTE
-import { RestauranteService } from '../../core/services/restaurante.service';
+import { RestaurantLoginResponse, RestauranteService } from '../../core/services/restaurante.service';
 
 @Component({
   selector: 'app-restaurant-login',
@@ -47,18 +47,27 @@ export class RestaurantLoginComponent {
     this.logger.info('Intento de login', { email: normalizedEmail });
 
     this.restauranteService.login(normalizedEmail, this.password).subscribe({
-      next: (data: any) => {
-        this.cargando = false;
+      next: (data: RestaurantLoginResponse) => {
         this.logger.info('Login exitoso', { email: normalizedEmail });
+        const ownerId = `${data?.ownerId ?? ''}`.trim();
+        const loginMail = `${data?.mail ?? normalizedEmail}`.trim().toLowerCase();
+        const restaurantIds = Array.isArray(data?.restaurantIds)
+          ? data.restaurantIds.map((id) => `${id ?? ''}`.trim()).filter((id) => !!id)
+          : [];
 
-        // Guardar uuid si el backend lo devuelve
-        if (data?.uuid) {
-          localStorage.setItem('restaurant_uuid', data.uuid);
+        if (ownerId) {
+          localStorage.setItem('owner_id', ownerId);
         }
-        // Guardar email para referencia
-        localStorage.setItem('restaurant_email', normalizedEmail);
+        localStorage.setItem('restaurant_email', loginMail);
+        localStorage.setItem('restaurant_ids', JSON.stringify(restaurantIds));
 
-        this.router.navigate(['/restaurant']);
+        if (restaurantIds.length > 0) {
+          localStorage.setItem('restaurant_uuid', restaurantIds[0]);
+        } else {
+          localStorage.removeItem('restaurant_uuid');
+        }
+
+        this.navegarARestaurant();
       },
       error: (err) => {
         this.cargando = false;
@@ -78,5 +87,10 @@ export class RestaurantLoginComponent {
   goToRegister() {
     this.logger.info('Navegación a registro de restaurante');
     this.router.navigate(['/restaurant/register']);
+  }
+
+  private navegarARestaurant(): void {
+    this.cargando = false;
+    this.router.navigate(['/restaurant'], { replaceUrl: true });
   }
 }

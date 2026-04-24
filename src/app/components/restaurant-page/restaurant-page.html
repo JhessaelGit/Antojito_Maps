@@ -91,7 +91,7 @@
               <h2 class="rp-section-title">{{ 'OWNER.SECTION_PROMOS_TITLE' | translate }}</h2>
               <p class="rp-section-sub">{{ 'OWNER.SECTION_PROMOS_SUB' | translate }}</p>
             </div>
-            <button class="rp-btn-add" (click)="crearPromo()">
+            <button class="rp-btn-add" (click)="crearPromo()" [disabled]="guardandoPromocion">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="3"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -102,7 +102,21 @@
             </button>
           </div>
 
-          @if (promociones.length === 0) {
+          @if (cargandoPromociones && !editandoItem) {
+            <div class="rp-empty">
+              <span class="rp-empty-icon">⏳</span>
+              <p class="rp-empty-txt">{{ 'OWNER.PROMOS_LOADING' | translate }}</p>
+            </div>
+          }
+
+          @if (!cargandoPromociones && promocionesErrorMsg) {
+            <div class="rp-empty">
+              <span class="rp-empty-icon">⚠️</span>
+              <p class="rp-empty-txt">{{ promocionesErrorMsg }}</p>
+            </div>
+          }
+
+          @if (!cargandoPromociones && !promocionesErrorMsg && promociones.length === 0) {
             <div class="rp-empty">
               <span class="rp-empty-icon">🏷️</span>
               <p class="rp-empty-txt">{{ 'OWNER.EMPTY_PROMOS' | translate }}</p>
@@ -110,43 +124,25 @@
             </div>
           }
 
-          <div class="rp-promos-grid">
-            @for (promo of promociones; track promo.id) {
-              <div class="rp-promo-card">
-                <div class="rp-promo-top">
-                  <span class="rp-promo-badge">{{ 'OWNER.PROMO_BADGE' | translate }}</span>
-                  <div class="rp-card-actions">
-                    <button class="rp-btn-icon rp-btn-edit"
-                      [title]="'OWNER.BTN_EDIT' | translate"
-                      (click)="editarPromo(promo)">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                      </svg>
-                    </button>
-                    <button class="rp-btn-icon rp-btn-delete"
-                      [title]="'OWNER.BTN_DELETE' | translate"
-                      (click)="eliminarPromo(promo.id)">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <polyline points="3 6 5 6 21 6"/>
-                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                      </svg>
-                    </button>
+          @if (!cargandoPromociones) {
+            <div class="rp-promos-grid">
+              @for (promo of promociones; track promo.uuid) {
+                <div class="rp-promo-card">
+                  <div class="rp-promo-top">
+                    <span class="rp-promo-badge">{{ 'OWNER.PROMO_BADGE' | translate }}</span>
+                  </div>
+                  <h3 class="rp-promo-name">{{ promo.title }}</h3>
+                  <p class="rp-promo-desc">{{ promo.description || '-' }}</p>
+                  <div class="rp-promo-footer">
+                    <span class="rp-promo-price">{{ promo.percentDiscount }}%</span>
+                    <span class="rp-promo-exp">
+                      {{ promo.dateStartPromotion | date:'dd/MM/yyyy' }} - {{ promo.dateEndPromotion | date:'dd/MM/yyyy' }}
+                    </span>
                   </div>
                 </div>
-                <h3 class="rp-promo-name">{{ promo.nombre }}</h3>
-                <p class="rp-promo-desc">{{ promo.descripcion }}</p>
-                <div class="rp-promo-footer">
-                  <span class="rp-promo-price">Bs {{ promo.precio }}</span>
-                  <span class="rp-promo-exp">
-                    {{ 'OWNER.EXPIRES' | translate }} {{ promo.fechaExpiracion | date:'dd/MM HH:mm' }}
-                  </span>
-                </div>
-              </div>
-            }
-          </div>
+              }
+            </div>
+          }
         </section>
       }
 
@@ -343,9 +339,7 @@
         <div class="rp-modal-header">
           <h3 class="rp-modal-title">
             {{ esPromo
-              ? (promociones.find(p => p.id === itemTemporal.id)
-                  ? ('OWNER.MODAL_EDIT_PROMO' | translate)
-                  : ('OWNER.MODAL_NEW_PROMO'  | translate))
+              ? ('OWNER.MODAL_NEW_PROMO'  | translate)
               : (menu.find(m => m.id === itemTemporal.id)
                   ? ('OWNER.MODAL_EDIT_DISH'  | translate)
                   : ('OWNER.MODAL_NEW_DISH'   | translate))
@@ -364,27 +358,35 @@
           <div class="rp-field">
             <label class="rp-field-label">{{ 'OWNER.LBL_NAME' | translate }}</label>
             <input class="rp-field-input" type="text"
-              [(ngModel)]="itemTemporal.nombre"
+              [(ngModel)]="itemTemporal.title"
               [placeholder]="'OWNER.MODAL_PLACEHOLDER_NAME' | translate">
           </div>
           <div class="rp-field">
             <label class="rp-field-label">{{ 'OWNER.LBL_DESC' | translate }}</label>
             <textarea class="rp-field-input rp-field-textarea"
-              [(ngModel)]="itemTemporal.descripcion"
+              [(ngModel)]="itemTemporal.description"
               [placeholder]="'OWNER.MODAL_PLACEHOLDER_DESC' | translate"></textarea>
           </div>
           <div class="rp-field">
-            <label class="rp-field-label">{{ 'OWNER.LBL_PRICE' | translate }}</label>
+            <label class="rp-field-label">{{ 'OWNER.LBL_DISCOUNT' | translate }}</label>
             <input class="rp-field-input" type="number"
-              [(ngModel)]="itemTemporal.precio" min="0" step="0.5">
+              [(ngModel)]="itemTemporal.percentDiscount" min="0" max="100" step="0.01">
           </div>
           @if (esPromo) {
             <div class="rp-field">
-              <label class="rp-field-label">{{ 'OWNER.LBL_EXPIRATION' | translate }}</label>
-              <input class="rp-field-input" type="datetime-local"
-                [(ngModel)]="itemTemporal.fechaExpiracionFormateada">
-              <p class="rp-field-hint">{{ 'OWNER.HINT_EXPIRATION' | translate }}</p>
+              <label class="rp-field-label">{{ 'OWNER.LBL_DATE_START' | translate }}</label>
+              <input class="rp-field-input" type="date"
+                [(ngModel)]="itemTemporal.dateStartPromotion">
             </div>
+            <div class="rp-field">
+              <label class="rp-field-label">{{ 'OWNER.LBL_DATE_END' | translate }}</label>
+              <input class="rp-field-input" type="date"
+                [(ngModel)]="itemTemporal.dateEndPromotion">
+            </div>
+          }
+
+          @if (errorMsg) {
+            <p class="rp-field-hint rp-field-error">{{ errorMsg }}</p>
           }
         </div>
 
@@ -392,8 +394,8 @@
           <button class="rp-btn-cancel" (click)="cerrarModal()">
             {{ 'OWNER.BTN_CANCEL' | translate }}
           </button>
-          <button class="rp-btn-save" (click)="guardarCambios()">
-            {{ 'OWNER.BTN_SAVE' | translate }}
+          <button class="rp-btn-save" (click)="guardarCambios()" [disabled]="esPromo && guardandoPromocion">
+            {{ (esPromo && guardandoPromocion) ? ('ADMIN_LOGIN.BTN_LOADING' | translate) : ('OWNER.BTN_SAVE' | translate) }}
           </button>
         </div>
       </div>

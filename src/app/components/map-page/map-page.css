@@ -857,3 +857,56 @@
   .search-box { display: none; }
   .header-right .btn-location { margin-left: auto; }
 }
+/* ─── PINES DIFERENCIADOS PARA EL CHATBOT ─── */
+::ng-deep .chatbot-recommendation-marker {
+  background: transparent !important;
+  border: none !important;
+  z-index: 1000 !important; /* Por encima de los marcadores estándar */
+}
+
+::ng-deep .marker-pin-bot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50% 50% 50% 0;
+  /* Degradado Dorado/Ámbar para distinguir de los rojos originales */
+  background: linear-gradient(135deg, #FFD700, #B8860B);
+  transform: rotate(-45deg);
+  border: 2px solid #fff;
+  box-shadow: 0 0 12px rgba(184, 134, 11, 0.5);
+  position: relative;
+  animation: bounce-marker 0.4s ease-out;
+}
+
+::ng-deep .marker-inner-bot {
+  position: absolute;
+  inset: 6px;
+  background: #2c3e50; /* Centro oscuro para contraste */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Efecto de pulso para los pines recomendados */
+@keyframes pulse-gold {
+  0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+}
+
+::ng-deep .marker-pin-bot {
+  animation: pulse-gold 2s infinite;
+}
+
+@keyframes bounce-marker {
+  0% { transform: rotate(-45deg) scale(0); }
+  70% { transform: rotate(-45deg) scale(1.2); }
+  100% { transform: rotate(-45deg) scale(1); }
+}
+
+/* Ajustes adicionales del Popup para que se vea bien */
+::ng-deep .custom-popup .leaflet-popup-content-wrapper {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 12px;
+}

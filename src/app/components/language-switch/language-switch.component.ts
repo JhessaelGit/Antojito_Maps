@@ -12,11 +12,20 @@ import { TranslateService } from '@ngx-translate/core';
         (click)="switchLanguage('es')" 
         class="btn-lang" 
         [class.active]="translate.currentLang === 'es'">ES</button>
+      
       <span class="divider">|</span>
+      
       <button 
         (click)="switchLanguage('en')" 
         class="btn-lang" 
         [class.active]="translate.currentLang === 'en'">EN</button>
+
+      <span class="divider">|</span>
+
+      <button 
+        (click)="switchLanguage('pt')" 
+        class="btn-lang" 
+        [class.active]="translate.currentLang === 'pt'">PT</button>
     </div>
   `,
   styles: [`
@@ -30,7 +39,7 @@ import { TranslateService } from '@ngx-translate/core';
       border-radius: 30px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.4); 
       display: flex !important;
-      gap: 15px;
+      gap: 12px; /* Reduje un poco el gap para acomodar el tercero */
       align-items: center;
     }
     .btn-lang { 
@@ -39,39 +48,33 @@ import { TranslateService } from '@ngx-translate/core';
       cursor: pointer; 
       font-weight: bold; 
       color: #02332D; 
-      font-size: 16px;
+      font-size: 15px; /* Ajuste sutil de tamaño */
       opacity: 0.5;
-      transition: opacity 0.3s;
+      transition: all 0.3s ease;
     }
     .btn-lang.active {
-      opacity: 1; /* El idioma seleccionado se ve más fuerte */
-      text-decoration: underline;
+      opacity: 1; 
+      color: #D4AF37; /* Un toque dorado para que resalte el activo */
+      transform: scale(1.1);
     }
-    .divider { color: #ccc; }
+    .divider { color: #eee; font-weight: 200; }
   `]
 })
 export class LanguageSwitchComponent {
   constructor(public translate: TranslateService) {
-    // Si por alguna razón no se ha detectado idioma, intentamos recuperar el guardado
-    if (!this.translate.currentLang) {
-      const saved = localStorage.getItem('userLang') || 'es';
-      this.translate.use(saved);
-    }
-  }
-
-  // Usamos una función para determinar si un idioma está activo
-  isActive(lang: string): boolean {
-    return this.translate.currentLang === lang;
+    // Recuperar idioma guardado o usar español por defecto
+    const saved = localStorage.getItem('userLang') || 'es';
+    this.translate.use(saved);
   }
 
   switchLanguage(lang: string) {
     this.translate.use(lang).subscribe({
       next: () => {
         localStorage.setItem('userLang', lang);
-        console.log('Idioma cambiado exitosamente a:', lang);
+        console.log('Idioma cambiado a:', lang);
       },
       error: (err) => {
-        console.error('Error cargando el archivo JSON de idioma:', err);
+        console.error('Error al cargar pt.json. Asegúrate de que el archivo existe en assets/i18n/', err);
       }
     });
   }
