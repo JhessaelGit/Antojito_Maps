@@ -2,7 +2,7 @@ import {
   Component, OnInit, AfterViewInit, OnDestroy,
   ChangeDetectorRef, ViewChild, ElementRef
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RestauranteService } from '../../core/services/restaurante.service';
@@ -98,7 +98,8 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     public router: Router,
     private restauranteService: RestauranteService,
     private translate: TranslateService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private location:     Location
   ) {}
 
   ngOnInit(): void {
@@ -360,6 +361,6 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   buscarRestaurante(texto: string): void { this.textoBusqueda = texto; this.filtrarRestaurantes(); }
   seleccionarCategoria(slug: string): void { this.categoriaSeleccionada = slug; this.router.navigate([], { queryParams: { categoria: slug || null }, queryParamsHandling: 'merge' }); this.filtrarRestaurantes(); }
   verTodasLasCategorias(): void { this.seleccionarCategoria(''); }
-  volverAlInicio(): void { this.router.navigate(['/inicio']); }
+  volverAlInicio(): void { this.location.back(); }
   centrarEnMiUbicacion(): void { this.obtenerUbicacion(); }
 }
