@@ -54,7 +54,10 @@
     "PLACEHOLDER_PASS": "Tu contraseña",
     "SUBMIT_BTN": "Iniciar sesión",
     "DIVIDER": "¿No tienes cuenta?",
-    "REGISTER_BTN": "Registrar mi restaurante"
+    "REGISTER_BTN": "Registrar mi restaurante",
+    "ERR_FILL_ALL": "Por favor, completa todos los campos",
+    "ERR_INVALID_EMAIL": "El formato del correo no es válido",
+    "EMAIL_HINT": "Ejemplo: usuario@correo.com"
   },
   "MAP": {
     "SEARCH_PLACEHOLDER": "Buscar restaurante...",
@@ -130,7 +133,8 @@
     "ERR_IMAGE": "Sube una foto de tu restaurante",
     "ERR_IMAGE_SIZE": "La imagen no puede superar los 5MB",
     "ERR_LOC": "Coloca un pin en el mapa para indicar tu ubicación",
-    "COORD_UNDEFINED": "— no definida —"
+    "COORD_UNDEFINED": "— no definida —",
+    "ERR_PHONE": "El teléfono debe tener 8 dígitos numéricos"
   },
   "OWNER": {
     "NAV_BADGE": "Panel de Owner",
@@ -221,8 +225,8 @@
     "BTN_LOGIN": "Iniciar sesión",
     "BTN_LOADING": "Cargando...",
     "ERR_EMAIL_EMPTY": "El correo no puede estar vacío",
-    "ERR_EMAIL_INVALID": "El correo debe contener '@'",
-    "ERR_PASS_EMPTY": "La contraseña no puede estar vacía",
+    "ERR_EMAIL_INVALID": "Ingrese un correo institucional válido",
+    "ERR_PASS_INVALID": "La contraseña no puede estar vacía",
     "ERR_CREDENTIALS": "Credenciales incorrectas"
   },
   "ADMIN_DASHBOARD": {

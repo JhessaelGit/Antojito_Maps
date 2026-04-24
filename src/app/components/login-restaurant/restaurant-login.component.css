@@ -335,3 +335,26 @@
   .form-card { padding: 1.75rem 1.25rem; }
   .btn-back { top: 12px; left: 12px; }
 }
+
+.field-input.field-error {
+  border-color: #e74c3c !important;
+  background-color: #fdf2f2;
+}
+
+.error-text {
+  color: #e74c3c;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  display: block;
+}
+
+.login-error {
+  background: #fdf2f2;
+  color: #e74c3c;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  text-align: center;
+  margin-top: 15px;
+  border: 1px solid #fadbd8;
+}
