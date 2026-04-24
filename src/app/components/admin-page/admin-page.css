@@ -1,153 +1,206 @@
-.admin-container {
+:host {
+  display: block;
   min-height: 100vh;
+}
+
+.ap-page {
   background: var(--color-secondary);
-  color: var(--color-neutral);
-}
-
-.header {
-  padding: 30px 50px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.header h2 {
-  font-family: var(--font-heading);
-  font-size: 24px;
-  color: var(--color-neutral);
-}
-
-.header span {
-  color: var(--color-accent);
-}
-
-.btn-logout {
-  border: 1px solid var(--color-accent);
-  background: transparent;
-  color: var(--color-accent);
-  border-radius: 999px;
-  padding: 8px 14px;
-  cursor: pointer;
-  font-weight: 700;
-}
-
-.btn-logout:hover {
-  background: var(--color-accent);
-  color: var(--color-secondary);
-}
-
-.content {
-  padding: 50px;
-
-  max-width: 1000px;
-  margin: 0 auto;
-
-  text-align: center;
-
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  font-family: var(--font-body);
 }
 
-.content h1 {
+/* ─── NAV ──────────────────────────────────── */
+.ap-nav {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(191,152,97,0.15);
+  flex-shrink: 0;
+}
+
+.ap-logo {
   font-family: var(--font-heading);
-  font-size: 42px;
-  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 900;
   color: var(--color-neutral);
 }
+.ap-logo span { color: var(--color-accent); }
 
-.content p {
-  color: #bfb6a8;
+.ap-back {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(191,152,97,0.3);
+  color: rgba(218,207,189,0.7);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: var(--font-body);
+}
+.ap-back:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+.ap-back svg { flex-shrink: 0; }
+
+/* ─── HERO ─────────────────────────────────── */
+.ap-hero {
+  padding: 40px 20px 28px;
+  text-align: center;
+}
+
+.ap-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(191,152,97,0.15);
+  border: 1px solid rgba(191,152,97,0.3);
+  color: var(--color-accent);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
   margin-bottom: 20px;
 }
+.ap-pill-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
 
-.subtexto {
-  font-family: var(--font-body);
-  font-size: 16px;
+.ap-title {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 900;
   color: var(--color-neutral);
-  opacity: 0.8;
+  margin-bottom: 12px;
+  line-height: 1.1;
+}
+
+.ap-sub {
+  font-size: 14px;
+  color: rgba(218,207,189,0.5);
+  max-width: 440px;
+  margin: 0 auto;
   line-height: 1.6;
-  max-width: 500px;
 }
 
-.cards {
-  margin-top: 40px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  gap: 30px;
-  flex-wrap: wrap;
+/* ─── CARDS ────────────────────────────────── */
+.ap-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding: 24px 20px 48px;
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-.card {
+.ap-card {
   background: rgba(255,255,255,0.05);
-  color: var(--color-neutral);
-
-  width: 260px;
-  height: 220px;
-
-  padding: 20px;
-  border-radius: var(--radius-lg);
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  text-align: center;
-
+  border: 1px solid rgba(218,207,189,0.1);
+  border-radius: 20px;
+  padding: 28px 24px;
   cursor: pointer;
-  transition: 0.3s;
-
-  border: 1px solid rgba(255,255,255,0.1);
+  transition: all .3s;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
 }
 
-.card p {
-  margin-top: 10px;
-  max-width: 180px;
+/* Overlay de hover */
+.ap-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateY(101%);
+  transition: transform .35s cubic-bezier(.4,0,.2,1);
+  z-index: 0;
 }
-.icon {
-  font-size: 42px;
-  margin-bottom: 10px;
+.ap-card.c1::after { background: rgba(191,152,97,0.18); }
+.ap-card.c2::after { background: rgba(191,152,97,0.18); }
+.ap-card.c3::after { background: rgba(191,152,97,0.18); }
+
+.ap-card:hover::after { transform: translateY(0); }
+.ap-card:hover {
+  border-color: rgba(191,152,97,0.5);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.2);
 }
 
-.card:hover {
-  transform: translateY(-6px);
-  border: 1px solid var(--color-accent);
-}
+.ap-card > * { position: relative; z-index: 1; }
 
-.icon {
-  font-size: 40px;
-  margin-bottom: 10px;
+/* Ícono */
+.ap-card-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(191,152,97,0.15);
+  border: 1px solid rgba(191,152,97,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  font-size: 22px;
+  color: var(--color-accent);
+  transition: background .3s, color .3s;
 }
-
-.card p {
-  font-weight: 500;
+.ap-card:hover .ap-card-icon {
+  background: rgba(218,207,189,0.15);
   color: var(--color-neutral);
 }
 
-@media (max-width: 768px) {
-  .header {
-    padding: 20px;
-  }
+/* Textos */
+.ap-card-title {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-neutral);
+  margin: 0 0 8px;
+  transition: color .3s;
+}
+.ap-card-desc {
+  font-size: 13px;
+  color: rgba(218,207,189,0.45);
+  line-height: 1.6;
+  margin: 0 0 18px;
+  transition: color .3s;
+}
+.ap-card:hover .ap-card-title,
+.ap-card:hover .ap-card-desc { color: rgba(255,255,255,0.9); }
 
-  .cards {
-    flex-direction: column;
-    align-items: center;
-  }
+/* Link inferior */
+.ap-card-link {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: color .3s;
+}
+.ap-card-link svg { flex-shrink: 0; }
+.ap-card:hover .ap-card-link { color: var(--color-neutral); }
 
-  .card {
-    width: 100%;
-    max-width: 300px;
-  }
+@media (min-width: 700px) {
+  .ap-nav    { padding: 20px 40px; }
+  .ap-hero   { padding: 56px 40px 36px; }
+  .ap-title  { font-size: clamp(2rem, 4vw, 3rem); }
 
-  .content {
-    padding: 20px;
-  }
-
-  .content h1 {
-    font-size: 28px;
+  .ap-cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 0 40px 60px;
   }
 }
