@@ -10,7 +10,7 @@
   background: var(--color-neutral);
 }
 
-/* Botón volver */
+/* ── Botón volver ── */
 .btn-back {
   position: absolute;
   top: 20px;
@@ -35,9 +35,10 @@
   background: white;
   border-color: var(--color-accent);
   color: var(--color-accent);
+  transform: translateX(-2px);
 }
 
-/* Panel izquierdo */
+/* ── Panel izquierdo ── */
 .login-side-panel {
   flex: 1;
   background: var(--color-secondary);
@@ -45,9 +46,35 @@
   align-items: center;
   justify-content: center;
   padding: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-side-panel::before {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: rgba(191,152,97,0.06);
+  top: -100px;
+  right: -100px;
+}
+
+.login-side-panel::after {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(191,152,97,0.04);
+  bottom: -80px;
+  left: -80px;
 }
 
 .side-content {
+  position: relative;
+  z-index: 1;
   max-width: 380px;
 }
 
@@ -57,24 +84,31 @@
   font-weight: 900;
   color: var(--color-neutral);
   margin-bottom: 2rem;
+  letter-spacing: -0.5px;
 }
 
-.side-logo span {
-  color: var(--color-accent);
-}
+.side-logo span { color: var(--color-accent); }
 
 .side-title {
   font-family: var(--font-heading);
   font-size: 2rem;
   font-weight: 900;
   color: var(--color-neutral);
-  margin-bottom: 1rem;
+  line-height: 1.2;
+  margin: 0 0 1rem;
 }
 
 .side-sub {
   font-size: 14px;
   color: rgba(218,207,189,0.6);
-  margin-bottom: 2rem;
+  line-height: 1.65;
+  margin: 0 0 2rem;
+}
+
+.side-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .feature-item {
@@ -90,9 +124,10 @@
   height: 7px;
   border-radius: 50%;
   background: var(--color-accent);
+  flex-shrink: 0;
 }
 
-/* Panel derecho */
+/* ── Panel derecho ── */
 .login-form-panel {
   flex: 0 0 480px;
   display: flex;
@@ -109,12 +144,19 @@
   width: 100%;
   max-width: 400px;
   box-shadow: 0 8px 32px rgba(2,51,45,0.1);
+  border: 1px solid rgba(191,152,97,0.2);
 }
 
-/* Header */
+/* ── Header del form ── */
 .form-header {
   text-align: center;
   margin-bottom: 2rem;
+}
+
+.form-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+  display: block;
 }
 
 .form-title {
@@ -122,14 +164,22 @@
   font-size: 1.6rem;
   font-weight: 900;
   color: var(--color-secondary);
+  margin: 0 0 6px;
 }
 
 .form-subtitle {
   font-size: 13px;
   color: rgba(2,51,45,0.5);
+  margin: 0;
 }
 
-/* Inputs */
+/* ── Campos ── */
+.form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
 .field-group {
   display: flex;
   flex-direction: column;
@@ -144,13 +194,15 @@
 
 .field-input-wrap {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .field-icon {
   position: absolute;
   left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
+  color: rgba(2,51,45,0.4);
+  pointer-events: none;
 }
 
 .field-input {
@@ -158,24 +210,59 @@
   padding: 11px 40px 11px 38px;
   border: 1.5px solid rgba(2,51,45,0.12);
   border-radius: 10px;
+  font-size: 14px;
+  font-family: var(--font-body);
+  color: var(--color-secondary);
+  background: var(--color-white);
+  transition: all 0.2s ease;
+  outline: none;
+  box-sizing: border-box;
 }
+
+.field-input::placeholder { color: rgba(2,51,45,0.3); }
 
 .field-input:focus {
   border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(191,152,97,0.15);
 }
 
-/* Toggle */
+.field-error {
+  font-size: 12px;
+  color: var(--color-primary);
+}
+
+/* ── Toggle contraseña ── */
 .toggle-pwd {
   position: absolute;
   right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
+  color: rgba(2,51,45,0.4);
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: color 0.2s;
 }
 
-/* Button */
+.toggle-pwd:hover { color: var(--color-secondary); }
+
+/* ── Banner de error ── */
+.form-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(127,17,0,0.07);
+  border: 1px solid rgba(127,17,0,0.2);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--color-primary);
+}
+
+.form-error-banner svg { flex-shrink: 0; }
+
+/* ── Botón login ── */
 .btn-login {
   width: 100%;
   padding: 13px;
@@ -183,24 +270,43 @@
   color: var(--color-white);
   border: none;
   border-radius: 12px;
+  font-size: 14px;
   font-weight: 700;
+  font-family: var(--font-body);
   cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.btn-login:hover {
+.btn-login:hover:not(:disabled) {
   background: #011f1b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(2,51,45,0.25);
 }
 
 .btn-login:disabled {
   opacity: 0.75;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-/* Error */
-.error {
-  color: var(--color-primary);
-  font-size: 12px;
+/* ── Spinner ── */
+.btn-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
 }
+
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── Responsive ── */
 @media (max-width: 860px) {
