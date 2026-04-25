@@ -54,7 +54,10 @@
     "PLACEHOLDER_PASS": "Your password",
     "SUBMIT_BTN": "Login",
     "DIVIDER": "Don't have an account?",
-    "REGISTER_BTN": "Register my restaurant"
+    "REGISTER_BTN": "Register my restaurant",
+    "ERR_FILL_ALL": "Please fill in all fields",
+    "ERR_INVALID_EMAIL": "Invalid email format",
+    "EMAIL_HINT": "Example: user@mail.com"
   },
   "MAP": {
     "SEARCH_PLACEHOLDER": "Search restaurant...",
@@ -130,7 +133,8 @@
     "ERR_IMAGE": "Upload a photo of your restaurant",
     "ERR_IMAGE_SIZE": "Image cannot exceed 5MB",
     "ERR_LOC": "Place a pin on the map to indicate your location",
-    "COORD_UNDEFINED": "— undefined —"
+    "COORD_UNDEFINED": "— undefined —",
+    "ERR_PHONE": "Phone must be 8 numeric digits"
   },
   "OWNER": {
     "NAV_BADGE": "Owner Panel",
@@ -221,8 +225,8 @@
     "BTN_LOGIN": "Log In",
     "BTN_LOADING": "Loading...",
     "ERR_EMAIL_EMPTY": "Email cannot be empty",
-    "ERR_EMAIL_INVALID": "Email must contain '@'",
-    "ERR_PASS_EMPTY": "Password cannot be empty",
+    "ERR_EMAIL_INVALID": "Enter a valid institutional email",
+    "ERR_PASS_INVALID": "Password cannot be empty",
     "ERR_CREDENTIALS": "Invalid credentials"
   },
   "ADMIN_DASHBOARD": {
