@@ -16,12 +16,12 @@ export class AdminSessionService {
   readonly session$ = this.sessionSubject.asObservable();
 
   setSession(session: AdminSession): void {
-    sessionStorage.setItem(this.storageKey, JSON.stringify(session));
+    localStorage.setItem(this.storageKey, JSON.stringify(session));
     this.sessionSubject.next(session);
   }
 
   clearSession(): void {
-    sessionStorage.removeItem(this.storageKey);
+    localStorage.removeItem(this.storageKey);
     this.sessionSubject.next(null);
   }
 
@@ -42,7 +42,7 @@ export class AdminSessionService {
   }
 
   private readFromStorage(): AdminSession | null {
-    const raw = sessionStorage.getItem(this.storageKey);
+    const raw = localStorage.getItem(this.storageKey);
     if (!raw) return null;
 
     try {

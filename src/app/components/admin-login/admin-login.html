@@ -10,30 +10,19 @@
     {{ 'ADMIN_LOGIN.BACK' | translate }}
   </button>
 
-  <!-- Panel izquierdo -->
   <div class="login-side-panel">
     <div class="side-content">
       <div class="side-logo">Antojitos<span>Maps</span></div>
       <h2 class="side-title">{{ 'ADMIN_LOGIN.SIDE_TITLE' | translate }}</h2>
       <p class="side-sub">{{ 'ADMIN_LOGIN.SIDE_SUB' | translate }}</p>
       <div class="side-features">
-        <div class="feature-item">
-          <span class="feature-dot"></span>
-          {{ 'ADMIN_LOGIN.FEATURE_SYSTEM' | translate }}
-        </div>
-        <div class="feature-item">
-          <span class="feature-dot"></span>
-          {{ 'ADMIN_LOGIN.FEATURE_RESTAURANTS' | translate }}
-        </div>
-        <div class="feature-item">
-          <span class="feature-dot"></span>
-          {{ 'ADMIN_LOGIN.FEATURE_MONITOR' | translate }}
-        </div>
+        <div class="feature-item"><span class="feature-dot"></span>{{ 'ADMIN_LOGIN.FEATURE_SYSTEM' | translate }}</div>
+        <div class="feature-item"><span class="feature-dot"></span>{{ 'ADMIN_LOGIN.FEATURE_RESTAURANTS' | translate }}</div>
+        <div class="feature-item"><span class="feature-dot"></span>{{ 'ADMIN_LOGIN.FEATURE_MONITOR' | translate }}</div>
       </div>
     </div>
   </div>
 
-  <!-- Panel derecho -->
   <div class="login-form-panel">
     <div class="form-card">
 
@@ -45,7 +34,6 @@
 
       <form class="form-body" #form="ngForm">
 
-        <!-- Correo -->
         <div class="field-group">
           <label class="field-label">{{ 'ADMIN_LOGIN.EMAIL' | translate }}</label>
           <div class="field-input-wrap">
@@ -61,21 +49,16 @@
               name="correo"
               class="field-input"
               placeholder="admin@antojitosmaps.com"
-              autocomplete="email"
               required>
           </div>
           <span *ngIf="form.submitted && !correo" class="field-error">
             {{ 'ADMIN_LOGIN.ERR_EMAIL_EMPTY' | translate }}
           </span>
-          <span *ngIf="correo && !correo.includes('@')" class="field-error">
+          <span *ngIf="correo && !correo.includes('.')" class="field-error">
             {{ 'ADMIN_LOGIN.ERR_EMAIL_INVALID' | translate }}
-          </span>
-          <span *ngIf="fieldErrors['mail']" class="field-error">
-            {{ fieldErrors['mail'] }}
           </span>
         </div>
 
-        <!-- Contraseña -->
         <div class="field-group">
           <label class="field-label">{{ 'ADMIN_LOGIN.PASSWORD' | translate }}</label>
           <div class="field-input-wrap">
@@ -91,18 +74,13 @@
               name="password"
               class="field-input"
               [placeholder]="'ADMIN_LOGIN.PASS_PLACEHOLDER' | translate"
-              autocomplete="current-password"
               required>
             <button type="button" class="toggle-pwd" (click)="togglePasswordVisibility()">
-              <svg *ngIf="!showPassword" width="16" height="16" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
+              <svg *ngIf="!showPassword" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                 <circle cx="12" cy="12" r="3"></circle>
               </svg>
-              <svg *ngIf="showPassword" width="16" height="16" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
+              <svg *ngIf="showPassword" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
                 <line x1="1" y1="1" x2="23" y2="23"></line>
               </svg>
@@ -111,17 +89,11 @@
           <span *ngIf="form.submitted && !password" class="field-error">
             {{ 'ADMIN_LOGIN.ERR_PASS_EMPTY' | translate }}
           </span>
-          <span *ngIf="fieldErrors['password']" class="field-error">
-            {{ fieldErrors['password'] }}
-          </span>
         </div>
 
-        <!-- Error general -->
         @if (errorMsg) {
           <div class="form-error-banner">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="12" y1="8" x2="12" y2="12"></line>
               <line x1="12" y1="16" x2="12.01" y2="16"></line>
@@ -130,7 +102,6 @@
           </div>
         }
 
-        <!-- Botón -->
         <button type="button" class="btn-login"
           (click)="login(form)"
           [disabled]="cargando">

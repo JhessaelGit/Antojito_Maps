@@ -84,8 +84,6 @@ export class AdminDeletedComponent implements OnInit, OnDestroy {
     xhr.onreadystatechange = () => {
       if (resolved) return;
 
-      // Algunos backends envian el JSON completo y dejan la conexion abierta.
-      // Si el payload ya es parseable en readyState 3, lo consumimos sin esperar cierre.
       if (xhr.readyState >= XMLHttpRequest.LOADING) {
         const parsedPayload = this.tryParseJsonPayload(xhr.responseText ?? '');
         if (parsedPayload !== null) {

@@ -16,46 +16,17 @@
   <div class="rr-body">
 
     <aside class="rr-left">
-      <div class="rr-left-title" [innerHTML]="'REGISTER.SIDE_TITLE' | translate">
-        </div>
-      <p class="rr-left-sub">
-        {{ 'REGISTER.SIDE_SUB' | translate }}
-      </p>
+      <div class="rr-left-title" [innerHTML]="'REGISTER.SIDE_TITLE' | translate"></div>
+      <p class="rr-left-sub">{{ 'REGISTER.SIDE_SUB' | translate }}</p>
 
-      <div class="rr-step">
-        <div class="rr-step-num">1</div>
+      <div class="rr-step" *ngFor="let step of [1,2,3,4]">
+        <div class="rr-step-num">{{step}}</div>
         <div>
-          <div class="rr-step-title">{{ 'REGISTER.STEP1_TITLE' | translate }}</div>
-          <div class="rr-step-desc">{{ 'REGISTER.STEP1_DESC' | translate }}</div>
-        </div>
-      </div>
-      <div class="rr-step">
-        <div class="rr-step-num">2</div>
-        <div>
-          <div class="rr-step-title">{{ 'REGISTER.STEP2_TITLE' | translate }}</div>
-          <div class="rr-step-desc">{{ 'REGISTER.STEP2_DESC' | translate }}</div>
-        </div>
-      </div>
-      <div class="rr-step">
-        <div class="rr-step-num">3</div>
-        <div>
-          <div class="rr-step-title">{{ 'REGISTER.STEP3_TITLE' | translate }}</div>
-          <div class="rr-step-desc">{{ 'REGISTER.STEP3_DESC' | translate }}</div>
-        </div>
-      </div>
-      <div class="rr-step">
-        <div class="rr-step-num">4</div>
-        <div>
-          <div class="rr-step-title">{{ 'REGISTER.STEP4_TITLE' | translate }}</div>
-          <div class="rr-step-desc">{{ 'REGISTER.STEP4_DESC' | translate }}</div>
+          <div class="rr-step-title">{{ 'REGISTER.STEP' + step + '_TITLE' | translate }}</div>
+          <div class="rr-step-desc">{{ 'REGISTER.STEP' + step + '_DESC' | translate }}</div>
         </div>
       </div>
     </aside>
-
-    <div class="rr-steps-mobile" style="display:none">
-      <span class="mobile-step">1. {{ 'REGISTER.STEP1_TITLE' | translate }}</span>
-      <span class="mobile-step">2. {{ 'REGISTER.STEP2_TITLE' | translate }}</span>
-    </div>
 
     <div class="rr-right">
       <div class="rr-form-card">
@@ -84,8 +55,7 @@
           <div class="rr-row">
             <div class="fg">
               <label>{{ 'REGISTER.LBL_CAT' | translate }}</label>
-              <select [(ngModel)]="category" name="category"
-                      [class.is-error]="errorCategory">
+              <select [(ngModel)]="category" name="category" [class.is-error]="errorCategory">
                 <option value="">{{ 'REGISTER.ERR_CAT' | translate }}</option>
                 <option value="Salteñas">{{ 'CATEGORIES.SALTEÑAS' | translate }}</option>
                 <option value="Chicharron">{{ 'CATEGORIES.CHICHARRON' | translate }}</option>
@@ -103,8 +73,11 @@
               <div class="input-wrap">
                 <i class="fas fa-phone inp-icon"></i>
                 <input type="tel" [(ngModel)]="phone" name="phone"
-                       placeholder="76543210">
+                       (input)="validatePhone($event)"
+                       placeholder="76543210"
+                       [class.is-error]="errorPhone">
               </div>
+              <small class="err" *ngIf="errorPhone">{{ errorPhone }}</small>
             </div>
           </div>
 
@@ -139,8 +112,7 @@
                      [(ngModel)]="password" name="password"
                      [placeholder]="'REGISTER.ERR_PASS' | translate"
                      class="has-eye" [class.is-error]="errorPassword">
-              <button type="button" class="btn-eye"
-                      (click)="togglePasswordVisibility()">
+              <button type="button" class="btn-eye" (click)="togglePasswordVisibility()">
                 <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
               </button>
             </div>
@@ -153,28 +125,19 @@
             <div class="rr-divider-line"></div>
           </div>
 
-          <div class="rr-upload-zone"
-               [class.has-image]="imagePreview"
-               (click)="fileInput.click()"
-               (dragover)="$event.preventDefault()"
-               (drop)="onDrop($event)">
+          <div class="rr-upload-zone" [class.has-image]="imagePreview" (click)="fileInput.click()"
+               (dragover)="$event.preventDefault()" (drop)="onDrop($event)">
             <div class="rr-upload-content" *ngIf="!imagePreview">
-              <div class="rr-upload-icon">
-                <i class="fas fa-camera"></i>
-              </div>
+              <div class="rr-upload-icon"><i class="fas fa-camera"></i></div>
               <div class="rr-upload-txt">{{ 'REGISTER.UPLOAD_TXT' | translate }}</div>
               <div class="rr-upload-sub">{{ 'REGISTER.UPLOAD_SUB' | translate }}</div>
             </div>
             <div class="rr-upload-preview" *ngIf="imagePreview">
-              <img [src]="imagePreview" alt="Preview restaurante">
-              <button type="button" class="rr-remove-img"
-                      (click)="removeImage($event)">
-                <i class="fas fa-times"></i>
-              </button>
+              <img [src]="imagePreview" alt="Preview">
+              <button type="button" class="rr-remove-img" (click)="removeImage($event)"><i class="fas fa-times"></i></button>
             </div>
           </div>
-          <input #fileInput type="file" accept="image/*"
-                 style="display:none" (change)="onFileSelected($event)">
+          <input #fileInput type="file" accept="image/*" style="display:none" (change)="onFileSelected($event)">
           <small class="err" *ngIf="errorImage">{{ errorImage }}</small>
 
           <div class="rr-divider">
@@ -185,30 +148,16 @@
 
           <div class="rr-map-container">
             <div id="register-map" class="rr-map"></div>
-            <div class="rr-map-hint-bar">
-              <i class="fas fa-info-circle"></i>
-              {{ 'REGISTER.MAP_HINT' | translate }}
-            </div>
           </div>
 
           <div class="rr-coords">
             <div class="rr-coord-chip" [class.active]="latitude !== null">
               <i class="fas fa-location-arrow"></i>
-              <div>
-                <div class="rr-coord-lbl">LATITUD</div>
-                <div class="rr-coord-val">
-                  {{ formatCoord(latitude) }}
-                </div>
-              </div>
+              <div><div class="rr-coord-lbl">LATITUD</div><div class="rr-coord-val">{{ formatCoord(latitude) }}</div></div>
             </div>
             <div class="rr-coord-chip" [class.active]="longitude !== null">
               <i class="fas fa-compass"></i>
-              <div>
-                <div class="rr-coord-lbl">LONGITUD</div>
-                <div class="rr-coord-val">
-                  {{ formatCoord(longitude) }}
-                </div>
-              </div>
+              <div><div class="rr-coord-lbl">LONGITUD</div><div class="rr-coord-val">{{ formatCoord(longitude) }}</div></div>
             </div>
           </div>
           <small class="err" *ngIf="errorLocation">{{ errorLocation }}</small>
@@ -218,9 +167,7 @@
               <i class="fas" [ngClass]="cargando ? 'fa-spinner fa-spin' : 'fa-check-circle'"></i>
               {{ cargando ? 'Registrando...' : ('REGISTER.BTN_CREATE' | translate) }}
             </button>
-            <button type="button" class="rr-btn-outline" (click)="goToLogin()">
-              {{ 'REGISTER.BTN_HAS_ACCOUNT' | translate }}
-            </button>
+            <button type="button" class="rr-btn-outline" (click)="goToLogin()">{{ 'REGISTER.BTN_HAS_ACCOUNT' | translate }}</button>
             <small class="err" *ngIf="errorMsg">{{ errorMsg }}</small>
             <small class="ok" *ngIf="successMsg">{{ successMsg }}</small>
           </div>
@@ -228,6 +175,5 @@
         </form>
       </div>
     </div>
-
   </div>
 </div>

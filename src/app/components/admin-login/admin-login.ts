@@ -40,22 +40,35 @@ export class AdminLogin {
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
+  }
 
-    this.logger.info('Toggle password admin', {
-      role: 'ADMIN',
-      action: 'TOGGLE_PASSWORD',
-      email: this.correo
-    });
+  // BUG FIX: Validación profesional de formato de email
+  private isValidEmail(email: string): boolean {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
   }
 
   login(form: NgForm) {
-    if (form.invalid) return;
-
-    this.cargando = true;
     this.errorMsg = '';
     this.fieldErrors = {};
-
+    
     const mail = this.correo.trim().toLowerCase();
+    // BUG FIX: Eliminar espacios en blanco de la contraseña
+    const cleanPassword = this.password.replace(/\s/g, '');
+
+    // Validaciones preventivas
+    if (!mail || !this.isValidEmail(mail)) {
+      this.errorMsg = this.translate.instant('ADMIN_LOGIN.ERR_EMAIL_INVALID');
+      return;
+    }
+
+    if (cleanPassword.length < 6) {
+      this.errorMsg = this.translate.instant('ADMIN_LOGIN.ERR_PASS_INVALID');
+      return;
+    }
+
+    this.cargando = true;
+    this.password = cleanPassword; // Sincronizamos la contraseña limpia
 
     this.logger.info('Intento login admin', {
       email: mail,
@@ -78,13 +91,6 @@ export class AdminLogin {
           mail: response.mail
         });
 
-        this.logger.info('Login admin exitoso', {
-          email: response.mail,
-          role: 'ADMIN',
-          action: 'LOGIN_SUCCESS',
-          adminId: resolvedAdminId
-        });
-
         this.router.navigate(['/admin/restaurants']);
       },
       error: (err) => {
@@ -98,13 +104,6 @@ export class AdminLogin {
         } else {
           this.errorMsg = err?.error?.message || 'No se pudo iniciar sesión como admin';
         }
-
-        this.logger.error('Login admin fallido', {
-          email: mail,
-          role: 'ADMIN',
-          action: 'LOGIN_ERROR',
-          status: err?.status
-        });
       }
     });
   }
