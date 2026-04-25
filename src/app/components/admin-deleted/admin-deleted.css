@@ -1,121 +1,334 @@
-.container {
-  padding: 40px;
+:host {
+  display: block;
   min-height: 100vh;
-  background-color: var(--color-secondary);
-  color: var(--color-neutral);
+  font-family: var(--font-body);
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo {
-  font-family: var(--font-heading);
-  font-size: 24px;
-  color: var(--color-neutral);
-}
-
-.logo span {
-  color: var(--color-accent);
-}
-
-.title {
-  margin-top: 30px;
-}
-
-.title h1 {
-  font-family: var(--font-heading);
-  font-size: 36px;
-  color: var(--color-neutral);
-}
-
-.title p {
-  color: #bfb6a8;
-}
-
-.list {
-  margin-top: 40px;
+.ad-page {
+  min-height: 100vh;
+  background: var(--color-neutral);
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
-.card {
+/* ── Navbar ── */
+.ad-nav {
+  background: var(--color-secondary);
+  padding: 0 2rem;
+  height: 60px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background: rgba(255,255,255,0.05);
-  color: var(--color-neutral);
-  padding: 20px;
-  border-radius: var(--radius-lg);
-  border: 1px solid rgba(255,255,255,0.1);
-  transition: 0.3s;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(191,152,97,0.2);
+  flex-shrink: 0;
 }
 
-.card:hover {
-  transform: translateY(-4px);
-  border: 1px solid var(--color-accent);
-}
-
-.info h3 {
+.ad-nav-logo {
   font-family: var(--font-heading);
-  margin-bottom: 5px;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--color-neutral);
 }
 
-.info p {
+.ad-nav-logo span { color: var(--color-accent); }
+
+.ad-btn-back {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(191,152,97,0.3);
+  border-radius: 8px;
+  color: var(--color-neutral);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 14px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.2s;
+}
+
+.ad-btn-back:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: rgba(191,152,97,0.1);
+}
+
+/* ── Hero ── */
+.ad-hero {
+  background: var(--color-secondary);
+  padding: 2rem 2rem 2.5rem;
+}
+
+.ad-location-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(191,152,97,0.12);
+  border: 1px solid rgba(191,152,97,0.3);
+  color: var(--color-accent);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+}
+
+.ad-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.ad-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 900;
+  color: var(--color-neutral);
+  margin: 0 0 8px;
+}
+
+.ad-subtitle {
   font-size: 14px;
-  color: #cfc6b8;
+  color: rgba(218,207,189,0.55);
+  margin: 0;
 }
 
-.estado {
-  font-size: 12px;
-  color: #ff6b6b;
+/* ── Body ── */
+.ad-body {
+  flex: 1;
+  padding: 2rem;
+  max-width: 700px;
+  width: 100%;
+  margin: 0 auto;
 }
 
-.actions button {
+/* ── Estados ── */
+.ad-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 3rem;
+  background: var(--color-white);
+  border-radius: 16px;
+  text-align: center;
+  border: 1px solid rgba(2,51,45,0.06);
+  font-size: 14px;
+  color: rgba(2,51,45,0.55);
+  margin-top: 1rem;
+}
+
+.ad-state-error { border-top: 3px solid var(--color-primary); }
+.ad-state-icon  { font-size: 2.5rem; }
+
+.ad-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(2,51,45,0.1);
+  border-top-color: var(--color-secondary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.ad-btn-retry {
+  padding: 8px 20px;
   background: var(--color-secondary);
   color: white;
-  border: 1px solid var(--color-accent);
-  padding: 10px 18px;
-  border-radius: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.3s;
+  font-family: var(--font-body);
 }
 
-.actions button:hover {
-  background: var(--color-accent);
-  color: var(--color-secondary);
+/* ── Lista ── */
+.ad-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 1rem;
 }
 
-.btn-back {
+.ad-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: transparent;
-  border: 1px solid var(--color-accent);
-  color: var(--color-accent);
-  padding: 8px 16px;
-  border-radius: 999px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: 0.3s;
+  justify-content: space-between;
+  background: var(--color-white);
+  border-radius: 14px;
+  padding: 14px 16px;
+  border: 1px solid rgba(2,51,45,0.07);
+  gap: 12px;
+  transition: transform 0.15s;
 }
 
-.btn-back:hover {
-  background: var(--color-accent);
+.ad-item:hover { transform: translateX(2px); }
+
+.ad-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.ad-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(127,17,0,0.08);
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ad-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.ad-item-mail {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ad-item-date {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: rgba(2,51,45,0.45);
+}
+
+.ad-status-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(192,57,43,0.08);
+  color: var(--color-primary);
+  border: 1px solid rgba(192,57,43,0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Modal de confirmación ── */
+.ad-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,51,45,0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+}
+
+.ad-modal {
+  background: var(--color-white);
+  border-radius: 18px;
+  padding: 2rem;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.2);
+  animation: modalIn 0.25s cubic-bezier(0.25,0.8,0.25,1);
+}
+
+@keyframes modalIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.ad-modal-icon { font-size: 2.5rem; margin-bottom: 12px; }
+
+.ad-modal-title {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin: 0 0 8px;
+}
+
+.ad-modal-sub {
+  font-size: 13px;
+  color: rgba(2,51,45,0.55);
+  margin: 0 0 1.5rem;
+}
+
+.ad-modal-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.ad-modal-cancel {
+  flex: 1;
+  padding: 11px;
+  background: transparent;
+  border: 1.5px solid rgba(2,51,45,0.15);
+  border-radius: 10px;
+  color: rgba(2,51,45,0.6);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.2s;
+}
+
+.ad-modal-cancel:hover {
+  border-color: rgba(2,51,45,0.3);
   color: var(--color-secondary);
 }
 
-@media (max-width: 768px) {
-  .card {
+.ad-modal-confirm {
+  flex: 1;
+  padding: 11px;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.2s;
+}
+
+.ad-modal-confirm:hover {
+  background: #9B1400;
+  box-shadow: 0 4px 12px rgba(127,17,0,0.3);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .ad-hero { padding: 1.5rem 1rem 2rem; }
+  .ad-body { padding: 1rem; }
+  .ad-nav  { padding: 0 1rem; }
+  .ad-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 15px;
+    gap: 10px;
   }
-
-  .actions button {
-    width: 100%;
-  }
+  .ad-status-badge { align-self: flex-start; }
 }

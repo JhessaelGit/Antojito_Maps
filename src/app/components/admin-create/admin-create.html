@@ -1,42 +1,162 @@
-<div class="form-page">
+<div class="ac-page">
 
-  <div class="form-card">
+  <div class="ac-card">
 
-    <div class="header-row">
-      <button class="btn-back" (click)="volver()">← Volver</button>
-    </div>
-
-    <h2 class="title">{{ 'ADMIN_CREATE.TITLE' | translate }}</h2>
-
-    <div class="field-group">
-      <input 
-        [(ngModel)]="correo" 
-        [placeholder]="'ADMIN_CREATE.PLACEHOLDER_EMAIL' | translate">
-      <div class="error" *ngIf="errorCorreo">{{ errorCorreo }}</div>
-      <div class="error" *ngIf="fieldErrors['mail']">{{ fieldErrors['mail'] }}</div>
-    </div>
-
-    <div class="field-group">
-      <div class="password-wrap">
-        <input
-          [type]="showPassword ? 'text' : 'password'"
-          [(ngModel)]="password"
-          [placeholder]="'ADMIN_LOGIN.PASS_PLACEHOLDER' | translate">
-        <button type="button" class="btn-eye" (click)="togglePasswordVisibility()">
-          {{ showPassword ? '🙈' : '👁' }}
-        </button>
-      </div>
-      <div class="error" *ngIf="errorPassword">{{ errorPassword }}</div>
-      <div class="error" *ngIf="fieldErrors['password']">{{ fieldErrors['password'] }}</div>
-    </div>
-
-    <button class="btn-primary" (click)="agregar()" [disabled]="cargando">
-      {{ cargando ? ('ADMIN_LOGIN.BTN_LOADING' | translate) : ('ADMIN_CREATE.BTN_ADD' | translate) }}
+    <!-- Botón volver -->
+    <button class="ac-btn-back" (click)="volver()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
+      {{ 'ADMIN_DELETED.BACK' | translate }}
     </button>
 
-    <div class="error" *ngIf="errorMsg">{{ errorMsg }}</div>
-    <div class="ok" *ngIf="successMsg">{{ successMsg }}</div>
+    <!-- Header -->
+    <div class="ac-header">
+      <div class="ac-icon">🛡️</div>
+      <h2 class="ac-title">{{ 'ADMIN_CREATE.TITLE' | translate }}</h2>
+      <p class="ac-subtitle">Completa los datos para crear un nuevo administrador</p>
+    </div>
+
+    <!-- Correo -->
+    <div class="ac-field">
+      <label class="ac-label">{{ 'ADMIN_CREATE.PLACEHOLDER_EMAIL' | translate }}</label>
+      <div class="ac-input-wrap">
+        <svg class="ac-input-icon" width="16" height="16" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <input
+          class="ac-input"
+          type="email"
+          [(ngModel)]="correo"
+          [class.ac-input-error]="errorCorreo || fieldErrors['mail']"
+          placeholder="admin@antojitosmaps.com"
+          autocomplete="email">
+      </div>
+      @if (errorCorreo) {
+        <span class="ac-error">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          {{ errorCorreo }}
+        </span>
+      }
+      @if (fieldErrors['mail'] && !errorCorreo) {
+        <span class="ac-error">{{ fieldErrors['mail'] }}</span>
+      }
+    </div>
+
+    <!-- Contraseña -->
+    <div class="ac-field">
+      <label class="ac-label">{{ 'ADMIN_LOGIN.PASSWORD' | translate }}</label>
+      <div class="ac-input-wrap">
+        <svg class="ac-input-icon" width="16" height="16" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <input
+          class="ac-input"
+          [type]="showPassword ? 'text' : 'password'"
+          [(ngModel)]="password"
+          [class.ac-input-error]="errorPassword || fieldErrors['password']"
+          [placeholder]="'ADMIN_LOGIN.PASS_PLACEHOLDER' | translate"
+          autocomplete="new-password">
+        <button type="button" class="ac-toggle-pwd" (click)="togglePasswordVisibility()">
+          <svg *ngIf="!showPassword" width="15" height="15" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <svg *ngIf="showPassword" width="15" height="15" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+            <line x1="1" y1="1" x2="23" y2="23"/>
+          </svg>
+        </button>
+      </div>
+      <!-- Indicador de fortaleza -->
+      @if (password.length > 0) {
+        <div class="ac-strength-bar">
+          <div class="ac-strength-fill"
+            [style.width.%]="passwordStrength.pct"
+            [class.ac-str-weak]="passwordStrength.level === 'weak'"
+            [class.ac-str-medium]="passwordStrength.level === 'medium'"
+            [class.ac-str-strong]="passwordStrength.level === 'strong'">
+          </div>
+        </div>
+        <span class="ac-strength-label"
+          [class.ac-str-weak]="passwordStrength.level === 'weak'"
+          [class.ac-str-medium]="passwordStrength.level === 'medium'"
+          [class.ac-str-strong]="passwordStrength.level === 'strong'">
+          {{ passwordStrength.label }}
+        </span>
+      }
+      @if (errorPassword) {
+        <span class="ac-error">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          {{ errorPassword }}
+        </span>
+      }
+    </div>
+
+    <!-- Error general -->
+    @if (errorMsg) {
+      <div class="ac-banner-error">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        {{ errorMsg }}
+      </div>
+    }
+
+    <!-- Éxito -->
+    @if (successMsg) {
+      <div class="ac-banner-ok">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        {{ successMsg }}
+      </div>
+    }
+
+    <!-- Botón -->
+    <button class="ac-btn-submit" (click)="agregar()" [disabled]="cargando">
+      @if (cargando) {
+        <span class="ac-spinner"></span>
+        {{ 'ADMIN_LOGIN.BTN_LOADING' | translate }}
+      } @else {
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        {{ 'ADMIN_CREATE.BTN_ADD' | translate }}
+      }
+    </button>
 
   </div>
-
 </div>

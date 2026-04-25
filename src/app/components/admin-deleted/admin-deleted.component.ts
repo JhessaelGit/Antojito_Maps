@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AdminSessionService } from '../../core/services/admin-session.service';
 import { environment } from '../../../environments/environment';
@@ -17,6 +17,7 @@ export class AdminDeletedComponent implements OnInit, OnDestroy {
   adminsEliminados: Array<{ id: string; mail: string; deletedAt: string | null }> = [];
   cargando = false;
   errorMsg = '';
+  confirmandoId: string | null = null;
   private deletedAdminsRequest: XMLHttpRequest | null = null;
   private requestTimeoutId: number | null = null;
   private destroyed = false;
@@ -26,10 +27,16 @@ export class AdminDeletedComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private adminSession: AdminSessionService,
     private zone: NgZone,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private location: Location  
   ) {}
 
   ngOnInit(): void {
+    const currentSession = this.adminSession.getSession();
+    if (!currentSession) {
+      this.router.navigate(['/admin/login']);
+      return;
+  }
     this.cargarEliminados();
   }
 
@@ -120,7 +127,20 @@ export class AdminDeletedComponent implements OnInit, OnDestroy {
   }
 
   volver() {
-    this.router.navigate(['/admin']);
+    this.location.back();
+  }
+
+  solicitarConfirmacion(id: string) {
+    this.confirmandoId = id;
+  }
+
+  cancelarConfirmacion() {
+    this.confirmandoId = null;
+  }
+
+  confirmarEliminacion() {
+    // Aquí irá la lógica de eliminación cuando el backend lo soporte
+    this.confirmandoId = null;
   }
 
   private extractList(items: unknown): any[] {

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoggerService } from '../../core/services/logger.service';
@@ -31,8 +31,19 @@ export class AdminCreate {
     private logger: LoggerService,
     private translate: TranslateService,
     private adminService: AdminService,
-    private adminSession: AdminSessionService
+    private adminSession: AdminSessionService,
+    private location: Location
   ) {}
+
+  ngOnInit(): void {
+    const currentSession = this.adminSession.getSession();
+    if (!currentSession) {
+      this.router.navigate(['/admin/login']);
+      return;
+    }
+
+    this.correo = currentSession.mail;
+  }
 
   agregar() {
     this.clearErrors();
@@ -130,12 +141,21 @@ export class AdminCreate {
     this.showPassword = !this.showPassword;
   }
 
-  volver(): void {
-    if (this.adminSession.isAuthenticated()) {
-      this.router.navigate(['/admin']);
-      return;
-    }
+  get passwordStrength(): { pct: number; level: string; label: string } {
+    const p = this.password;
+    if (!p) return { pct: 0, level: '', label: '' };
+    let score = 0;
+    if (p.length >= 6)  score++;
+    if (p.length >= 10) score++;
+    if (/[A-Z]/.test(p)) score++;
+    if (/[0-9]/.test(p)) score++;
+    if (/[^A-Za-z0-9]/.test(p)) score++;
+    if (score <= 2) return { pct: 33,  level: 'weak',   label: 'Contraseña débil' };
+    if (score <= 3) return { pct: 66,  level: 'medium', label: 'Contraseña media' };
+    return              { pct: 100, level: 'strong', label: 'Contraseña fuerte' };
+  }
 
-    this.router.navigate(['/admin/login']);
+  volver(): void {
+    this.location.back();
   }
 }

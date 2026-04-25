@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -17,6 +17,7 @@ export class AdminEdit implements OnInit {
 
   editMail = '';
   editPassword = '';
+  showPass = false;
 
   errorMsg = '';
   successMsg = '';
@@ -27,9 +28,11 @@ export class AdminEdit implements OnInit {
     private router: Router,
     private adminService: AdminService,
     private adminSession: AdminSessionService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private location: Location
   ) {}
 
+  //Esta parte es como "seguridad", quitar si es que lo quieres revisar de manera local
   ngOnInit(): void {
     const currentSession = this.adminSession.getSession();
     if (!currentSession) {
@@ -51,7 +54,7 @@ export class AdminEdit implements OnInit {
       return;
     }
     if (!this.editPassword || this.editPassword.length < 6) {
-      this.errorMsg = 'Minimo 6 caracteres';
+      this.errorMsg = this.translate.instant('ADMIN_CREATE.ERR_PASSWORD');
       return;
     }
 
@@ -92,6 +95,6 @@ export class AdminEdit implements OnInit {
   }
 
   volver(): void {
-    this.router.navigate(['/admin']);
+    this.location.back();
   }
 }
