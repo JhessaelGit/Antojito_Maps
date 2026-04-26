@@ -31,6 +31,8 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   private markersLayer = L.layerGroup();
   private chatbotMarkersLayer = L.layerGroup(); // Capa para recomendaciones del bot
   private locationMarker?: L.Marker;
+  private userLat: number | null = null;
+  private userLng: number | null = null;
 
   categorias = [
     { label: 'CATEGORIES.ALL',        slug: '' },
@@ -147,6 +149,8 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude: lat, longitude: lng } = pos.coords;
+        this.userLat = lat;
+        this.userLng = lng;
         const iconoUbicacion = L.divIcon({
           className: 'user-location-marker',
           html: `<div class="user-pulse-ring"></div><div class="user-dot"></div>`,
@@ -186,49 +190,122 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  private readonly RADIO_MAX_KM = 10;
+
   private mostrarRecomendacionesEnMapa(slug: string): void {
     if (!slug) return;
     this.chatbotMarkersLayer.clearLayers();
 
-    const recomendados = this.restaurantes.filter(r => 
+    // Filtrar por categoría
+    const porCategoria = this.restaurantes.filter(r =>
       (r.category ?? r.categoria ?? '').toLowerCase() === slug.toLowerCase()
     );
 
-    recomendados.forEach(r => {
-      const lat = r.latitude ?? r.lat ?? r.latitud;
-      const lng = r.longitude ?? r.lng ?? r.longitud;
-      if (lat == null || lng == null) return;
+    // Calcular distancia si tenemos ubicación del usuario
+    const conDistancia = porCategoria
+      .map(r => {
+        const lat = r.latitude ?? r.lat ?? r.latitud;
+        const lng = r.longitude ?? r.lng ?? r.longitud;
+        if (lat == null || lng == null) return null;
+
+        const distancia = (this.userLat !== null && this.userLng !== null)
+          ? this.calcularDistanciaKm(this.userLat, this.userLng, lat, lng)
+          : 0; // Sin ubicación del usuario → distancia 0 (muestra todos)
+
+        return { r, lat, lng, distancia };
+      })
+      .filter((item): item is { r: any; lat: number; lng: number; distancia: number } =>
+        item !== null
+      );
+
+    // Filtrar por radio de 10 km (solo si tenemos ubicación)
+    const dentroDelRadio = (this.userLat !== null && this.userLng !== null)
+      ? conDistancia.filter(item => item.distancia <= this.RADIO_MAX_KM)
+      : conDistancia;
+
+    // Ordenar por cercanía
+    const ordenados = dentroDelRadio.sort((a, b) => a.distancia - b.distancia);
+
+    // Si no hay resultados dentro del radio, avisar al chatbot
+    if (ordenados.length === 0 && porCategoria.length > 0) {
+      this.agregarMensaje('bot',
+        `📍 No encontré restaurantes de esa categoría dentro de ${this.RADIO_MAX_KM} km de tu ubicación. ` +
+        `Existen ${porCategoria.length} en otras zonas de Cochabamba.`
+      );
+      this.refreshView();
+      return;
+    }
+
+    // Pintar marcadores dorados ordenados por cercanía
+    ordenados.forEach((item, index) => {
+      const { r, lat, lng } = item;
+      const uuid = r.uuid ?? r.id ?? '';
+      const distTexto = this.userLat !== null
+        ? ` · ${item.distancia.toFixed(1)} km`
+        : '';
 
       const iconoChatbot = L.divIcon({
         className: 'chatbot-recommendation-marker',
         html: `<div class="marker-pin-bot"><div class="marker-inner-bot"></div></div>`,
-        iconSize: [38, 48], iconAnchor: [19, 44]
+        iconSize: [38, 48],
+        iconAnchor: [19, 44]
       });
 
-      const uuid = r.uuid ?? r.id ?? '';
+      const nombre      = r.name ?? r.nombre ?? 'Restaurante';
+      const descripcion = r.description ?? r.descripcion ?? '';
+      const categoria   = r.category ?? r.categoria ?? '';
+      const imagen      = r.imagenUrl ?? r.image_url ?? '';
+
+      // Agrega distancia a la descripción del popup
+      const descConDist = descripcion
+        ? `${descripcion}${distTexto}`
+        : `${categoria}${distTexto}`;
+
       const marker = L.marker([lat, lng], { icon: iconoChatbot })
-        .bindPopup(this.buildPopupHtml(
-          r.name ?? 'Recomendado', 
-          r.description ?? '', 
-          r.category ?? '', 
-          r.imagenUrl ?? '', 
-          uuid
-        ), { maxWidth: 290, className: 'custom-popup' });
+        .bindPopup(
+          this.buildPopupHtml(nombre, descConDist, categoria, imagen, uuid),
+          { maxWidth: 290, className: 'custom-popup' }
+        );
 
       marker.on('popupopen', () => {
         setTimeout(() => {
-          const btn = document.querySelector<HTMLButtonElement>(`.restaurant-popup-btn[data-uuid="${uuid}"]`);
-          btn?.addEventListener('click', () => this.router.navigate(['/restaurant-view', uuid]));
+          const btn = document.querySelector<HTMLButtonElement>(
+            `.restaurant-popup-btn[data-uuid="${uuid}"]`
+          );
+          btn?.addEventListener('click', () =>
+            this.router.navigate(['/restaurant-view', uuid])
+          );
         }, 50);
       });
 
       this.chatbotMarkersLayer.addLayer(marker);
+
+      // Abre automáticamente el popup del más cercano
+      if (index === 0) {
+        setTimeout(() => marker.openPopup(), 400);
+      }
     });
 
-    if (recomendados.length > 0) {
-      const group = L.featureGroup(this.chatbotMarkersLayer.getLayers() as L.Marker[]);
+    // Ajusta el mapa para mostrar todos los marcadores recomendados
+    if (ordenados.length > 0) {
+      const group = L.featureGroup(
+        this.chatbotMarkersLayer.getLayers() as L.Marker[]
+      );
       this.map.fitBounds(group.getBounds().pad(0.3));
     }
+
+    // Mensaje de confirmación con conteo y distancia del más cercano
+    const masCarcanoDist = ordenados[0]?.distancia;
+    const sufijo = this.userLat !== null && masCarcanoDist !== undefined
+      ? ` El más cercano está a ${masCarcanoDist.toFixed(1)} km.`
+      : '';
+
+    this.agregarMensaje('bot',
+      `📍 Encontré ${ordenados.length} opción${ordenados.length !== 1 ? 'es' : ''} ` +
+      `dentro de ${this.RADIO_MAX_KM} km.${sufijo}`
+    );
+    this.refreshView();
+    setTimeout(() => this.scrollAlFinal(), 50);
   }
 
   filtrarRestaurantes(): void {
@@ -285,6 +362,24 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     const mediaHtml = i ? `<div class="restaurant-popup-media"><img src="${this.escapeHtml(i)}" class="restaurant-popup-image" onerror="this.parentElement.classList.add('no-image'); this.remove();"><div class="restaurant-popup-fallback">🍽️</div></div>` : `<div class="restaurant-popup-media no-image"><div class="restaurant-popup-fallback only">🍽️</div></div>`;
 
     return `<article class="restaurant-popup-card">${mediaHtml}<div class="restaurant-popup-body"><span class="restaurant-popup-category">${sC}</span><h3 class="restaurant-popup-title">${sN}</h3><p class="restaurant-popup-desc">${sD}</p><button class="restaurant-popup-btn" data-uuid="${u}" type="button">Ver restaurante</button></div></article>`;
+  }
+
+  /**
+   * Fórmula de Haversine — distancia en km entre dos coordenadas
+   */
+  private calcularDistanciaKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+    const R = 6371; // Radio de la Tierra en km
+    const dLat = this.toRad(lat2 - lat1);
+    const dLng = this.toRad(lng2 - lng1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.toRad(lat1)) * Math.cos(this.toRad(lat2)) *
+      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  private toRad(deg: number): number {
+    return deg * (Math.PI / 180);
   }
 
   private escapeHtml(v: string): string {
