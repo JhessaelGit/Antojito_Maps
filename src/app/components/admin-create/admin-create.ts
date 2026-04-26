@@ -32,8 +32,18 @@ export class AdminCreate {
     private translate: TranslateService,
     private adminService: AdminService,
     private adminSession: AdminSessionService,
-    private location:     Location
+    private location: Location
   ) {}
+
+  ngOnInit(): void {
+    const currentSession = this.adminSession.getSession();
+    if (!currentSession) {
+      this.router.navigate(['/admin/login']);
+      return;
+    }
+
+    this.correo = currentSession.mail;
+  }
 
   agregar() {
     this.clearErrors();
@@ -131,7 +141,21 @@ export class AdminCreate {
     this.showPassword = !this.showPassword;
   }
 
+  get passwordStrength(): { pct: number; level: string; label: string } {
+    const p = this.password;
+    if (!p) return { pct: 0, level: '', label: '' };
+    let score = 0;
+    if (p.length >= 6)  score++;
+    if (p.length >= 10) score++;
+    if (/[A-Z]/.test(p)) score++;
+    if (/[0-9]/.test(p)) score++;
+    if (/[^A-Za-z0-9]/.test(p)) score++;
+    if (score <= 2) return { pct: 33,  level: 'weak',   label: 'Contraseña débil' };
+    if (score <= 3) return { pct: 66,  level: 'medium', label: 'Contraseña media' };
+    return              { pct: 100, level: 'strong', label: 'Contraseña fuerte' };
+  }
+
   volver(): void {
     this.location.back();
-    }
+  }
 }

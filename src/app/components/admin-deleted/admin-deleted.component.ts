@@ -17,6 +17,7 @@ export class AdminDeletedComponent implements OnInit, OnDestroy {
   adminsEliminados: Array<{ id: string; mail: string; deletedAt: string | null }> = [];
   cargando = false;
   errorMsg = '';
+  confirmandoId: string | null = null;
   private deletedAdminsRequest: XMLHttpRequest | null = null;
   private requestTimeoutId: number | null = null;
   private destroyed = false;
@@ -27,10 +28,15 @@ export class AdminDeletedComponent implements OnInit, OnDestroy {
     private adminSession: AdminSessionService,
     private zone: NgZone,
     private cdr: ChangeDetectorRef,
-    private location:     Location
+    private location: Location  
   ) {}
 
   ngOnInit(): void {
+    const currentSession = this.adminSession.getSession();
+    if (!currentSession) {
+      this.router.navigate(['/admin/login']);
+      return;
+  }
     this.cargarEliminados();
   }
 
@@ -120,6 +126,19 @@ export class AdminDeletedComponent implements OnInit, OnDestroy {
 
   volver() {
     this.location.back();
+  }
+
+  solicitarConfirmacion(id: string) {
+    this.confirmandoId = id;
+  }
+
+  cancelarConfirmacion() {
+    this.confirmandoId = null;
+  }
+
+  confirmarEliminacion() {
+    // Aquí irá la lógica de eliminación cuando el backend lo soporte
+    this.confirmandoId = null;
   }
 
   private extractList(items: unknown): any[] {
