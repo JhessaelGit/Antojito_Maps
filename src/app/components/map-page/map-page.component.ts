@@ -9,6 +9,8 @@ import { RestauranteService } from '../../core/services/restaurante.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subject, finalize, takeUntil, timeout } from 'rxjs';
 import * as L from 'leaflet';
+import { ChatService } from '../../core/services/chat.service';
+
 
 export interface ChatMensaje {
   id: string;
@@ -52,7 +54,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   cargando: boolean = true;
   errorApi: boolean = false;
   private restaurantes: any[] = [];
-
+  private conversationId: string | null = null;
   /* ── Chatbot ───────────────────────────────────────────────── */
   @ViewChild('chatMessages') private chatMessagesRef!: ElementRef<HTMLDivElement>;
 
@@ -97,9 +99,10 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     public router: Router,
     private restauranteService: RestauranteService,
+    private chatService: ChatService, // 🔥 AGREGAR
     private translate: TranslateService,
     private cd: ChangeDetectorRef,
-    private location:     Location
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -305,24 +308,37 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async enviarMensaje(texto: string): Promise<void> {
-    const trimmed = texto.trim();
-    if (!trimmed || this.chatbotEscribiendo) return;
+  const trimmed = texto.trim();
+  if (!trimmed || this.chatbotEscribiendo) return;
 
-    this.agregarMensaje('user', trimmed);
-    this.mostrarSugerencias = false;
-    this.chatbotEscribiendo = true;
-    this.refreshView();
+  this.agregarMensaje('user', trimmed);
+  this.mostrarSugerencias = false;
+  this.chatbotEscribiendo = true;
+  this.refreshView();
 
-    const resData = await this.mockResponderData(trimmed);
-    this.chatbotEscribiendo = false;
-    this.agregarMensaje('bot', resData.texto);
+  this.chatService.enviarMensaje({
+      conversationId: this.conversationId ?? undefined,
+      message: trimmed
+    }).subscribe({
+      next: (res) => {
+        this.conversationId = res.conversationId;
 
-    // Activamos la visualización en mapa
-    this.mostrarRecomendacionesEnMapa(resData.slug);
+        this.chatbotEscribiendo = false;
+        this.agregarMensaje('bot', res.reply);
 
-    if (!this.chatbotAbierto) this.mensajesNoLeidos++;
-    this.refreshView();
-    setTimeout(() => this.scrollAlFinal(), 50);
+        // 🔥 LÓGICA REAL (tu HU)
+        this.procesarBusquedaIA(trimmed);
+
+        if (!this.chatbotAbierto) this.mensajesNoLeidos++;
+        this.refreshView();
+        setTimeout(() => this.scrollAlFinal(), 50);
+      },
+      error: () => {
+        this.chatbotEscribiendo = false;
+        this.agregarMensaje('bot', 'Error al obtener respuesta del servidor.');
+        this.refreshView();
+      }
+    });
   }
 
   enviarSugerencia(texto: string): void { this.enviarMensaje(texto); }
@@ -356,7 +372,98 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     const res = this.mockRespuestas[key];
     return new Promise(resolve => setTimeout(() => resolve(res), 1200));
   }
+/* ══════════════════════════════════════════════════════════════
+    IA + FALLBACK (HU)
+══════════════════════════════════════════════════════════════ */
 
+private procesarBusquedaIA(texto: string): void {
+    if (!this.locationMarker) return;
+
+    const userLatLng = this.locationMarker.getLatLng();
+
+    const resultados = this.buscarRestaurantesCercanos(
+      userLatLng.lat,
+      userLatLng.lng,
+      10
+    );
+
+    if (resultados.length > 0) {
+      this.mostrarResultadosEnMapa(resultados);
+    } else {
+      const fallback = this.obtenerRecomendacionFallback(userLatLng.lat, userLatLng.lng);
+
+      if (fallback) {
+        this.agregarMensaje('bot', `No encontré resultados cercanos. Te recomiendo: ${fallback.name}`);
+        this.mostrarResultadosEnMapa([fallback]);
+      } else {
+        this.agregarMensaje('bot', 'No hay restaurantes disponibles en este momento.');
+      }
+    }
+  }
+
+  private buscarRestaurantesCercanos(userLat: number, userLng: number, radioKm: number): any[] {
+    return this.restaurantes.filter(r => {
+      const lat = r.latitude ?? r.lat ?? r.latitud;
+      const lng = r.longitude ?? r.lng ?? r.longitud;
+      if (lat == null || lng == null) return false;
+
+      const distancia = this.calcularDistanciaKm(userLat, userLng, lat, lng);
+      return distancia <= radioKm;
+    });
+  }
+
+  private obtenerRecomendacionFallback(userLat: number, userLng: number): any | null {
+    if (this.restaurantes.length === 0) return null;
+
+    let mejor = null;
+    let menorDistancia = Infinity;
+
+    for (const r of this.restaurantes) {
+      const lat = r.latitude ?? r.lat ?? r.latitud;
+      const lng = r.longitude ?? r.lng ?? r.longitud;
+      if (lat == null || lng == null) continue;
+
+      const distancia = this.calcularDistanciaKm(userLat, userLng, lat, lng);
+
+      if (distancia < menorDistancia) {
+        menorDistancia = distancia;
+        mejor = r;
+      }
+    }
+
+    return mejor;
+  }
+
+  private calcularDistanciaKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371;
+    const dLat = this.toRad(lat2 - lat1);
+    const dLon = this.toRad(lon2 - lon1);
+
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(this.toRad(lat1)) *
+      Math.cos(this.toRad(lat2)) *
+      Math.sin(dLon / 2) ** 2;
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  private toRad(valor: number): number {
+    return valor * Math.PI / 180;
+  }
+
+  private mostrarResultadosEnMapa(restaurantes: any[]): void {
+    this.chatbotMarkersLayer.clearLayers();
+
+    restaurantes.forEach(r => {
+      const lat = r.latitude ?? r.lat ?? r.latitud;
+      const lng = r.longitude ?? r.lng ?? r.longitud;
+      if (lat == null || lng == null) return;
+
+      const marker = L.marker([lat, lng]).addTo(this.chatbotMarkersLayer);
+    });
+  }
   private refreshView(): void { try { this.cd.detectChanges(); } catch {} }
   buscarRestaurante(texto: string): void { this.textoBusqueda = texto; this.filtrarRestaurantes(); }
   seleccionarCategoria(slug: string): void { this.categoriaSeleccionada = slug; this.router.navigate([], { queryParams: { categoria: slug || null }, queryParamsHandling: 'merge' }); this.filtrarRestaurantes(); }
