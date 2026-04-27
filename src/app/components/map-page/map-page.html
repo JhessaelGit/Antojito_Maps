@@ -168,7 +168,7 @@
         <div class="chatbot-suggestions">
           @for (sug of sugerenciasRapidas; track sug) {
             <button class="suggestion-chip" (click)="enviarSugerencia(sug)">
-              {{ 'CHATBOT.SUGGESTIONS.' + sug | translate }}
+              {{ sug }}
             </button>
           }
         </div>

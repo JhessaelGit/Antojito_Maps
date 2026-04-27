@@ -68,29 +68,29 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     {
       id: '1',
       rol: 'bot',
-      texto: '¡Hola! 👋 Soy tu asistente de Antojitos. Cuéntame qué tipo de comida te apetece hoy y te recomiendo los mejores restaurantes del mapa.',
+      texto: '¡Hola! Soy tu asistente de Antojitos. Cuéntame qué tipo de comida te apetece hoy y te recomiendo los mejores restaurantes del mapa.',
       hora: this.horaActual()
     }
   ];
 
   sugerenciasRapidas: string[] = [
-    '🌮 Quiero tacos',
-    '🍕 Algo italiano',
-    '🥩 Comida típica boliviana',
-    '🍣 Me apetece sushi',
-    '🍔 Una buena hamburguesa',
+    'Quiero tacos',
+    'Algo italiano',
+    'Comida típica boliviana',
+    'Me apetece sushi',
+    'Una buena hamburguesa',
   ];
 
   /* ── Respuestas mock con Metadata de Categoría ──────────────── */
   private mockRespuestas: Record<string, { texto: string, slug: string }> = {
-    taco:     { texto: '¡Buena elección! 🌮 He marcado las mejores taquerías en el mapa para ti.', slug: 'Tacos' },
-    pizza:    { texto: '🍕 ¡Perfecto! He ubicado las pizzerías más cercanas en el mapa.', slug: 'Pizzeria' },
-    sushi:    { texto: '🍣 ¡Amo el sushi! Mira los puntos dorados destacados en el mapa.', slug: 'Sushi' },
-    burger:   { texto: '🍔 ¡Hamburguesas! Aquí tienes las opciones disponibles ahora mismo.', slug: 'Hamburguesas' },
-    tipic:    { texto: '🇧🇴 ¡Comida boliviana! He marcado los lugares de comida típica en el mapa.', slug: 'Comida Tipica' },
-    salteña:  { texto: '☀️ ¡Salteñas! Los puntos amarillos te muestran dónde encontrarlas.', slug: 'Salteñas' },
-    chicharr: { texto: '🥩 ¡Chicharrón! Mira las opciones que han aparecido en el mapa.', slug: 'Chicharron' },
-    default:  { texto: 'Entendido 🤔 Puedo ayudarte a encontrar restaurantes. Prueba con: Tacos, Pizza o Sushi.', slug: '' }
+    taco:     { texto: '¡Buena elección! He marcado las mejores taquerías en el mapa para ti.', slug: 'Tacos' },
+    pizza:    { texto: '¡Perfecto! He ubicado las pizzerías más cercanas en el mapa.', slug: 'Pizzeria' },
+    sushi:    { texto: '¡Amo el sushi! Mira los puntos dorados destacados en el mapa.', slug: 'Sushi' },
+    burger:   { texto: '¡Hamburguesas! Aquí tienes las opciones disponibles ahora mismo.', slug: 'Hamburguesas' },
+    tipic:    { texto: '¡Comida boliviana! He marcado los lugares de comida típica en el mapa.', slug: 'Comida Tipica' },
+    salteña:  { texto: '¡Salteñas! Los puntos amarillos te muestran dónde encontrarlas.', slug: 'Salteñas' },
+    chicharr: { texto: '¡Chicharrón! Mira las opciones que han aparecido en el mapa.', slug: 'Chicharron' },
+    default:  { texto: 'Entendido. Puedo ayudarte a encontrar restaurantes. Prueba con: Tacos, Pizza o Sushi.', slug: '' }
   };
   
   private readonly destroy$ = new Subject<void>();
@@ -149,6 +149,8 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
       (pos) => {
+        if (!this.map || !this.map.getContainer()) return;
+        
         const { latitude: lat, longitude: lng } = pos.coords;
         const iconoUbicacion = L.divIcon({
           className: 'user-location-marker',
@@ -385,44 +387,82 @@ private procesarBusquedaIA(texto: string): void {
     if (!this.locationMarker) return;
 
     const userLatLng = this.locationMarker.getLatLng();
+    
+    const lower = texto.toLowerCase();
+    let slugDeseado = '';
+    if (lower.includes('taco')) slugDeseado = 'Tacos';
+    else if (lower.includes('pizza') || lower.includes('italia')) slugDeseado = 'Pizzeria';
+    else if (lower.includes('sushi')) slugDeseado = 'Sushi';
+    else if (lower.includes('burger') || lower.includes('hambur')) slugDeseado = 'Hamburguesas';
+    else if (lower.includes('típic') || lower.includes('tipic')) slugDeseado = 'Comida Tipica';
+    else if (lower.includes('salteña')) slugDeseado = 'Salteñas';
+    else if (lower.includes('chichar')) slugDeseado = 'Chicharron';
 
     const resultados = this.buscarRestaurantesCercanos(
       userLatLng.lat,
       userLatLng.lng,
-      10
+      10,
+      slugDeseado
     );
 
     if (resultados.length > 0) {
       this.mostrarResultadosEnMapa(resultados);
     } else {
-      const fallback = this.obtenerRecomendacionFallback(userLatLng.lat, userLatLng.lng);
+      const fallback = this.obtenerRecomendacionFallback(userLatLng.lat, userLatLng.lng, slugDeseado);
 
       if (fallback) {
-        this.agregarMensaje('bot', `No encontré resultados cercanos. Te recomiendo: ${fallback.name}`);
+        const nombreRestaurante = fallback.name ?? fallback.nombre;
+        this.agregarMensaje('bot', `No encontré resultados cercanos a 10 km. Como alternativa te recomiendo: ${nombreRestaurante}`);
         this.mostrarResultadosEnMapa([fallback]);
       } else {
-        this.agregarMensaje('bot', 'No hay restaurantes disponibles en este momento.');
+        this.agregarMensaje('bot', 'No hay restaurantes disponibles en este momento que coincidan con tu búsqueda.');
       }
     }
   }
 
-  private buscarRestaurantesCercanos(userLat: number, userLng: number, radioKm: number): any[] {
+  private buscarRestaurantesCercanos(userLat: number, userLng: number, radioKm: number, slug: string): any[] {
     return this.restaurantes.filter(r => {
       const lat = r.latitude ?? r.lat ?? r.latitud;
       const lng = r.longitude ?? r.lng ?? r.longitud;
       if (lat == null || lng == null) return false;
+
+      if (slug) {
+        const cat = (r.category ?? r.categoria ?? '').toLowerCase();
+        if (cat !== slug.toLowerCase()) return false;
+      }
 
       const distancia = this.calcularDistanciaKm(userLat, userLng, lat, lng);
       return distancia <= radioKm;
     });
   }
 
-  private obtenerRecomendacionFallback(userLat: number, userLng: number): any | null {
+  private obtenerRecomendacionFallback(userLat: number, userLng: number, slug: string): any | null {
     if (this.restaurantes.length === 0) return null;
 
     let mejor = null;
     let menorDistancia = Infinity;
 
+    if (slug) {
+      for (const r of this.restaurantes) {
+        const lat = r.latitude ?? r.lat ?? r.latitud;
+        const lng = r.longitude ?? r.lng ?? r.longitud;
+        if (lat == null || lng == null) continue;
+        
+        const cat = (r.category ?? r.categoria ?? '').toLowerCase();
+        if (cat !== slug.toLowerCase()) continue;
+
+        const distancia = this.calcularDistanciaKm(userLat, userLng, lat, lng);
+
+        if (distancia < menorDistancia) {
+          menorDistancia = distancia;
+          mejor = r;
+        }
+      }
+    }
+
+    if (mejor) return mejor;
+
+    menorDistancia = Infinity;
     for (const r of this.restaurantes) {
       const lat = r.latitude ?? r.lat ?? r.latitud;
       const lng = r.longitude ?? r.lng ?? r.longitud;
