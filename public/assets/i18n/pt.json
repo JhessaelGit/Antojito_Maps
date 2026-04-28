@@ -225,15 +225,20 @@
     "CARD_DELETED": "Administradores excluídos"
   },
   "ADMIN_CREATE": {
-    "TITLE": "Adicionar Administrador",
-    "IMAGE_LABEL": "Subir imagem",
-    "PLACEHOLDER_NAME": "Nome completo",
+    "TITLE": "Criar Administrador",
+    "SUBTITLE": "Preencha os campos para criar um novo administrador",
     "PLACEHOLDER_EMAIL": "E-mail",
-    "PLACEHOLDER_FUNCTIONS": "Funções",
-    "BTN_ADD": "Adicionar",
-    "ERR_NAME": "Nome obrigatório",
-    "ERR_EMAIL": "E-mail inválido",
-    "ERR_FUNCTIONS": "Funções obrigatórias"
+    "BTN_ADD": "Adicionar Administrador",
+    "ERR_EMAIL": "Insira um e-mail válido",
+    "ERR_PASSWORD": "A senha não pode estar vazia e deve ter pelo menos 6 caracteres",
+    "STR_WEAK": "Senha fraca",
+    "STR_MEDIUM": "Senha média",
+    "STR_STRONG": "Senha forte",
+    "SUCCESS_DEFAULT": "Administrador criado com sucesso",
+    "ERR_EXISTING_ADMIN": "Já existem administradores ativos. Você deve fazer login.",
+    "ERR_BAD_REQUEST": "Dados inválidos ou e-mail duplicado",
+    "ERR_NO_CONNECTION": "Não foi possível conectar ao servidor",
+    "ERR_GENERIC": "Não foi possível criar o administrador"
   },
   "ADMIN_DELETED": {
     "BACK": "Voltar",

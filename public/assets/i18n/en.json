@@ -237,15 +237,20 @@
     "CARD_DELETED": "Deleted Administrators"
   },
   "ADMIN_CREATE": {
-    "TITLE": "Add Administrator",
-    "IMAGE_LABEL": "Upload image",
-    "PLACEHOLDER_NAME": "Full name",
-    "PLACEHOLDER_EMAIL": "Email",
-    "PLACEHOLDER_FUNCTIONS": "Functions",
-    "BTN_ADD": "Add",
-    "ERR_NAME": "Name required",
-    "ERR_EMAIL": "Invalid email",
-    "ERR_FUNCTIONS": "Functions required"
+    "TITLE": "Create Administrator",
+    "SUBTITLE": "Complete the fields to create a new administrator",
+    "PLACEHOLDER_EMAIL": "Email Address",
+    "BTN_ADD": "Add Administrator",
+    "ERR_EMAIL": "Please enter a valid email address",
+    "ERR_PASSWORD": "Password cannot be empty and must be at least 6 characters long",
+    "STR_WEAK": "Weak password",
+    "STR_MEDIUM": "Medium password",
+    "STR_STRONG": "Strong password",
+    "SUCCESS_DEFAULT": "Administrator created successfully",
+    "ERR_EXISTING_ADMIN": "Active admins already exist. You must log in.",
+    "ERR_BAD_REQUEST": "Invalid data or duplicate email",
+    "ERR_NO_CONNECTION": "Could not connect to the server",
+    "ERR_GENERIC": "Failed to create administrator"
   },
   "ADMIN_DELETED": {
     "BACK": "Back",
