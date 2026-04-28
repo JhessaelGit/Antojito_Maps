@@ -35,15 +35,15 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   private locationMarker?: L.Marker;
 
   categorias = [
-    { label: 'CATEGORIES.ALL',        slug: '' },
-    { label: 'CATEGORIES.SALTEÑAS',   slug: 'Salteñas' },
+    { label: 'CATEGORIES.ALL', slug: '' },
+    { label: 'CATEGORIES.SALTEÑAS', slug: 'Salteñas' },
     { label: 'CATEGORIES.CHICHARRON', slug: 'Chicharron' },
-    { label: 'CATEGORIES.SUSHI',      slug: 'Sushi' },
-    { label: 'CATEGORIES.TYPICAL',    slug: 'Comida Tipica' },
-    { label: 'CATEGORIES.PIZZA',      slug: 'Pizzeria' },
-    { label: 'CATEGORIES.BURGERS',    slug: 'Hamburguesas' },
-    { label: 'CATEGORIES.TACOS',      slug: 'Tacos' },
-    { label: 'CATEGORIES.GRILL',      slug: 'Parrilla' },
+    { label: 'CATEGORIES.SUSHI', slug: 'Sushi' },
+    { label: 'CATEGORIES.TYPICAL', slug: 'Comida Tipica' },
+    { label: 'CATEGORIES.PIZZA', slug: 'Pizzeria' },
+    { label: 'CATEGORIES.BURGERS', slug: 'Hamburguesas' },
+    { label: 'CATEGORIES.TACOS', slug: 'Tacos' },
+    { label: 'CATEGORIES.GRILL', slug: 'Parrilla' },
   ];
 
   categoriaSeleccionada: string = '';
@@ -81,18 +81,6 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     '🍔 Una buena hamburguesa',
   ];
 
-  /* ── Respuestas mock con Metadata de Categoría ──────────────── */
-  private mockRespuestas: Record<string, { texto: string, slug: string }> = {
-    taco:     { texto: '¡Buena elección! 🌮 He marcado las mejores taquerías en el mapa para ti.', slug: 'Tacos' },
-    pizza:    { texto: '🍕 ¡Perfecto! He ubicado las pizzerías más cercanas en el mapa.', slug: 'Pizzeria' },
-    sushi:    { texto: '🍣 ¡Amo el sushi! Mira los puntos dorados destacados en el mapa.', slug: 'Sushi' },
-    burger:   { texto: '🍔 ¡Hamburguesas! Aquí tienes las opciones disponibles ahora mismo.', slug: 'Hamburguesas' },
-    tipic:    { texto: '🇧🇴 ¡Comida boliviana! He marcado los lugares de comida típica en el mapa.', slug: 'Comida Tipica' },
-    salteña:  { texto: '☀️ ¡Salteñas! Los puntos amarillos te muestran dónde encontrarlas.', slug: 'Salteñas' },
-    chicharr: { texto: '🥩 ¡Chicharrón! Mira las opciones que han aparecido en el mapa.', slug: 'Chicharron' },
-    default:  { texto: 'Entendido 🤔 Puedo ayudarte a encontrar restaurantes. Prueba con: Tacos, Pizza o Sushi.', slug: '' }
-  };
-  
   private readonly destroy$ = new Subject<void>();
 
   constructor(
@@ -103,7 +91,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     private translate: TranslateService,
     private cd: ChangeDetectorRef,
     private location: Location
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams
@@ -114,6 +102,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
         this.refreshView();
       });
     this.cargarRestaurantes();
+    this.restaurarConversacion();
   }
 
   ngAfterViewInit(): void {
@@ -127,10 +116,6 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     if (this.map) this.map.remove();
   }
 
-  /* ══════════════════════════════════════════════════════════════
-      MAPA
-     ══════════════════════════════════════════════════════════════ */
-
   private initMap(): void {
     if (this.map) this.map.remove();
     const mapContainer = L.DomUtil.get('map') as (HTMLElement & { _leaflet_id?: number }) | null;
@@ -140,7 +125,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(this.map);
-    
+
     this.markersLayer.addTo(this.map);
     this.chatbotMarkersLayer.addTo(this.map);
   }
@@ -193,7 +178,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     if (!slug) return;
     this.chatbotMarkersLayer.clearLayers();
 
-    const recomendados = this.restaurantes.filter(r => 
+    const recomendados = this.restaurantes.filter(r =>
       (r.category ?? r.categoria ?? '').toLowerCase() === slug.toLowerCase()
     );
 
@@ -211,10 +196,10 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
       const uuid = r.uuid ?? r.id ?? '';
       const marker = L.marker([lat, lng], { icon: iconoChatbot })
         .bindPopup(this.buildPopupHtml(
-          r.name ?? 'Recomendado', 
-          r.description ?? '', 
-          r.category ?? '', 
-          r.imagenUrl ?? '', 
+          r.name ?? 'Recomendado',
+          r.description ?? '',
+          r.category ?? '',
+          r.imagenUrl ?? '',
           uuid
         ), { maxWidth: 290, className: 'custom-popup' });
 
@@ -263,10 +248,10 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
       const uuid = r.uuid ?? r.id ?? '';
       const marker = L.marker([lat, lng], { icon: icono })
         .bindPopup(this.buildPopupHtml(
-          r.name ?? r.nombre ?? 'Restaurante', 
-          r.description ?? r.descripcion ?? '', 
-          r.category ?? r.categoria ?? '', 
-          r.imagenUrl ?? r.image_url ?? '', 
+          r.name ?? r.nombre ?? 'Restaurante',
+          r.description ?? r.descripcion ?? '',
+          r.category ?? r.categoria ?? '',
+          r.imagenUrl ?? r.image_url ?? '',
           uuid
         ), { maxWidth: 290, className: 'custom-popup' });
 
@@ -294,10 +279,6 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     return v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  /* ══════════════════════════════════════════════════════════════
-      CHATBOT
-     ══════════════════════════════════════════════════════════════ */
-
   toggleChatbot(): void {
     this.chatbotAbierto = !this.chatbotAbierto;
     if (this.chatbotAbierto) {
@@ -308,18 +289,18 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async enviarMensaje(texto: string): Promise<void> {
-  const trimmed = texto.trim();
-  if (!trimmed || this.chatbotEscribiendo) return;
+    const trimmed = texto.trim();
+    if (!trimmed || this.chatbotEscribiendo) return;
 
-  this.agregarMensaje('user', trimmed);
-  this.mostrarSugerencias = false;
-  this.chatbotEscribiendo = true;
-  this.refreshView();
+    this.agregarMensaje('user', trimmed);
+    this.mostrarSugerencias = false;
+    this.chatbotEscribiendo = true;
+    this.refreshView();
 
-  // Obtener ubicacion del usuario si esta disponible
-  const userLocation = this.locationMarker?.getLatLng();
+    // Obtener ubicacion del usuario si esta disponible
+    const userLocation = this.locationMarker?.getLatLng();
 
-  this.chatService.enviarMensaje({
+    this.chatService.enviarMensaje({
       conversationId: this.conversationId ?? undefined,
       message: trimmed,
       latitude: userLocation?.lat,
@@ -327,11 +308,11 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     }).subscribe({
       next: (res) => {
         this.conversationId = res.conversationId;
+        localStorage.setItem('antojitos_conversationId', res.conversationId);
 
         this.chatbotEscribiendo = false;
         this.agregarMensaje('bot', res.reply);
 
-        // 🔥 LÓGICA REAL (tu HU)
         this.procesarBusquedaIA(trimmed);
 
         if (!this.chatbotAbierto) this.mensajesNoLeidos++;
@@ -363,80 +344,162 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     return new Date().toLocaleTimeString('es-BO', { hour: '2-digit', minute: '2-digit' });
   }
 
-  private mockResponderData(texto: string): Promise<{texto: string, slug: string}> {
-    const lower = texto.toLowerCase();
-    let key = 'default';
-    if (lower.includes('taco')) key = 'taco';
-    else if (lower.includes('pizza') || lower.includes('italia')) key = 'pizza';
-    else if (lower.includes('sushi')) key = 'sushi';
-    else if (lower.includes('burger') || lower.includes('hambur')) key = 'burger';
-    else if (lower.includes('típic') || lower.includes('tipic')) key = 'tipic';
-    else if (lower.includes('salteña')) key = 'salteña';
-    else if (lower.includes('chichar')) key = 'chicharr';
+  /**
+   * Restaura la conversacion desde localStorage al recargar la pagina.
+   * Carga el historial de mensajes desde el backend.
+   */
+  private restaurarConversacion(): void {
+    const savedId = localStorage.getItem('antojitos_conversationId');
+    if (!savedId) return;
 
-    const res = this.mockRespuestas[key];
-    return new Promise(resolve => setTimeout(() => resolve(res), 1200));
+    this.conversationId = savedId;
+    this.chatService.obtenerHistorial(savedId).subscribe({
+      next: (historial) => {
+        if (historial.messages && historial.messages.length > 0) {
+          // Reemplazar el mensaje de bienvenida con el historial real
+          this.chatMensajes = historial.messages.map((m: any, i: number) => ({
+            id: (i + 1).toString(),
+            rol: m.role === 'assistant' ? 'bot' as const : 'user' as const,
+            texto: m.content,
+            hora: m.timestamp
+              ? new Date(m.timestamp).toLocaleTimeString('es-BO', { hour: '2-digit', minute: '2-digit' })
+              : ''
+          }));
+          this.mostrarSugerencias = false;
+          this.refreshView();
+          setTimeout(() => this.scrollAlFinal(), 100);
+        }
+      },
+      error: () => {
+        // Conversacion no encontrada, limpiar localStorage
+        localStorage.removeItem('antojitos_conversationId');
+        this.conversationId = null;
+      }
+    });
   }
-/* ══════════════════════════════════════════════════════════════
-    IA + FALLBACK (HU)
-══════════════════════════════════════════════════════════════ */
 
-private procesarBusquedaIA(texto: string): void {
+  private procesarBusquedaIA(texto: string): void {
     if (!this.locationMarker) return;
 
     const userLatLng = this.locationMarker.getLatLng();
+    const categoria = this.parsearCategoria(texto);
 
-    const resultados = this.buscarRestaurantesCercanos(
+    let resultados = this.buscarRestaurantesCercanos(
       userLatLng.lat,
       userLatLng.lng,
-      10
+      0.1,
+      categoria
     );
+
+    // Si no hay categoría detectada pero el usuario escribió algo, intentar buscar por texto
+    if (!categoria && texto) {
+      const terminos = texto.toLowerCase().split(' ').filter(t => t.length > 3);
+      if (terminos.length > 0) {
+        resultados = this.restaurantes.filter(r => {
+          const lat = r.latitude ?? r.lat ?? r.latitud;
+          const lng = r.longitude ?? r.lng ?? r.longitud;
+          if (lat == null || lng == null) return false;
+
+          const distancia = this.calcularDistanciaKm(userLatLng.lat, userLatLng.lng, lat, lng);
+          if (distancia > 10) return false;
+
+          const nombre = (r.name ?? r.nombre ?? '').toLowerCase();
+          const desc = (r.description ?? r.descripcion ?? '').toLowerCase();
+          return terminos.some(t => nombre.includes(t) || desc.includes(t));
+        });
+      }
+    }
 
     if (resultados.length > 0) {
       this.mostrarResultadosEnMapa(resultados);
     } else {
-      const fallback = this.obtenerRecomendacionFallback(userLatLng.lat, userLatLng.lng);
+      const fallback = this.obtenerRecomendacionFallback(userLatLng.lat, userLatLng.lng, categoria);
 
       if (fallback) {
-        this.agregarMensaje('bot', `No encontré resultados cercanos. Te recomiendo: ${fallback.name}`);
-        this.mostrarResultadosEnMapa([fallback]);
+        const nombreRes = fallback.r.name ?? fallback.r.nombre ?? 'un restaurante';
+        const distFormateada = fallback.distancia.toFixed(1);
+
+        let mensajeFallback = '';
+        if (fallback.tipo === 'categoria_lejos') {
+          mensajeFallback = `No encontré opciones de esa categoría dentro de 10 km. Sin embargo, te recomiendo "${nombreRes}", que está a ${distFormateada} km de distancia.`;
+        } else {
+          mensajeFallback = `No encontré lo que buscabas cerca. Como alternativa, te sugiero "${nombreRes}", nuestro local más cercano a ${distFormateada} km.`;
+        }
+
+        this.agregarMensaje('bot', mensajeFallback);
+        this.mostrarResultadosEnMapa([fallback.r]);
       } else {
-        this.agregarMensaje('bot', 'No hay restaurantes disponibles en este momento.');
+        this.agregarMensaje('bot', 'Lo siento, no hay restaurantes disponibles en este momento.');
       }
     }
   }
 
-  private buscarRestaurantesCercanos(userLat: number, userLng: number, radioKm: number): any[] {
+  private parsearCategoria(texto: string): string | null {
+    const lower = texto.toLowerCase();
+    if (lower.includes('taco')) return 'Tacos';
+    if (lower.includes('pizza') || lower.includes('italia')) return 'Pizzeria';
+    if (lower.includes('sushi')) return 'Sushi';
+    if (lower.includes('burger') || lower.includes('hamburguesa')) return 'Hamburguesas';
+    if (lower.includes('típic') || lower.includes('tipic')) return 'Comida Tipica';
+    if (lower.includes('salteña')) return 'Salteñas';
+    if (lower.includes('chichar')) return 'Chicharron';
+    if (lower.includes('parrilla') || lower.includes('carne')) return 'Parrilla';
+    return null;
+  }
+
+  private buscarRestaurantesCercanos(userLat: number, userLng: number, radioKm: number, categoria: string | null): any[] {
     return this.restaurantes.filter(r => {
       const lat = r.latitude ?? r.lat ?? r.latitud;
       const lng = r.longitude ?? r.lng ?? r.longitud;
       if (lat == null || lng == null) return false;
+
+      const rCat = (r.category ?? r.categoria ?? '').toLowerCase();
+      if (categoria && rCat !== categoria.toLowerCase()) return false;
 
       const distancia = this.calcularDistanciaKm(userLat, userLng, lat, lng);
       return distancia <= radioKm;
     });
   }
 
-  private obtenerRecomendacionFallback(userLat: number, userLng: number): any | null {
+  private obtenerRecomendacionFallback(userLat: number, userLng: number, categoriaDeseada: string | null): { r: any, distancia: number, tipo: string } | null {
     if (this.restaurantes.length === 0) return null;
 
-    let mejor = null;
-    let menorDistancia = Infinity;
+    let mejorOpcionCat = null;
+    let menorDistanciaCat = Infinity;
+
+    let mejorOpcionCualquiera = null;
+    let menorDistanciaCualquiera = Infinity;
 
     for (const r of this.restaurantes) {
       const lat = r.latitude ?? r.lat ?? r.latitud;
       const lng = r.longitude ?? r.lng ?? r.longitud;
       if (lat == null || lng == null) continue;
 
+      const rCat = (r.category ?? r.categoria ?? '').toLowerCase();
       const distancia = this.calcularDistanciaKm(userLat, userLng, lat, lng);
 
-      if (distancia < menorDistancia) {
-        menorDistancia = distancia;
-        mejor = r;
+      if (categoriaDeseada && rCat === categoriaDeseada.toLowerCase()) {
+        if (distancia < menorDistanciaCat) {
+          menorDistanciaCat = distancia;
+          mejorOpcionCat = r;
+        }
+      }
+
+      if (distancia < menorDistanciaCualquiera) {
+        menorDistanciaCualquiera = distancia;
+        mejorOpcionCualquiera = r;
       }
     }
 
-    return mejor;
+    if (mejorOpcionCat && categoriaDeseada) {
+      return { r: mejorOpcionCat, distancia: menorDistanciaCat, tipo: 'categoria_lejos' };
+    }
+
+    if (mejorOpcionCualquiera) {
+      return { r: mejorOpcionCualquiera, distancia: menorDistanciaCualquiera, tipo: 'cercano_general' };
+    }
+
+    return null;
   }
 
   private calcularDistanciaKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -466,10 +529,38 @@ private procesarBusquedaIA(texto: string): void {
       const lng = r.longitude ?? r.lng ?? r.longitud;
       if (lat == null || lng == null) return;
 
-      const marker = L.marker([lat, lng]).addTo(this.chatbotMarkersLayer);
+      const iconoChatbot = L.divIcon({
+        className: 'chatbot-recommendation-marker',
+        html: `<div class="marker-pin-bot"><div class="marker-inner-bot"></div></div>`,
+        iconSize: [38, 48], iconAnchor: [19, 44]
+      });
+
+      const uuid = r.uuid ?? r.id ?? '';
+      const marker = L.marker([lat, lng], { icon: iconoChatbot })
+        .bindPopup(this.buildPopupHtml(
+          r.name ?? r.nombre ?? 'Recomendado',
+          r.description ?? r.descripcion ?? '',
+          r.category ?? r.categoria ?? '',
+          r.imagenUrl ?? r.image_url ?? '',
+          uuid
+        ), { maxWidth: 290, className: 'custom-popup' });
+
+      marker.on('popupopen', () => {
+        setTimeout(() => {
+          const btn = document.querySelector<HTMLButtonElement>(`.restaurant-popup-btn[data-uuid="${uuid}"]`);
+          btn?.addEventListener('click', () => this.router.navigate(['/restaurant-view', uuid]));
+        }, 50);
+      });
+
+      this.chatbotMarkersLayer.addLayer(marker);
     });
+
+    if (restaurantes.length > 0) {
+      const group = L.featureGroup(this.chatbotMarkersLayer.getLayers() as L.Marker[]);
+      this.map.fitBounds(group.getBounds().pad(0.3));
+    }
   }
-  private refreshView(): void { try { this.cd.detectChanges(); } catch {} }
+  private refreshView(): void { try { this.cd.detectChanges(); } catch { } }
   buscarRestaurante(texto: string): void { this.textoBusqueda = texto; this.filtrarRestaurantes(); }
   seleccionarCategoria(slug: string): void { this.categoriaSeleccionada = slug; this.router.navigate([], { queryParams: { categoria: slug || null }, queryParamsHandling: 'merge' }); this.filtrarRestaurantes(); }
   verTodasLasCategorias(): void { this.seleccionarCategoria(''); }
