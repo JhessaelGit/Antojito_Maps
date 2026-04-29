@@ -53,6 +53,8 @@ export class AdminCreate {
     let valid = true;
 
     const mail = this.correo.trim().toLowerCase();
+    // Validamos quitando espacios en blanco
+    const passValue = this.password ? this.password.trim() : '';
     const hadSession = this.adminSession.isAuthenticated();
 
     if (!mail || !mail.includes('@')) {
@@ -60,8 +62,8 @@ export class AdminCreate {
       valid = false;
     }
 
-    if (!this.password || this.password.length < 6) {
-      this.errorPassword = 'Mínimo 6 caracteres';
+    if (!passValue || passValue.length < 6) {
+      this.errorPassword = this.translate.instant('ADMIN_CREATE.ERR_PASSWORD');
       valid = false;
     }
 
@@ -86,7 +88,7 @@ export class AdminCreate {
     this.adminService.createAdmin(mail, this.password).subscribe({
       next: (response) => {
         this.cargando = false;
-        this.successMsg = response?.message || 'Administrador creado correctamente';
+        this.successMsg = response?.message || this.translate.instant('ADMIN_CREATE.SUCCESS_DEFAULT');
 
         this.logger.info('Administrador creado', {
           role: 'ADMIN',
@@ -112,14 +114,14 @@ export class AdminCreate {
         }
 
         if (!hadSession && err?.status === 401) {
-          this.errorMsg = err?.error?.message || 'Ya existen admins activos. Debes iniciar sesión.';
+          this.errorMsg = err?.error?.message || this.translate.instant('ADMIN_CREATE.ERR_EXISTING_ADMIN');
           this.router.navigate(['/admin/login']);
         } else if (err?.status === 400) {
-          this.errorMsg = err?.error?.message || 'Datos inválidos o mail duplicado';
+          this.errorMsg = err?.error?.message || this.translate.instant('ADMIN_CREATE.ERR_BAD_REQUEST');
         } else if (err?.status === 0) {
-          this.errorMsg = 'No se pudo conectar con el backend';
+          this.errorMsg = this.translate.instant('ADMIN_CREATE.ERR_NO_CONNECTION');
         } else {
-          this.errorMsg = err?.error?.message || 'No se pudo crear el administrador';
+          this.errorMsg = err?.error?.message || this.translate.instant('ADMIN_CREATE.ERR_GENERIC');
         }
 
         this.logger.error('Error al crear admin', {
@@ -142,7 +144,7 @@ export class AdminCreate {
   }
 
   get passwordStrength(): { pct: number; level: string; label: string } {
-    const p = this.password;
+    const p = this.password ? this.password.trim() : '';
     if (!p) return { pct: 0, level: '', label: '' };
     let score = 0;
     if (p.length >= 6)  score++;
@@ -150,9 +152,10 @@ export class AdminCreate {
     if (/[A-Z]/.test(p)) score++;
     if (/[0-9]/.test(p)) score++;
     if (/[^A-Za-z0-9]/.test(p)) score++;
-    if (score <= 2) return { pct: 33,  level: 'weak',   label: 'Contraseña débil' };
-    if (score <= 3) return { pct: 66,  level: 'medium', label: 'Contraseña media' };
-    return              { pct: 100, level: 'strong', label: 'Contraseña fuerte' };
+    
+    if (score <= 2) return { pct: 33,  level: 'weak',   label: this.translate.instant('ADMIN_CREATE.STR_WEAK') };
+    if (score <= 3) return { pct: 66,  level: 'medium', label: this.translate.instant('ADMIN_CREATE.STR_MEDIUM') };
+    return              { pct: 100, level: 'strong', label: this.translate.instant('ADMIN_CREATE.STR_STRONG') };
   }
 
   volver(): void {
