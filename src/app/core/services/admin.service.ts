@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, from, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
 
 export interface AdminLoginResponse {
   adminId: string;
@@ -49,13 +50,16 @@ export class AdminService {
     'Content-Type': 'application/json'
   });
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private auth: Auth) {}
 
   login(mail: string, password: string): Observable<AdminLoginResponse> {
-    return this.http.post<AdminLoginResponse>(
-      `${this.baseUrl}/login`,
-      { mail, password },
-      { headers: this.jsonHeaders }
+    return from(signInWithEmailAndPassword(this.auth, mail, password)).pipe(
+      switchMap(userCredential => userCredential.user.getIdToken()),
+      switchMap(idToken => this.http.post<AdminLoginResponse>(
+        `${this.baseUrl}/login`,
+        { idToken },
+        { headers: this.jsonHeaders }
+      ))
     );
   }
 
@@ -101,3 +105,4 @@ export class AdminService {
     );
   }
 }
+

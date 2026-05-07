@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, from, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from '@angular/fire/auth';
 
 export interface CreateRestaurantRequest {
   ownerMail: string;
@@ -56,7 +57,7 @@ export class RestauranteService {
 
   private readonly BASE_URL = environment.apiBaseUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private auth: Auth) {}
 
   // GET /restaurant/all
   getRestaurantes(): Observable<any[]> {
@@ -87,17 +88,25 @@ export class RestauranteService {
 
   // POST /restaurant/login
   login(mail: string, password: string): Observable<RestaurantLoginResponse> {
-    return this.http.post<RestaurantLoginResponse>(`${this.BASE_URL}/restaurant/login`, { mail, password });
+    return from(signInWithEmailAndPassword(this.auth, mail, password)).pipe(
+      switchMap(userCredential => userCredential.user.getIdToken()),
+      switchMap(idToken => this.http.post<RestaurantLoginResponse>(`${this.BASE_URL}/restaurant/login`, { idToken }))
+    );
   }
 
   // POST /restaurant/registry
   registro(mail: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.BASE_URL}/restaurant/registry`, { mail, password });
+    return from(createUserWithEmailAndPassword(this.auth, mail, password)).pipe(
+      switchMap(userCredential => userCredential.user.getIdToken()),
+      switchMap(idToken => this.http.post<any>(`${this.BASE_URL}/restaurant/registry`, { idToken }))
+    );
   }
 
   // POST /restaurant/logout
   logout(mail: string): Observable<any> {
-    return this.http.post<any>(`${this.BASE_URL}/restaurant/logout`, { mail });
+    return from(signOut(this.auth)).pipe(
+      switchMap(() => this.http.post<any>(`${this.BASE_URL}/restaurant/logout`, { mail }))
+    );
   }
 
   // GET /promotion/restaurant/{restaurantId}
@@ -110,3 +119,4 @@ export class RestauranteService {
     return this.http.post<PromotionResponse>(`${this.BASE_URL}/promotion/restaurant/${restaurantId}`, payload);
   }
 }
+
