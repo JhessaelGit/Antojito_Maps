@@ -59,6 +59,10 @@ export class RegisterRestaurantComponent implements AfterViewInit, OnDestroy {
     private restauranteService: RestauranteService
   ) {}
 
+  irAlInicio(): void {
+  this.router.navigate(['/']);
+  }
+
   ngAfterViewInit(): void {
     setTimeout(() => this.initMap(), 150);
   }

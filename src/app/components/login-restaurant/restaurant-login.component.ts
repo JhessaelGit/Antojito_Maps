@@ -28,6 +28,10 @@ export class RestaurantLoginComponent {
     private translate: TranslateService // Inyectado para traducciones dinámicas
   ) {}
 
+  irAlInicio(): void {
+  this.router.navigate(['/']);
+  }
+
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }

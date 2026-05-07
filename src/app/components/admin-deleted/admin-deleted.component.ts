@@ -31,6 +31,10 @@ export class AdminDeletedComponent implements OnInit, OnDestroy {
     private location: Location  
   ) {}
 
+  irAlInicio(): void {
+  this.router.navigate(['/']);
+  }
+
   ngOnInit(): void {
     const currentSession = this.adminSession.getSession();
     if (!currentSession) {
