@@ -49,6 +49,10 @@ export class PaymentOptionsComponent {
 
   constructor(private router: Router) {}
 
+  irAlInicio(): void {
+  this.router.navigate(['/']);
+  }
+
   seleccionar(plan: any) {
     localStorage.setItem('selected_plan', plan.id);
     if (plan.id === 'BASIC') {

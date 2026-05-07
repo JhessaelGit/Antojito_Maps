@@ -32,6 +32,10 @@ export class AdminLogin {
     private adminSession: AdminSessionService
   ) {}
 
+  irAlInicio(): void {
+  this.router.navigate(['/']);
+  }
+
   ngOnInit(): void {
     if (this.adminSession.isAuthenticated()) {
       this.router.navigate(['/admin/restaurants']);

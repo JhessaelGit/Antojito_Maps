@@ -55,6 +55,7 @@
   color: var(--color-neutral);
   margin-bottom: 1.25rem;
   letter-spacing: -0.3px;
+  cursor: pointer;
 }
 
 .po-logo span { color: var(--color-accent); }

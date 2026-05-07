@@ -28,6 +28,7 @@
   font-size: 1.1rem;
   font-weight: 900;
   color: var(--color-neutral);
+  cursor: pointer;
 }
 
 .ad-nav-logo span { color: var(--color-accent); }

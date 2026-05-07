@@ -19,6 +19,10 @@ export class AdminPageComponent {
     private adminSession: AdminSessionService
   ) {}
 
+  irAlInicio(): void {
+  this.router.navigate(['/']);
+}
+
   volverAtras(): void {
     this.location.back();
   }

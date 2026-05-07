@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { RestauranteService } from '../../core/services/restaurante.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subject, finalize, takeUntil, timeout } from 'rxjs';
@@ -165,8 +165,12 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
       (err) => console.warn('Geolocalización denegada:', err.message),
       { enableHighAccuracy: true, timeout: 8000 }
     );
-  }
 
+  }
+  irAlInicio(): void {
+    this.router.navigate(['/']);
+  }
+  
   cargarRestaurantes(): void {
     this.cargando = true;
     this.errorApi = false;
@@ -476,3 +480,4 @@ private procesarBusquedaIA(texto: string): void {
   volverAlInicio(): void { this.location.back(); }
   centrarEnMiUbicacion(): void { this.obtenerUbicacion(); }
 }
+

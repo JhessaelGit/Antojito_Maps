@@ -33,6 +33,10 @@ export class AdminRestaurantsComponent implements OnInit {
     this.cargarRestaurantes();
   }
 
+  irAlInicio(): void {
+    this.router.navigate(['/']);
+  }
+
   cargarRestaurantes(): void {
     this.cargando = true;
     this.errorMsg = '';

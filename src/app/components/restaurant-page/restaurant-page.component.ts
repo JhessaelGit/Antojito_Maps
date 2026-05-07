@@ -74,6 +74,10 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
     private translate: TranslateService
   ) {}
 
+  irAlInicio(): void {
+  this.router.navigate(['/']);
+  }
+
   ngOnInit(): void {
     this.restaurantUuid = localStorage.getItem('restaurant_uuid')?.trim() || null;
     this.ownerUuid = localStorage.getItem('owner_id')?.trim() || null;
