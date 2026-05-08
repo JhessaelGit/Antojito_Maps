@@ -57,10 +57,8 @@ export class AdminLogin {
     this.fieldErrors = {};
     
     const mail = this.correo.trim().toLowerCase();
-    // BUG FIX: Eliminar espacios en blanco de la contraseña
     const cleanPassword = this.password.replace(/\s/g, '');
-
-    // Validaciones preventivas
+    
     if (!mail || !this.isValidEmail(mail)) {
       this.errorMsg = this.translate.instant('ADMIN_LOGIN.ERR_EMAIL_INVALID');
       return;

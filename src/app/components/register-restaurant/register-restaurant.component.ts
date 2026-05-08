@@ -190,7 +190,7 @@ export class RegisterRestaurantComponent implements AfterViewInit, OnDestroy {
       this.errorPassword = this.translate.instant('REGISTER.ERR_PASS');
       valid = false;
     }
-    this.password = cleanPassword; // Sincronizamos la clave limpia
+    this.password = cleanPassword; 
 
     // Validación Imagen
     if (!this.imageFile) {

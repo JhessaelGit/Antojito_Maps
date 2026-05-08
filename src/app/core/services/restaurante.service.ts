@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, from, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -56,8 +56,9 @@ export interface RestaurantLoginResponse {
 export class RestauranteService {
 
   private readonly BASE_URL = environment.apiBaseUrl;
+  private auth = inject(Auth);
 
-  constructor(private http: HttpClient, private auth: Auth) {}
+  constructor(private http: HttpClient) {}
 
   // GET /restaurant/all
   getRestaurantes(): Observable<any[]> {
