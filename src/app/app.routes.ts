@@ -15,18 +15,23 @@ import { AdminCreate } from './components/admin-create/admin-create';
 import { AdminEdit } from './components/admin-edit/admin-edit';
 import { AdminDeletedComponent } from './components/admin-deleted/admin-deleted.component';
 
+import { adminGuard } from './core/guards/admin.guard';
+import { ownerGuard } from './core/guards/owner.guard';
+
 export const routes: Routes = [
 
   {
     path: 'restaurant',
-    component: RestaurantPage
+    component: RestaurantPage,
+    canActivate: [ownerGuard]
   },
 
   /* ================= ADMIN ================= */
 
   {
     path: 'admin',
-    component: AdminPageComponent
+    component: AdminPageComponent,
+    canActivate: [adminGuard]
   },
   {
     path: 'admin/login',
@@ -34,19 +39,23 @@ export const routes: Routes = [
   },
   {
     path: 'admin/agregar',
-    component: AdminCreate
+    component: AdminCreate,
+    canActivate: [adminGuard]
   },
   {
     path: 'admin/editar',
-    component: AdminEdit
+    component: AdminEdit,
+    canActivate: [adminGuard]
   },
   {
     path: 'admin/eliminados',
-    component: AdminDeletedComponent
+    component: AdminDeletedComponent,
+    canActivate: [adminGuard]
   },
   {
     path: 'admin/restaurants',
-    component: AdminRestaurantsComponent
+    component: AdminRestaurantsComponent,
+    canActivate: [adminGuard]
   },
 
   /* ================= RESTAURANT ================= */

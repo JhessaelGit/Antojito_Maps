@@ -15,6 +15,16 @@ export interface ChatResponse {
   reply: string;
 }
 
+export interface ConversationHistory {
+  conversationId: string;
+  createdAt: string;
+  messages: {
+    role: string;
+    content: string;
+    timestamp: string;
+  }[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -27,4 +37,8 @@ export class ChatService {
   enviarMensaje(request: ChatRequest): Observable<ChatResponse> {
     return this.http.post<ChatResponse>(`${this.BASE_URL}/chat`, request);
   }
-}
+
+  obtenerHistorial(conversationId: string): Observable<ConversationHistory> {
+    return this.http.get<ConversationHistory>(`${this.BASE_URL}/chat/${conversationId}`);
+  }
+}
