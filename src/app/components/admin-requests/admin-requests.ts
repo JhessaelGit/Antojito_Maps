@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
+import { RequestDetailModalComponent } from '../request-detail-modal/request-detail-modal';
+
 
 @Component({
   selector: 'app-admin-requests',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RequestDetailModalComponent],
   templateUrl: './admin-requests.html',
   styleUrl: './admin-requests.css'
 })
@@ -15,7 +17,20 @@ export class AdminRequestsComponent {
   volverAtras(): void {
     this.location.back();
   }
+ 
 
+  selectedRequest: any = null;
+
+showModal = false;
+
+openModal(request: any): void {
+  this.selectedRequest = request;
+  this.showModal = true;
+}
+
+closeModal(): void {
+  this.showModal = false;
+}
   solicitudes = [
 
     {

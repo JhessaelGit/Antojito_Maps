@@ -1,1 +1,57 @@
-<p>request-detail-modal works!</p>
+<div class="modal-overlay">
+
+  <div class="modal-card">
+
+    <button class="modal-close" (click)="cerrar()">
+      ✕
+    </button>
+
+    <div class="modal-top">
+
+      <span class="modal-type">
+        {{ request.tipo }}
+      </span>
+
+      <span class="modal-status">
+        {{ request.estado }}
+      </span>
+
+    </div>
+
+    <h2>
+      {{ request.restaurante }}
+    </h2>
+
+    <p class="modal-description">
+      {{ request.descripcion }}
+    </p>
+
+    <div class="modal-info">
+
+      <div>
+        <strong>Fecha:</strong>
+        {{ request.fecha }}
+      </div>
+
+      <div>
+        <strong>ID:</strong>
+        #{{ request.id }}
+      </div>
+
+    </div>
+
+    <div class="modal-actions">
+
+      <button class="btn-reject" (click)="rechazar()">
+        Rechazar
+      </button>
+
+      <button class="btn-accept" (click)="aceptar()">
+        Aceptar
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

@@ -62,7 +62,7 @@
 
       <div class="ar-actions">
 
-        <button class="btn-view">
+        <button class="btn-view" (click)="openModal(s)">
           Ver detalle
         </button>
 
@@ -73,3 +73,9 @@
   </div>
 
 </div>
+
+<app-request-detail-modal
+  *ngIf="showModal"
+  [request]="selectedRequest"
+  (close)="closeModal()">
+</app-request-detail-modal>
