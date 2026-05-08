@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AdminService } from '../../core/services/admin.service';
 import { AdminSessionService } from '../../core/services/admin-session.service';
-// IMPORTANTE: Asegúrate de tener estas importaciones
 import { timeout, catchError, finalize } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
@@ -65,8 +64,6 @@ export class AdminEdit implements OnInit {
     this.adminService.editAdmin(mail, this.editPassword).pipe(
       timeout(5000), // Si en 5 segundos no hay respuesta, aborta
       finalize(() => {
-        // ESTO ES LO MÁS IMPORTANTE: 
-        // Se ejecuta SIEMPRE, ya sea éxito o error. Rompe el loop sí o sí.
         this.guardando = false;
       }),
       catchError(err => {
