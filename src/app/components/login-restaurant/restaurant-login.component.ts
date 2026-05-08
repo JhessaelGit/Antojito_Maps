@@ -25,7 +25,7 @@ export class RestaurantLoginComponent {
     public router: Router,
     private logger: LoggerService,
     private restauranteService: RestauranteService,
-    private translate: TranslateService // Inyectado para traducciones dinámicas
+    private translate: TranslateService
   ) {}
 
   irAlInicio(): void {
@@ -44,13 +44,11 @@ export class RestaurantLoginComponent {
   login() {
     this.errorMsg = '';
 
-    // Validar campos vacíos con traducción
     if (!this.email.trim() || !this.password.trim()) {
       this.translate.get('LOGIN.ERR_FILL_ALL').subscribe(res => this.errorMsg = res);
       return;
     }
 
-    // Validar formato de correo con traducción
     if (!this.isValidEmail(this.email)) {
       this.translate.get('LOGIN.ERR_INVALID_EMAIL').subscribe(res => this.errorMsg = res);
       return;
