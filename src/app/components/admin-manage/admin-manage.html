@@ -1,1 +1,71 @@
-<p>admin-manage works!</p>
+<div class="am-page">
+
+  <nav class="am-nav">
+
+    <div class="am-logo">
+      Antojitos<span>Maps</span>
+    </div>
+
+    <button class="am-back" (click)="volverAtras()">
+      ← Volver
+    </button>
+
+  </nav>
+
+  <div class="am-hero">
+
+    <div class="am-pill">
+      Gestión administrativa
+    </div>
+
+    <h1 class="am-title">
+      Gestionar administradores
+    </h1>
+
+    <p class="am-sub">
+      Administra accesos, edición y control de administradores.
+    </p>
+
+  </div>
+
+  <div class="am-cards">
+
+    <div class="am-card" (click)="irAgregar()">
+
+      <div class="am-icon">👤</div>
+
+      <h3>Agregar administrador</h3>
+
+      <p>
+        Registra nuevos administradores en el sistema.
+      </p>
+
+    </div>
+
+    <div class="am-card" (click)="irEditar()">
+
+      <div class="am-icon">✏️</div>
+
+      <h3>Editar administrador</h3>
+
+      <p>
+        Modifica información de administradores existentes.
+      </p>
+
+    </div>
+
+    <div class="am-card" (click)="irEliminados()">
+
+      <div class="am-icon">🗑️</div>
+
+      <h3>Administradores eliminados</h3>
+
+      <p>
+        Consulta historial y restauración de administradores.
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
