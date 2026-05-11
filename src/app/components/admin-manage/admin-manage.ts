@@ -32,4 +32,17 @@ export class AdminManageComponent {
     this.router.navigate(['/admin/eliminados']);
   }
 
+  irEditados(): void {
+    this.router.navigate(['/admin/editados']);
+  }
+
+  solicitudAceptada(): void {
+    this.router.navigate(['/admin/aminmanage/solicitud-aceptada']);
+  }
+  solicitudDenegada(): void {
+    this.router.navigate(['/admin/aminmanage/solicitud-denegada']);
+  }
+  solicitudEnEspera(): void {
+    this.router.navigate(['/admin/aminmanage/solicitud-en-espera']);
+  }
 }
