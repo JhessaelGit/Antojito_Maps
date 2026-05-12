@@ -332,7 +332,8 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   enviarSugerencia(texto: string): void { this.enviarMensaje(texto); }
 
   private agregarMensaje(rol: 'bot' | 'user', texto: string): void {
-    this.chatMensajes.push({ id: Date.now().toString(), rol, texto, hora: this.horaActual() });
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    this.chatMensajes.push({ id, rol, texto, hora: this.horaActual() });
   }
 
   private scrollAlFinal(): void {
