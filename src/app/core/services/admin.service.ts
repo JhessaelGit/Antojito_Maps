@@ -1,8 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, from, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
 
 export interface AdminLoginResponse {
   adminId: string;
@@ -50,16 +49,14 @@ export class AdminService {
     'Content-Type': 'application/json'
   });
 
-  constructor(private http: HttpClient, private auth: Auth) {}
+  constructor(private http: HttpClient) {}
 
+  /** Login de admin — el backend gestiona Firebase internamente */
   login(mail: string, password: string): Observable<AdminLoginResponse> {
-    return from(signInWithEmailAndPassword(this.auth, mail, password)).pipe(
-      switchMap(userCredential => userCredential.user.getIdToken()),
-      switchMap(idToken => this.http.post<AdminLoginResponse>(
-        `${this.baseUrl}/login`,
-        { idToken },
-        { headers: this.jsonHeaders }
-      ))
+    return this.http.post<AdminLoginResponse>(
+      `${this.baseUrl}/login`,
+      { email: mail, password },
+      { headers: this.jsonHeaders }
     );
   }
 
@@ -105,4 +102,3 @@ export class AdminService {
     );
   }
 }
-

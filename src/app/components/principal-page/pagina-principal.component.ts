@@ -37,6 +37,14 @@ export class PaginaPrincipalComponent {
         this.router.navigate(['/mapa']);
         break;
 
+      case 'cliente':
+        this.router.navigate(['/client/login']);
+        break;
+
+      case 'registroCliente':
+        this.router.navigate(['/client/register']);
+        break;
+
       case 'restaurante':
         this.router.navigate(['/restaurant/login']);
         break;
@@ -48,7 +56,7 @@ export class PaginaPrincipalComponent {
       case 'registroRestaurante':
         this.router.navigate(['/restaurant/register']);
         break;
-        
+
       default:
         this.router.navigate(['/mapa']);
         break;

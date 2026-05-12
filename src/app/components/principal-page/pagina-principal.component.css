@@ -32,8 +32,23 @@
   border-radius: 10px; font-size: 13px;
   font-weight: 600; cursor: pointer;
   transition: background .2s;
+  display: flex; align-items: center; gap: 6px;
 }
 .am-nav-btn:hover { background: #9B1400; }
+
+.am-nav-btn-outline {
+  background: transparent; color: rgba(218,207,189,0.85);
+  border: 1px solid rgba(218,207,189,0.3); padding: 10px 22px;
+  border-radius: 10px; font-size: 13px;
+  font-weight: 600; cursor: pointer;
+  transition: all .2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.am-nav-btn-outline:hover {
+  border-color: rgba(218,207,189,0.65);
+  color: var(--color-neutral);
+  background: rgba(218,207,189,0.06);
+}
 
 /* ─── HERO ─────────────────────────── */
 .am-hero {

@@ -89,7 +89,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     public router: Router,
     private restauranteService: RestauranteService,
     private chatService: ChatService,
-    private clientSession: ClientSessionService,
+    public clientSession: ClientSessionService,
     private translate: TranslateService,
     private cd: ChangeDetectorRef,
     private location: Location
@@ -157,7 +157,17 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   irAlInicio(): void {
     this.router.navigate(['/']);
   }
-  
+
+  cerrarSesionCliente(): void {
+    const session = this.clientSession.getSession();
+    if (session?.mail) {
+      // Llamada de auditoría al backend (no bloqueante)
+      this.chatService['http']?.post(`${this.chatService['BASE_URL']}/client/logout`, { mail: session.mail }).subscribe({ error: () => {} });
+    }
+    this.clientSession.clearSession();
+    this.router.navigate(['/']);
+  }
+
   cargarRestaurantes(): void {
     this.cargando = true;
     this.errorApi = false;
