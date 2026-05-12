@@ -10,6 +10,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subject, finalize, takeUntil, timeout } from 'rxjs';
 import * as L from 'leaflet';
 import { ChatService } from '../../core/services/chat.service';
+import { ClientSessionService } from '../../core/services/client-session.service';
 
 
 export interface ChatMensaje {
@@ -54,7 +55,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   cargando: boolean = true;
   errorApi: boolean = false;
   private restaurantes: any[] = [];
-  private conversationId: string | null = null;
+
   /* ── Chatbot ───────────────────────────────────────────────── */
   @ViewChild('chatMessages') private chatMessagesRef!: ElementRef<HTMLDivElement>;
 
@@ -87,7 +88,8 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     public router: Router,
     private restauranteService: RestauranteService,
-    private chatService: ChatService, // 🔥 AGREGAR
+    private chatService: ChatService,
+    private clientSession: ClientSessionService,
     private translate: TranslateService,
     private cd: ChangeDetectorRef,
     private location: Location
@@ -349,14 +351,13 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
    * Carga el historial de mensajes desde el backend.
    */
   private restaurarConversacion(): void {
-    const savedId = localStorage.getItem('antojitos_conversationId');
-    if (!savedId) return;
+    // El historial ahora se identifica por X-Client-Id (enviado automaticamente por ChatService)
+    // Solo restauramos si hay una sesion de cliente activa
+    if (!this.clientSession.getClientId()) return;
 
-    this.conversationId = savedId;
-    this.chatService.obtenerHistorial(savedId).subscribe({
+    this.chatService.obtenerHistorial().subscribe({
       next: (historial) => {
         if (historial.messages && historial.messages.length > 0) {
-          // Reemplazar el mensaje de bienvenida con el historial real
           this.chatMensajes = historial.messages.map((m: any, i: number) => ({
             id: (i + 1).toString(),
             rol: m.role === 'assistant' ? 'bot' as const : 'user' as const,
@@ -371,9 +372,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
         }
       },
       error: () => {
-        // Conversacion no encontrada, limpiar localStorage
-        localStorage.removeItem('antojitos_conversationId');
-        this.conversationId = null;
+        // Sin historial previo, se deja el mensaje de bienvenida por defecto
       }
     });
   }
