@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiBaseUrl: '/api',
+  apiBaseUrl: 'http://localhost:8080',
   firebaseConfig: {
     apiKey: "AIzaSyBAyNpkUTQhCOF7j7qbl3dCxb1DSapxbVc",
     authDomain: "antojitos-maps-auth.firebaseapp.com",

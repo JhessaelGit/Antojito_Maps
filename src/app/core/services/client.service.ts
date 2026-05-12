@@ -25,9 +25,11 @@ export class ClientService {
     private clientSession: ClientSessionService
   ) {}
 
-  registry(idToken: string, fullName: string, phone: string): Observable<ClientLoginResponse> {
+  /** Registro: el backend crea el usuario en Firebase y lo guarda en BD */
+  registry(email: string, password: string, fullName: string, phone: string): Observable<ClientLoginResponse> {
     return this.http.post<ClientLoginResponse>(`${this.BASE_URL}/client/registry`, {
-      idToken,
+      email,
+      password,
       fullName,
       phone
     }).pipe(
@@ -40,8 +42,12 @@ export class ClientService {
     );
   }
 
-  login(idToken: string): Observable<ClientLoginResponse> {
-    return this.http.post<ClientLoginResponse>(`${this.BASE_URL}/client/login`, { idToken }).pipe(
+  /** Login: el backend autentica con Firebase REST y devuelve datos del cliente */
+  login(email: string, password: string): Observable<ClientLoginResponse> {
+    return this.http.post<ClientLoginResponse>(`${this.BASE_URL}/client/login`, {
+      email,
+      password
+    }).pipe(
       tap(res => this.clientSession.setSession({
         clientId: res.uuid,
         mail: res.mail,

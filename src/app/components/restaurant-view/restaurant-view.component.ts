@@ -1,9 +1,13 @@
 import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PromotionResponse, RestauranteService } from '../../core/services/restaurante.service';
+import { ClientSessionService } from '../../core/services/client-session.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject, finalize, takeUntil, timeout } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 interface RestaurantViewPromotion {
   uuid: string;
@@ -17,7 +21,7 @@ interface RestaurantViewPromotion {
 @Component({
   selector: 'app-restaurant-view',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './restaurant-view.html',
   styleUrl: './restaurant-view.css'
 })
@@ -30,12 +34,21 @@ export class RestaurantView implements OnInit, OnDestroy {
   promocionesError = false;
   promociones: RestaurantViewPromotion[] = [];
 
+  // Queja
+  mostrarFormQueja = false;
+  quejaEnviando = false;
+  quejaTexto = '';
+  quejaExito = false;
+  quejaError = '';
+
   private readonly destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private restauranteService: RestauranteService,
+    public clientSession: ClientSessionService,
+    private http: HttpClient,
     private cd: ChangeDetectorRef
   ) {}
 
@@ -91,6 +104,57 @@ export class RestaurantView implements OnInit, OnDestroy {
     this.router.navigate(['/mapa']);
   }
 
+  toggleFormQueja(): void {
+    this.mostrarFormQueja = !this.mostrarFormQueja;
+    this.quejaExito = false;
+    this.quejaError = '';
+    this.quejaTexto = '';
+    this.refreshView();
+  }
+
+  enviarQueja(): void {
+    if (!this.quejaTexto.trim()) {
+      this.quejaError = 'Por favor describe el problema.';
+      return;
+    }
+    const clientId = this.clientSession.getClientId();
+    if (!clientId) {
+      this.quejaError = 'Debes iniciar sesión para enviar una queja.';
+      return;
+    }
+
+    this.quejaEnviando = true;
+    this.quejaError = '';
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'X-Client-Id': clientId
+    });
+
+    this.http.post<any>(
+      `${environment.apiBaseUrl}/complaint/create`,
+      {
+        type: 'RESTAURANT',
+        targetUuid: this.restaurante?.uuid,
+        description: this.quejaTexto.trim()
+      },
+      { headers }
+    ).subscribe({
+      next: () => {
+        this.quejaEnviando = false;
+        this.quejaExito = true;
+        this.quejaTexto = '';
+        this.mostrarFormQueja = false;
+        this.refreshView();
+      },
+      error: () => {
+        this.quejaEnviando = false;
+        this.quejaError = 'Error al enviar la queja. Intenta de nuevo.';
+        this.refreshView();
+      }
+    });
+  }
+
   private cargarPromociones(restaurantId: string): void {
     this.cargandoPromociones = true;
     this.promocionesError = false;
@@ -143,7 +207,7 @@ export class RestaurantView implements OnInit, OnDestroy {
     try {
       this.cd.detectChanges();
     } catch {
-      // No-op: evita errores de deteccion al navegar rapido entre vistas.
+      // No-op
     }
   }
 }

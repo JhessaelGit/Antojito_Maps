@@ -4,8 +4,11 @@
     <div class="am-logo">Antojitos<span>Maps</span></div>
     <div class="am-nav-actions" style="display: flex; align-items: center; gap: 1rem;">
       <app-language-switch></app-language-switch>
-      <button class="am-nav-btn" (click)="selectRole('restaurante')">
-        {{ 'LANDING.LOGIN_BTN' | translate }}
+      <button class="am-nav-btn-outline" (click)="selectRole('restaurante')">
+        <i class="fas fa-store"></i> Tengo un restaurante
+      </button>
+      <button class="am-nav-btn" (click)="selectRole('cliente')">
+        <i class="fas fa-user"></i> Iniciar sesión
       </button>
     </div>
   </nav>
@@ -20,8 +23,8 @@
         <button class="am-btn-p" (click)="irAlMapa()">
           <i class="fas fa-map-marked-alt"></i> {{ 'LANDING.HERO_MAP_BTN' | translate }}
         </button>
-        <button class="am-btn-o" (click)="selectRole('registroRestaurante')">
-          {{ 'LANDING.HERO_REG_BTN' | translate }}
+        <button class="am-btn-o" (click)="selectRole('registroCliente')">
+          <i class="fas fa-user-plus"></i> Crear cuenta
         </button>
       </div>
 
