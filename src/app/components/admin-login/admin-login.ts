@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -29,16 +29,18 @@ export class AdminLogin {
     private logger: LoggerService,
     private translate: TranslateService,
     private adminService: AdminService,
-    private adminSession: AdminSessionService
+    private adminSession: AdminSessionService,
+    private zone: NgZone,
+    private cd: ChangeDetectorRef
   ) {}
 
   irAlInicio(): void {
-  this.router.navigate(['/']);
+    this.router.navigate(['/']);
   }
 
   ngOnInit(): void {
     if (this.adminSession.isAuthenticated()) {
-      this.router.navigate(['/admin/restaurants']);
+      this.router.navigate(['/admin']);
     }
   }
 
@@ -46,7 +48,6 @@ export class AdminLogin {
     this.showPassword = !this.showPassword;
   }
 
-  // BUG FIX: Validación profesional de formato de email
   private isValidEmail(email: string): boolean {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
@@ -55,10 +56,10 @@ export class AdminLogin {
   login(form: NgForm) {
     this.errorMsg = '';
     this.fieldErrors = {};
-    
+
     const mail = this.correo.trim().toLowerCase();
     const cleanPassword = this.password.replace(/\s/g, '');
-    
+
     if (!mail || !this.isValidEmail(mail)) {
       this.errorMsg = this.translate.instant('ADMIN_LOGIN.ERR_EMAIL_INVALID');
       return;
@@ -70,42 +71,41 @@ export class AdminLogin {
     }
 
     this.cargando = true;
-    this.password = cleanPassword; // Sincronizamos la contraseña limpia
+    this.password = cleanPassword;
+    this.cd.detectChanges();
 
-    this.logger.info('Intento login admin', {
-      email: mail,
-      role: 'ADMIN',
-      action: 'LOGIN_ATTEMPT'
-    });
+    this.logger.info('Intento login admin', { email: mail, role: 'ADMIN', action: 'LOGIN_ATTEMPT' });
 
     this.adminService.login(mail, this.password).subscribe({
       next: (response) => {
-        this.cargando = false;
-        const resolvedAdminId = response?.adminId ?? response?.id ?? response?.uuid;
+        this.zone.run(() => {
+          this.cargando = false;
+          const resolvedAdminId = response?.adminId ?? response?.id ?? response?.uuid;
 
-        if (!resolvedAdminId || !response?.mail) {
-          this.errorMsg = 'Respuesta inválida del backend en login admin';
-          return;
-        }
+          if (!resolvedAdminId || !response?.mail) {
+            this.errorMsg = 'Respuesta inválida del backend en login admin';
+            this.cd.detectChanges();
+            return;
+          }
 
-        this.adminSession.setSession({
-          adminId: resolvedAdminId,
-          mail: response.mail
+          this.adminSession.setSession({ adminId: resolvedAdminId, mail: response.mail });
+          this.router.navigate(['/admin']);
         });
-
-        this.router.navigate(['/admin/restaurants']);
       },
       error: (err) => {
-        this.cargando = false;
-        this.fieldErrors = err?.error?.validationErrors ?? {};
+        this.zone.run(() => {
+          this.cargando = false;
+          this.fieldErrors = err?.error?.validationErrors ?? {};
 
-        if (err?.status === 401) {
-          this.errorMsg = err?.error?.message || this.translate.instant('ADMIN_LOGIN.ERR_CREDENTIALS');
-        } else if (err?.status === 0) {
-          this.errorMsg = 'No se pudo conectar con el backend';
-        } else {
-          this.errorMsg = err?.error?.message || 'No se pudo iniciar sesión como admin';
-        }
+          if (err?.status === 401) {
+            this.errorMsg = err?.error?.message || this.translate.instant('ADMIN_LOGIN.ERR_CREDENTIALS');
+          } else if (err?.status === 0) {
+            this.errorMsg = 'No se pudo conectar con el backend';
+          } else {
+            this.errorMsg = err?.error?.message || 'No se pudo iniciar sesión como admin';
+          }
+          this.cd.detectChanges();
+        });
       }
     });
   }

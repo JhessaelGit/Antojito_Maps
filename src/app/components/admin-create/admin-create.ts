@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -32,7 +32,9 @@ export class AdminCreate {
     private translate: TranslateService,
     private adminService: AdminService,
     private adminSession: AdminSessionService,
-    private location: Location
+    private location: Location,
+    private zone: NgZone,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -77,6 +79,7 @@ export class AdminCreate {
     }
 
     this.cargando = true;
+    this.cd.detectChanges();
 
     this.logger.info('Intento crear admin', {
       role: 'ADMIN',
@@ -87,48 +90,47 @@ export class AdminCreate {
 
     this.adminService.createAdmin(mail, this.password).subscribe({
       next: (response) => {
-        this.cargando = false;
-        this.successMsg = response?.message || this.translate.instant('ADMIN_CREATE.SUCCESS_DEFAULT');
+        this.zone.run(() => {
+          this.cargando = false;
+          this.successMsg = response?.message || this.translate.instant('ADMIN_CREATE.SUCCESS_DEFAULT');
+          this.cd.detectChanges();
 
-        this.logger.info('Administrador creado', {
-          role: 'ADMIN',
-          action: 'CREATE_ADMIN_SUCCESS',
-          email: mail
+          this.logger.info('Administrador creado', {
+            role: 'ADMIN',
+            action: 'CREATE_ADMIN_SUCCESS',
+            email: mail
+          });
+
+          if (!hadSession) {
+            this.router.navigate(['/admin/login']);
+          } else {
+            this.router.navigate(['/admin/editar']);
+          }
         });
-
-        if (!hadSession) {
-          this.router.navigate(['/admin/login']);
-        } else {
-          this.router.navigate(['/admin/editar']);
-        }
       },
       error: (err) => {
-        this.cargando = false;
-        this.fieldErrors = err?.error?.validationErrors ?? {};
+        this.zone.run(() => {
+          this.cargando = false;
+          this.fieldErrors = err?.error?.validationErrors ?? {};
 
-        if (this.fieldErrors['mail']) {
-          this.errorCorreo = this.fieldErrors['mail'];
-        }
-        if (this.fieldErrors['password']) {
-          this.errorPassword = this.fieldErrors['password'];
-        }
+          if (this.fieldErrors['mail']) this.errorCorreo = this.fieldErrors['mail'];
+          if (this.fieldErrors['password']) this.errorPassword = this.fieldErrors['password'];
 
-        if (!hadSession && err?.status === 401) {
-          this.errorMsg = err?.error?.message || this.translate.instant('ADMIN_CREATE.ERR_EXISTING_ADMIN');
-          this.router.navigate(['/admin/login']);
-        } else if (err?.status === 400) {
-          this.errorMsg = err?.error?.message || this.translate.instant('ADMIN_CREATE.ERR_BAD_REQUEST');
-        } else if (err?.status === 0) {
-          this.errorMsg = this.translate.instant('ADMIN_CREATE.ERR_NO_CONNECTION');
-        } else {
-          this.errorMsg = err?.error?.message || this.translate.instant('ADMIN_CREATE.ERR_GENERIC');
-        }
+          if (!hadSession && err?.status === 401) {
+            this.errorMsg = err?.error?.message || this.translate.instant('ADMIN_CREATE.ERR_EXISTING_ADMIN');
+            this.router.navigate(['/admin/login']);
+          } else if (err?.status === 400) {
+            this.errorMsg = err?.error?.message || this.translate.instant('ADMIN_CREATE.ERR_BAD_REQUEST');
+          } else if (err?.status === 0) {
+            this.errorMsg = this.translate.instant('ADMIN_CREATE.ERR_NO_CONNECTION');
+          } else {
+            this.errorMsg = err?.error?.message || this.translate.instant('ADMIN_CREATE.ERR_GENERIC');
+          }
 
-        this.logger.error('Error al crear admin', {
-          role: 'ADMIN',
-          action: 'CREATE_ADMIN_ERROR',
-          status: err?.status,
-          email: mail
+          this.logger.error('Error al crear admin', {
+            role: 'ADMIN', action: 'CREATE_ADMIN_ERROR', status: err?.status, email: mail
+          });
+          this.cd.detectChanges();
         });
       }
     });

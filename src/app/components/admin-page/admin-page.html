@@ -3,15 +3,31 @@
   <!-- NAV -->
   <nav class="ap-nav">
     <div class="ap-logo" (click)="irAlInicio()">Antojitos<span>Maps</span></div>
-    <button class="ap-back" (click)="volverAtras()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" stroke-width="2"
-           stroke-linecap="round" stroke-linejoin="round">
-        <line x1="19" y1="12" x2="5" y2="12"/>
-        <polyline points="12 19 5 12 12 5"/>
-      </svg>
-      Volver
-    </button>
+
+    <div class="ap-nav-right">
+      <span class="ap-session-mail">{{ adminSession.getMail() }}</span>
+
+      <button class="ap-btn-home" (click)="irAlInicio()" title="Ir al inicio">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Inicio
+      </button>
+
+      <button class="ap-btn-logout" (click)="cerrarSesion()" title="Cerrar sesión">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Cerrar sesión
+      </button>
+    </div>
   </nav>
 
   <!-- HERO -->
@@ -29,42 +45,30 @@
   </div>
 
   <!-- CARDS -->
- <div class="ap-cards">
+  <div class="ap-cards">
 
-  <div class="ap-card c1" (click)="irGestionAdmins()">
-    <div class="ap-card-icon">
-      <i class="fas fa-users-cog"></i>
+    <div class="ap-card c1" (click)="irGestionAdmins()">
+      <div class="ap-card-icon">
+        <i class="fas fa-users-cog"></i>
+      </div>
+      <h3 class="ap-card-title">Gestionar administradores</h3>
+      <p class="ap-card-desc">
+        Administra registros, edición y control de administradores del sistema.
+      </p>
+      <div class="ap-card-link">Gestionar admins</div>
     </div>
 
-    <h3 class="ap-card-title">
-      Gestionar administradores
-    </h3>
-
-    <p class="ap-card-desc">
-      Administra registros, edición y control de administradores del sistema.
-    </p>
-
-    <div class="ap-card-link">
-      Gestionar admins
+    <div class="ap-card c2" (click)="irSolicitudes()">
+      <div class="ap-card-icon">
+        <i class="fas fa-envelope-open-text"></i>
+      </div>
+      <h3 class="ap-card-title">Gestionar solicitudes</h3>
+      <p class="ap-card-desc">
+        Revisa solicitudes, reportes y moderación de restaurantes y promociones.
+      </p>
+      <div class="ap-card-link">Ver solicitudes</div>
     </div>
+
   </div>
 
-  <div class="ap-card c2" (click)="irSolicitudes()">
-    <div class="ap-card-icon">
-      <i class="fas fa-envelope-open-text"></i>
-    </div>
-
-    <h3 class="ap-card-title">
-      Gestionar solicitudes
-    </h3>
-
-    <p class="ap-card-desc">
-      Revisa solicitudes, reportes y moderación de restaurantes y promociones.
-    </p>
-
-    <div class="ap-card-link">
-      Ver solicitudes
-    </div>
-  </div>
-
-</div>ng generate component components/admin-manage --standalone
+</div>

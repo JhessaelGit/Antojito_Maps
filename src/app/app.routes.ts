@@ -65,11 +65,13 @@ export const routes: Routes = [
 
   {
     path: 'admin/manage',
-    component: AdminManageComponent
+    component: AdminManageComponent,
+    canActivate: [adminGuard]
   },
   {
     path: 'admin/requests',
-    component: AdminRequestsComponent
+    component: AdminRequestsComponent,
+    canActivate: [adminGuard]
   },
 
   

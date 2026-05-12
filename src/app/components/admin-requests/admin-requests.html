@@ -1,81 +1,199 @@
 <div class="ar-page">
 
+  <!-- NAV -->
   <nav class="ar-nav">
-
-    <div class="ar-logo">
-      Antojitos<span>Maps</span>
+    <div class="ar-logo" (click)="router.navigate(['/admin'])">Antojitos<span>Maps</span></div>
+    <div class="ar-nav-right">
+      <span class="ar-pill">Moderación</span>
+      <button class="ar-btn-back" (click)="volverAtras()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Volver
+      </button>
     </div>
-
-    <button class="ar-back" (click)="volverAtras()">
-      ← Volver
-    </button>
-
   </nav>
 
+  <!-- HERO -->
   <div class="ar-hero">
-
-    <div class="ar-pill">
-      Moderación del sistema
-    </div>
-
-    <h1 class="ar-title">
-      Gestionar solicitudes
-    </h1>
-
-    <p class="ar-sub">
-      Revisa solicitudes, reportes y contenido pendiente de moderación.
-    </p>
-
+    <h1 class="ar-title">Gestionar solicitudes</h1>
+    <p class="ar-sub">Revisa quejas de clientes, acepta o rechaza solicitudes y gestiona contenido bloqueado.</p>
   </div>
 
-  <div class="ar-list">
+  <!-- TABS -->
+  <div class="ar-tabs">
+    <button class="ar-tab" [class.ar-tab-active]="activeTab === 'pending'" (click)="setTab('pending')">
+      Pendientes
+      @if (quejasPendientes.length > 0) {
+        <span class="ar-badge">{{ quejasPendientes.length }}</span>
+      }
+    </button>
+    <button class="ar-tab" [class.ar-tab-active]="activeTab === 'all'" (click)="setTab('all')">
+      Todas las quejas
+    </button>
+    <button class="ar-tab" [class.ar-tab-active]="activeTab === 'blocked_restaurants'" (click)="setTab('blocked_restaurants')">
+      Restaurantes vetados
+      @if (restaurantesBloqueados.length > 0) {
+        <span class="ar-badge ar-badge-red">{{ restaurantesBloqueados.length }}</span>
+      }
+    </button>
+  </div>
 
-    <div class="ar-card" *ngFor="let s of solicitudes">
+  <!-- BODY -->
+  <div class="ar-body">
 
-      <div class="ar-info">
+    <!-- TAB: Quejas (pendientes o todas) -->
+    @if (activeTab === 'pending' || activeTab === 'all') {
 
-        <div class="ar-top">
+      @if (cargandoQuejas) {
+        <div class="ar-state"><div class="ar-spinner"></div><p>Cargando solicitudes...</p></div>
+      }
 
-          <span class="ar-type">
-            {{ s.tipo }}
-          </span>
-
-          <span class="ar-status">
-            {{ s.estado }}
-          </span>
-
+      @if (quejaError && !cargandoQuejas) {
+        <div class="ar-state ar-state-error">
+          <span>⚠️</span><p>{{ quejaError }}</p>
+          <button class="ar-btn-retry" (click)="cargarQuejasPendientes(); cargarTodasQuejas()">Reintentar</button>
         </div>
+      }
 
-        <h3>
-          {{ s.restaurante }}
-        </h3>
+      @if (!cargandoQuejas && !quejaError && quejasActivas.length === 0) {
+        <div class="ar-state">
+          <span class="ar-state-icon">✅</span>
+          <p>{{ activeTab === 'pending' ? 'No hay solicitudes pendientes.' : 'No hay solicitudes registradas.' }}</p>
+        </div>
+      }
 
-        <p>
-          {{ s.descripcion }}
-        </p>
+      @if (!cargandoQuejas && quejasActivas.length > 0) {
+        <div class="ar-list">
+          @for (q of quejasActivas; track q.uuid) {
+            <div class="ar-card" [class.ar-card-accepted]="q.status === 'ACCEPTED'" [class.ar-card-rejected]="q.status === 'REJECTED'">
+              <div class="ar-card-left">
+                <div class="ar-type-badge" [class.ar-type-promo]="q.type === 'PROMOTION'">
+                  {{ typeLabel(q.type) }}
+                </div>
+                <p class="ar-desc">{{ q.description }}</p>
+                <small class="ar-date">{{ formatDate(q.createdAt) }}</small>
+              </div>
+              <div class="ar-card-right">
+                <span class="ar-status"
+                  [class.ar-status-pending]="q.status === 'PENDING'"
+                  [class.ar-status-accepted]="q.status === 'ACCEPTED'"
+                  [class.ar-status-rejected]="q.status === 'REJECTED'">
+                  {{ statusLabel(q.status) }}
+                </span>
+                @if (q.status === 'PENDING') {
+                  <button class="ar-btn-view" (click)="abrirModal(q)">
+                    Ver detalle
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
 
-        <small>
-          {{ s.fecha }}
-        </small>
-
-      </div>
-
-      <div class="ar-actions">
-
-        <button class="btn-view" (click)="openModal(s)">
-          Ver detalle
-        </button>
-
-      </div>
-
-    </div>
+    <!-- TAB: Restaurantes bloqueados -->
+    @if (activeTab === 'blocked_restaurants') {
+      @if (cargandoRestaurantes) {
+        <div class="ar-state"><div class="ar-spinner"></div><p>Cargando...</p></div>
+      }
+      @if (!cargandoRestaurantes && restaurantesBloqueados.length === 0) {
+        <div class="ar-state">
+          <span class="ar-state-icon">🏪</span>
+          <p>No hay restaurantes vetados.</p>
+        </div>
+      }
+      @if (!cargandoRestaurantes && restaurantesBloqueados.length > 0) {
+        <div class="ar-list">
+          @for (r of restaurantesBloqueados; track r.uuid) {
+            <div class="ar-card ar-card-blocked">
+              <div class="ar-card-left">
+                <div class="ar-type-badge ar-type-restaurant">Restaurante</div>
+                <h3 class="ar-nombre">{{ r.name }}</h3>
+                <small class="ar-date">{{ r.category }} · {{ r.plan }}</small>
+              </div>
+              <div class="ar-card-right">
+                <span class="ar-status ar-status-rejected">Vetado</span>
+                <button class="ar-btn-unblock" (click)="desbloquearRestaurante(r.uuid)">
+                  Desvetar
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
 
   </div>
 
 </div>
 
-<app-request-detail-modal
-  *ngIf="showModal"
-  [request]="selectedRequest"
-  (close)="closeModal()">
-</app-request-detail-modal>
+<!-- MODAL DETALLE QUEJA -->
+@if (modalVisible && quejaSeleccionada) {
+  <div class="ar-modal-backdrop" (click)="cerrarModal()">
+    <div class="ar-modal" (click)="$event.stopPropagation()">
+
+      <div class="ar-modal-header">
+        <h2>Detalle de queja</h2>
+        <button class="ar-modal-close" (click)="cerrarModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ar-modal-body">
+        <div class="ar-modal-row">
+          <span class="ar-modal-lbl">Tipo</span>
+          <span class="ar-type-badge" [class.ar-type-promo]="quejaSeleccionada.type === 'PROMOTION'">
+            {{ typeLabel(quejaSeleccionada.type) }}
+          </span>
+        </div>
+        <div class="ar-modal-row">
+          <span class="ar-modal-lbl">Estado</span>
+          <span class="ar-status ar-status-pending">{{ statusLabel(quejaSeleccionada.status) }}</span>
+        </div>
+        <div class="ar-modal-row ar-modal-row-col">
+          <span class="ar-modal-lbl">Restaurante / Objetivo</span>
+          @if (quejaSeleccionada.targetName) {
+            <div class="ar-target-info">
+              <span class="ar-target-name">{{ quejaSeleccionada.targetName }}</span>
+              @if (quejaSeleccionada.targetCategory) {
+                <span class="ar-target-cat">{{ quejaSeleccionada.targetCategory }}</span>
+              }
+            </div>
+          } @else {
+            <code class="ar-modal-code">{{ quejaSeleccionada.targetUuid }}</code>
+          }
+        </div>
+        <div class="ar-modal-row ar-modal-row-col">
+          <span class="ar-modal-lbl">Descripción</span>
+          <p class="ar-modal-desc">{{ quejaSeleccionada.description }}</p>
+        </div>
+        @if (quejaSeleccionada.createdAt) {
+          <div class="ar-modal-row">
+            <span class="ar-modal-lbl">Fecha</span>
+            <span>{{ formatDate(quejaSeleccionada.createdAt) }}</span>
+          </div>
+        }
+
+        @if (accionError) {
+          <p class="ar-modal-error">{{ accionError }}</p>
+        }
+      </div>
+
+      <div class="ar-modal-footer">
+        <button class="ar-btn-reject" (click)="revisar('REJECTED')" [disabled]="accionando">
+          {{ accionando ? 'Procesando...' : '✕ Rechazar' }}
+        </button>
+        <button class="ar-btn-accept" (click)="revisar('ACCEPTED')" [disabled]="accionando">
+          {{ accionando ? 'Procesando...' : '✓ Aceptar y vetar' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
