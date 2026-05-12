@@ -1,0 +1,81 @@
+<div class="ar-page">
+
+  <nav class="ar-nav">
+
+    <div class="ar-logo">
+      Antojitos<span>Maps</span>
+    </div>
+
+    <button class="ar-back" (click)="volverAtras()">
+      ← Volver
+    </button>
+
+  </nav>
+
+  <div class="ar-hero">
+
+    <div class="ar-pill">
+      Moderación del sistema
+    </div>
+
+    <h1 class="ar-title">
+      Gestionar solicitudes
+    </h1>
+
+    <p class="ar-sub">
+      Revisa solicitudes, reportes y contenido pendiente de moderación.
+    </p>
+
+  </div>
+
+  <div class="ar-list">
+
+    <div class="ar-card" *ngFor="let s of solicitudes">
+
+      <div class="ar-info">
+
+        <div class="ar-top">
+
+          <span class="ar-type">
+            {{ s.tipo }}
+          </span>
+
+          <span class="ar-status">
+            {{ s.estado }}
+          </span>
+
+        </div>
+
+        <h3>
+          {{ s.restaurante }}
+        </h3>
+
+        <p>
+          {{ s.descripcion }}
+        </p>
+
+        <small>
+          {{ s.fecha }}
+        </small>
+
+      </div>
+
+      <div class="ar-actions">
+
+        <button class="btn-view" (click)="openModal(s)">
+          Ver detalle
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<app-request-detail-modal
+  *ngIf="showModal"
+  [request]="selectedRequest"
+  (close)="closeModal()">
+</app-request-detail-modal>

@@ -27,15 +27,11 @@ export class AdminPageComponent {
     this.location.back();
   }
 
-  irAgregar(): void {
-    this.router.navigate(['/admin/agregar']);
-  }
+  irGestionAdmins(): void {
+  this.router.navigate(['/admin/manage']);
+}
 
-  irEditar(): void {
-    this.router.navigate(['/admin/editar']);
-  }
-
-  irEliminados(): void {
-    this.router.navigate(['/admin/eliminados']);
-  }
+irSolicitudes(): void {
+  this.router.navigate(['/admin/requests']);
+}
 }

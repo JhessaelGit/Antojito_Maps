@@ -18,6 +18,9 @@ import { AdminDeletedComponent } from './components/admin-deleted/admin-deleted.
 import { adminGuard } from './core/guards/admin.guard';
 import { ownerGuard } from './core/guards/owner.guard';
 
+import { AdminManageComponent } from './components/admin-manage/admin-manage';
+import { AdminRequestsComponent } from './components/admin-requests/admin-requests';
+
 export const routes: Routes = [
 
   {
@@ -58,6 +61,17 @@ export const routes: Routes = [
     canActivate: [adminGuard]
   },
 
+  {
+    path: 'admin/manage',
+    component: AdminManageComponent
+  },
+  {
+    path: 'admin/requests',
+    component: AdminRequestsComponent
+  },
+
+  
+
   /* ================= RESTAURANT ================= */
 
   {
@@ -95,6 +109,7 @@ export const routes: Routes = [
     component: RestaurantView 
   },
 
+ 
   {
     path: '',
     redirectTo: 'inicio',

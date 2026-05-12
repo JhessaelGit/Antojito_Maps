@@ -29,69 +29,42 @@
   </div>
 
   <!-- CARDS -->
-  <div class="ap-cards">
-    <div class="ap-card c1" (click)="irAgregar()">
-      <div class="ap-card-icon">
-        <i class="fas fa-user-plus"></i>
-      </div>
-      <h3 class="ap-card-title">
-        {{ 'ADMIN_DASHBOARD.CARD_ADD' | translate }}
-      </h3>
-      <p class="ap-card-desc">
-        Registra un nuevo administrador con acceso al panel del sistema.
-      </p>
-      <div class="ap-card-link">
-        Ir a agregar
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2.5"
-             stroke-linecap="round" stroke-linejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"/>
-          <polyline points="12 5 19 12 12 19"/>
-        </svg>
-      </div>
+ <div class="ap-cards">
+
+  <div class="ap-card c1" (click)="irGestionAdmins()">
+    <div class="ap-card-icon">
+      <i class="fas fa-users-cog"></i>
     </div>
 
-    <div class="ap-card c2" (click)="irEditar()">
-      <div class="ap-card-icon">
-        <i class="fas fa-user-edit"></i>
-      </div>
-      <h3 class="ap-card-title">
-        {{ 'ADMIN_DASHBOARD.CARD_EDIT' | translate }}
-      </h3>
-      <p class="ap-card-desc">
-        Consulta y modifica los datos de los administradores existentes.
-      </p>
-      <div class="ap-card-link">
-        Ir a editar
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2.5"
-             stroke-linecap="round" stroke-linejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"/>
-          <polyline points="12 5 19 12 12 19"/>
-        </svg>
-      </div>
-    </div>
+    <h3 class="ap-card-title">
+      Gestionar administradores
+    </h3>
 
-    <div class="ap-card c3" (click)="irEliminados()">
-      <div class="ap-card-icon">
-        <i class="fas fa-user-slash"></i>
-      </div>
-      <h3 class="ap-card-title">
-        {{ 'ADMIN_DASHBOARD.CARD_DELETED' | translate }}
-      </h3>
-      <p class="ap-card-desc">
-        Revisa el historial de administradores eliminados del sistema.
-      </p>
-      <div class="ap-card-link">
-        Ver eliminados
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2.5"
-             stroke-linecap="round" stroke-linejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"/>
-          <polyline points="12 5 19 12 12 19"/>
-        </svg>
-      </div>
+    <p class="ap-card-desc">
+      Administra registros, edición y control de administradores del sistema.
+    </p>
+
+    <div class="ap-card-link">
+      Gestionar admins
     </div>
   </div>
 
-</div>
+  <div class="ap-card c2" (click)="irSolicitudes()">
+    <div class="ap-card-icon">
+      <i class="fas fa-envelope-open-text"></i>
+    </div>
+
+    <h3 class="ap-card-title">
+      Gestionar solicitudes
+    </h3>
+
+    <p class="ap-card-desc">
+      Revisa solicitudes, reportes y moderación de restaurantes y promociones.
+    </p>
+
+    <div class="ap-card-link">
+      Ver solicitudes
+    </div>
+  </div>
+
+</div>ng generate component components/admin-manage --standalone
