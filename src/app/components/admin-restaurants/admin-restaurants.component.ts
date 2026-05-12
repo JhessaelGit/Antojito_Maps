@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { AdminService } from '../../core/services/admin.service';
+import { AdminSessionService } from '../../core/services/admin-session.service';
 
 @Component({
   selector: 'app-admin-restaurants',
@@ -12,11 +13,6 @@ import { AdminService } from '../../core/services/admin.service';
   styleUrls: ['./admin-restaurants.css']
 })
 export class AdminRestaurantsComponent implements OnInit {
-
-  constructor(
-    private router: Router,
-    private adminService: AdminService
-  ) {}
 
   restaurantes: Array<{
     id: string;
@@ -29,6 +25,14 @@ export class AdminRestaurantsComponent implements OnInit {
   cargando = false;
   errorMsg = '';
 
+  constructor(
+    private router: Router,
+    private adminService: AdminService,
+    private adminSession: AdminSessionService,
+    private zone: NgZone,
+    private cd: ChangeDetectorRef
+  ) {}
+
   ngOnInit(): void {
     this.cargarRestaurantes();
   }
@@ -40,25 +44,31 @@ export class AdminRestaurantsComponent implements OnInit {
   cargarRestaurantes(): void {
     this.cargando = true;
     this.errorMsg = '';
+    this.cd.detectChanges();
 
     this.adminService.getRestaurants().subscribe({
       next: (items: any) => {
-        this.cargando = false;
-
-        const rawList = Array.isArray(items) ? items : (items?.data ?? items?.restaurants ?? []);
-        this.restaurantes = rawList
-          .map((r: any) => ({
-            id: `${r.uuid ?? r.id ?? ''}`,
-            nombre: `${r.name ?? r.nombre ?? 'Restaurante'}`,
-            plan: this.normalizePlan(r.planSuscription ?? r.plan ?? ''),
-            tiempo: this.calculateRemainingDays(r.planExpirationDate),
-            bloqueado: !!(r.isBlocked ?? r.bloqueado)
-          }))
-          .filter((r: any) => !!r.id);
+        this.zone.run(() => {
+          const rawList = Array.isArray(items) ? items : (items?.data ?? items?.restaurants ?? []);
+          this.restaurantes = rawList
+            .map((r: any) => ({
+              id: `${r.uuid ?? r.id ?? ''}`,
+              nombre: `${r.name ?? r.nombre ?? 'Restaurante'}`,
+              plan: this.normalizePlan(r.planSuscription ?? r.plan ?? ''),
+              tiempo: this.calculateRemainingDays(r.planExpirationDate),
+              bloqueado: !!(r.isBlocked ?? r.bloqueado)
+            }))
+            .filter((r: any) => !!r.id);
+          this.cargando = false;
+          this.cd.detectChanges();
+        });
       },
       error: (err) => {
-        this.cargando = false;
-        this.errorMsg = err?.error?.message || 'No se pudieron cargar los restaurantes';
+        this.zone.run(() => {
+          this.cargando = false;
+          this.errorMsg = err?.error?.message || 'No se pudieron cargar los restaurantes';
+          this.cd.detectChanges();
+        });
       }
     });
   }
@@ -68,10 +78,16 @@ export class AdminRestaurantsComponent implements OnInit {
 
     this.adminService.updateRestaurantBlock(r.id, newState).subscribe({
       next: () => {
-        r.bloqueado = newState;
+        this.zone.run(() => {
+          r.bloqueado = newState;
+          this.cd.detectChanges();
+        });
       },
       error: (err) => {
-        this.errorMsg = err?.error?.message || 'No se pudo actualizar el bloqueo del restaurante';
+        this.zone.run(() => {
+          this.errorMsg = err?.error?.message || 'No se pudo actualizar el bloqueo del restaurante';
+          this.cd.detectChanges();
+        });
       }
     });
   }
@@ -81,6 +97,7 @@ export class AdminRestaurantsComponent implements OnInit {
   }
 
   cerrarSesion() {
+    this.adminSession.clearSession();
     this.router.navigate(['/admin/login']);
   }
 
@@ -111,5 +128,4 @@ export class AdminRestaurantsComponent implements OnInit {
   }
 
   readonly Math = Math;
-
 }
