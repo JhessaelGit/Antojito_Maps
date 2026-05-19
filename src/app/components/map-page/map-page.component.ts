@@ -179,7 +179,8 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
       )
       .subscribe({
         next: (data: any) => {
-          this.restaurantes = Array.isArray(data) ? data : (data?.data || []);
+          const restaurantes = Array.isArray(data) ? data : (data?.data || []);
+          this.restaurantes = restaurantes.filter((r: any) => !(r.isBlocked ?? r.bloqueado));
           this.filtrarRestaurantes();
         },
         error: (err) => {
