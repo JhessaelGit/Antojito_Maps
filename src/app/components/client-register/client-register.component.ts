@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ClientService } from '../../core/services/client.service';
 
 @Component({
@@ -25,6 +25,7 @@ export class ClientRegisterComponent {
 
   constructor(
     public router: Router,
+    private route: ActivatedRoute,
     private clientService: ClientService
   ) {}
 
@@ -67,12 +68,17 @@ export class ClientRegisterComponent {
       next: () => {
         this.cargando = false;
         this.successMsg = '¡Cuenta creada! Redirigiendo al mapa...';
-        setTimeout(() => this.router.navigate(['/mapa'], { replaceUrl: true }), 1200);
+        setTimeout(() => this.router.navigateByUrl(this.getReturnUrl(), { replaceUrl: true }), 1200);
       },
       error: (err) => {
         this.cargando = false;
         this.errorMsg = err?.error?.message || 'Error al crear la cuenta. Intenta de nuevo';
       }
     });
+  }
+
+  private getReturnUrl(): string {
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+    return returnUrl?.startsWith('/') ? returnUrl : '/mapa';
   }
 }

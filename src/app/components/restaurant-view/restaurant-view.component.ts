@@ -55,6 +55,8 @@ export class RestaurantView implements OnInit, OnDestroy {
   ngOnInit(): void {
     window.scrollTo(0, 0);
     const uuid = this.route.snapshot.paramMap.get('uuid') ?? this.route.snapshot.paramMap.get('id');
+    this.mostrarFormQueja = this.route.snapshot.queryParamMap.get('report') === '1';
+
     if (uuid) {
       this.cargar(uuid);
     } else {
@@ -104,6 +106,14 @@ export class RestaurantView implements OnInit, OnDestroy {
     this.router.navigate(['/mapa']);
   }
 
+  iniciarSesionParaQueja(): void {
+    this.router.navigate(['/client/login'], { queryParams: { returnUrl: this.router.url } });
+  }
+
+  registrarseParaQueja(): void {
+    this.router.navigate(['/client/register'], { queryParams: { returnUrl: this.router.url } });
+  }
+
   toggleFormQueja(): void {
     this.mostrarFormQueja = !this.mostrarFormQueja;
     this.quejaExito = false;
@@ -115,6 +125,10 @@ export class RestaurantView implements OnInit, OnDestroy {
   enviarQueja(): void {
     if (!this.quejaTexto.trim()) {
       this.quejaError = 'Por favor describe el problema.';
+      return;
+    }
+    if (!this.restaurante?.uuid) {
+      this.quejaError = 'No se pudo identificar el restaurante.';
       return;
     }
     const clientId = this.clientSession.getClientId();
@@ -135,7 +149,7 @@ export class RestaurantView implements OnInit, OnDestroy {
       `${environment.apiBaseUrl}/complaint/create`,
       {
         type: 'RESTAURANT',
-        targetUuid: this.restaurante?.uuid,
+        targetUuid: this.restaurante.uuid,
         description: this.quejaTexto.trim()
       },
       { headers }

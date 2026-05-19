@@ -403,6 +403,29 @@
   margin: 0;
 }
 
+.rv-queja-login {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(191,152,97,0.12);
+  border: 1.5px solid rgba(191,152,97,0.3);
+  border-radius: 10px;
+}
+
+.rv-queja-login p {
+  margin: 0;
+  color: var(--color-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.rv-queja-login-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .rv-btn-enviar-queja {
   align-self: flex-start;
   background: var(--color-primary);
