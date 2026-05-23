@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -29,7 +29,9 @@ export class AdminEdit implements OnInit {
     private adminService: AdminService,
     private adminSession: AdminSessionService,
     private translate: TranslateService,
-    private location: Location
+    private location: Location,
+    private zone: NgZone,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -79,29 +81,27 @@ export class AdminEdit implements OnInit {
       })
     ).subscribe({
       next: (response) => {
-        this.successMsg = response?.message || 'Administrador actualizado correctamente';
-        
-        // Actualizar sesión
-        const session = this.adminSession.getSession();
-        if (session) {
-          this.adminSession.setSession({
-            adminId: session.adminId,
-            mail: (response?.mail || mail).trim().toLowerCase()
-          });
-        }
-
-        this.editPassword = '';
-
-        // Redirección forzada tras éxito
-        setTimeout(() => {
-          this.router.navigate(['/admin/restaurants']);
-        }, 1500);
+        this.zone.run(() => {
+          this.successMsg = response?.message || 'Administrador actualizado correctamente';
+          const session = this.adminSession.getSession();
+          if (session) {
+            this.adminSession.setSession({
+              adminId: session.adminId,
+              mail: (response?.mail || mail).trim().toLowerCase()
+            });
+          }
+          this.editPassword = '';
+          this.cd.detectChanges();
+          setTimeout(() => { this.router.navigate(['/admin']); }, 1500);
+        });
       },
       error: (err) => {
-        // Los errores de validación del backend se capturan aquí
-        this.fieldErrors = err?.error?.validationErrors ?? {};
-        if (this.fieldErrors['mail']) this.errorMsg = this.fieldErrors['mail'];
-        if (this.fieldErrors['password']) this.errorMsg = this.fieldErrors['password'];
+        this.zone.run(() => {
+          this.fieldErrors = err?.error?.validationErrors ?? {};
+          if (this.fieldErrors['mail']) this.errorMsg = this.fieldErrors['mail'];
+          if (this.fieldErrors['password']) this.errorMsg = this.fieldErrors['password'];
+          this.cd.detectChanges();
+        });
       }
     });
   }

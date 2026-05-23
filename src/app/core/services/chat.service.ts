@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, EMPTY } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { ClientSessionService } from './client-session.service';
 
 export interface ChatRequest {
-  conversationId?: string;
   message: string;
   latitude?: number;
   longitude?: number;
@@ -32,13 +32,29 @@ export class ChatService {
 
   private readonly BASE_URL = environment.apiBaseUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private clientSession: ClientSessionService
+  ) {}
+
+  private buildHeaders(): { headers?: HttpHeaders } {
+    const clientId = this.clientSession.getClientId();
+    if (clientId) {
+      return { headers: new HttpHeaders({ 'X-Client-Id': clientId }) };
+    }
+    return {};
+  }
 
   enviarMensaje(request: ChatRequest): Observable<ChatResponse> {
-    return this.http.post<ChatResponse>(`${this.BASE_URL}/chat`, request);
+    return this.http.post<ChatResponse>(`${this.BASE_URL}/chat`, request, this.buildHeaders());
   }
 
-  obtenerHistorial(conversationId: string): Observable<ConversationHistory> {
-    return this.http.get<ConversationHistory>(`${this.BASE_URL}/chat/${conversationId}`);
+  obtenerHistorial(): Observable<ConversationHistory> {
+    const clientId = this.clientSession.getClientId();
+    if (!clientId) {
+      return EMPTY;
+    }
+    const headers = new HttpHeaders({ 'X-Client-Id': clientId });
+    return this.http.get<ConversationHistory>(`${this.BASE_URL}/chat/history`, { headers });
   }
-}
+}

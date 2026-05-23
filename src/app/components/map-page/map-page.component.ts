@@ -10,6 +10,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subject, finalize, takeUntil, timeout } from 'rxjs';
 import * as L from 'leaflet';
 import { ChatService } from '../../core/services/chat.service';
+import { ClientSessionService } from '../../core/services/client-session.service';
 
 
 export interface ChatMensaje {
@@ -54,7 +55,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   cargando: boolean = true;
   errorApi: boolean = false;
   private restaurantes: any[] = [];
-  private conversationId: string | null = null;
+
   /* ── Chatbot ───────────────────────────────────────────────── */
   @ViewChild('chatMessages') private chatMessagesRef!: ElementRef<HTMLDivElement>;
 
@@ -87,7 +88,8 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     public router: Router,
     private restauranteService: RestauranteService,
-    private chatService: ChatService, // 🔥 AGREGAR
+    private chatService: ChatService,
+    public clientSession: ClientSessionService,
     private translate: TranslateService,
     private cd: ChangeDetectorRef,
     private location: Location
@@ -155,7 +157,17 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   irAlInicio(): void {
     this.router.navigate(['/']);
   }
-  
+
+  cerrarSesionCliente(): void {
+    const session = this.clientSession.getSession();
+    if (session?.mail) {
+      // Llamada de auditoría al backend (no bloqueante)
+      this.chatService['http']?.post(`${this.chatService['BASE_URL']}/client/logout`, { mail: session.mail }).subscribe({ error: () => {} });
+    }
+    this.clientSession.clearSession();
+    this.router.navigate(['/']);
+  }
+
   cargarRestaurantes(): void {
     this.cargando = true;
     this.errorApi = false;
@@ -305,15 +317,11 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     const userLocation = this.locationMarker?.getLatLng();
 
     this.chatService.enviarMensaje({
-      conversationId: this.conversationId ?? undefined,
       message: trimmed,
       latitude: userLocation?.lat,
       longitude: userLocation?.lng
     }).subscribe({
       next: (res) => {
-        this.conversationId = res.conversationId;
-        localStorage.setItem('antojitos_conversationId', res.conversationId);
-
         this.chatbotEscribiendo = false;
         this.agregarMensaje('bot', res.reply);
 
@@ -334,7 +342,8 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   enviarSugerencia(texto: string): void { this.enviarMensaje(texto); }
 
   private agregarMensaje(rol: 'bot' | 'user', texto: string): void {
-    this.chatMensajes.push({ id: Date.now().toString(), rol, texto, hora: this.horaActual() });
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    this.chatMensajes.push({ id, rol, texto, hora: this.horaActual() });
   }
 
   private scrollAlFinal(): void {
@@ -353,14 +362,13 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
    * Carga el historial de mensajes desde el backend.
    */
   private restaurarConversacion(): void {
-    const savedId = localStorage.getItem('antojitos_conversationId');
-    if (!savedId) return;
+    // El historial ahora se identifica por X-Client-Id (enviado automaticamente por ChatService)
+    // Solo restauramos si hay una sesion de cliente activa
+    if (!this.clientSession.getClientId()) return;
 
-    this.conversationId = savedId;
-    this.chatService.obtenerHistorial(savedId).subscribe({
+    this.chatService.obtenerHistorial().subscribe({
       next: (historial) => {
         if (historial.messages && historial.messages.length > 0) {
-          // Reemplazar el mensaje de bienvenida con el historial real
           this.chatMensajes = historial.messages.map((m: any, i: number) => ({
             id: (i + 1).toString(),
             rol: m.role === 'assistant' ? 'bot' as const : 'user' as const,
@@ -375,9 +383,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
         }
       },
       error: () => {
-        // Conversacion no encontrada, limpiar localStorage
-        localStorage.removeItem('antojitos_conversationId');
-        this.conversationId = null;
+        // Sin historial previo, se deja el mensaje de bienvenida por defecto
       }
     });
   }
@@ -568,7 +574,14 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   buscarRestaurante(texto: string): void { this.textoBusqueda = texto; this.filtrarRestaurantes(); }
   seleccionarCategoria(slug: string): void { this.categoriaSeleccionada = slug; this.router.navigate([], { queryParams: { categoria: slug || null }, queryParamsHandling: 'merge' }); this.filtrarRestaurantes(); }
   verTodasLasCategorias(): void { this.seleccionarCategoria(''); }
-  volverAlInicio(): void { this.location.back(); }
   centrarEnMiUbicacion(): void { this.obtenerUbicacion(); }
+  volverAlInicio(): void {
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+    if (returnUrl) {
+      this.router.navigateByUrl(returnUrl);
+    } else {
+      this.router.navigate(['/inicio']);
+    }
+  }
 }
 

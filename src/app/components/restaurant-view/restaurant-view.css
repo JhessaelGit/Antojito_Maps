@@ -351,3 +351,83 @@
   .rv-section { padding: 1.1rem; }
   .rv-nombre { font-size: 1.4rem; }
 }
+
+/* ── Queja ── */
+.rv-queja-section { border-top: 2px solid rgba(220,50,50,0.1); }
+
+.rv-btn-queja {
+  background: transparent;
+  border: 1.5px solid rgba(200,50,50,0.35);
+  color: #c43232;
+  padding: 9px 20px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.2s;
+}
+.rv-btn-queja:hover {
+  background: rgba(200,50,50,0.06);
+  border-color: #c43232;
+}
+
+.rv-queja-form {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rv-queja-textarea {
+  width: 100%;
+  border: 1.5px solid rgba(2,51,45,0.15);
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  color: var(--color-secondary);
+  background: var(--color-neutral);
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+.rv-queja-textarea:focus {
+  border-color: var(--color-accent);
+}
+
+.rv-queja-error {
+  font-size: 12px;
+  color: #c43232;
+  margin: 0;
+}
+
+.rv-btn-enviar-queja {
+  align-self: flex-start;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: opacity 0.2s;
+}
+.rv-btn-enviar-queja:hover:not(:disabled) { opacity: 0.88; }
+.rv-btn-enviar-queja:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.rv-queja-exito {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(40,160,80,0.08);
+  border: 1.5px solid rgba(40,160,80,0.3);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #1d7a40;
+  font-weight: 600;
+}

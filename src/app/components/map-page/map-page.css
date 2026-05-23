@@ -220,8 +220,8 @@
   color: var(--color-accent);
 }
 .chip-active {
-  background: var(--color-primary);
-  color: var(--color-white);
+  background: var(--color-accent);
+  color: var(--color-secondary);
   border-color: var(--color-accent);
   font-weight: 600;
 }
@@ -956,4 +956,46 @@
   padding: 0;
   overflow: hidden;
   border-radius: 12px;
+}
+
+/* ─── SESION CLIENTE EN MAPA ───────────────── */
+.client-session-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(191,152,97,0.12);
+  border: 1px solid rgba(191,152,97,0.35);
+  border-radius: 24px;
+  padding: 4px 12px 4px 14px;
+  flex-shrink: 0;
+  max-width: 200px;
+}
+.client-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
+.btn-logout {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  color: rgba(218,207,189,0.7);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  transition: color 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-logout:hover {
+  color: #e05555;
 }

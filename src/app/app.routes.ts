@@ -17,6 +17,11 @@ import { AdminDeletedComponent } from './components/admin-deleted/admin-deleted.
 
 import { adminGuard } from './core/guards/admin.guard';
 import { ownerGuard } from './core/guards/owner.guard';
+import { ClientLoginComponent } from './components/client-login/client-login.component';
+import { ClientRegisterComponent } from './components/client-register/client-register.component';
+
+import { AdminManageComponent } from './components/admin-manage/admin-manage';
+import { AdminRequestsComponent } from './components/admin-requests/admin-requests';
 
 export const routes: Routes = [
 
@@ -58,6 +63,19 @@ export const routes: Routes = [
     canActivate: [adminGuard]
   },
 
+  {
+    path: 'admin/manage',
+    component: AdminManageComponent,
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'admin/requests',
+    component: AdminRequestsComponent,
+    canActivate: [adminGuard]
+  },
+
+  
+
   /* ================= RESTAURANT ================= */
 
   {
@@ -67,6 +85,17 @@ export const routes: Routes = [
   {
     path: 'restaurant/register',
     component: RegisterRestaurantComponent
+  },
+
+  /* ================= CLIENT ================= */
+
+  {
+    path: 'client/login',
+    component: ClientLoginComponent
+  },
+  {
+    path: 'client/register',
+    component: ClientRegisterComponent
   },
 
   /* ================= PAYMENT ================= */
@@ -95,6 +124,7 @@ export const routes: Routes = [
     component: RestaurantView 
   },
 
+ 
   {
     path: '',
     redirectTo: 'inicio',

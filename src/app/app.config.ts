@@ -7,15 +7,10 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { apiAuthInterceptor } from './core/interceptors/api-auth.interceptor';
 
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { provideAuth, getAuth } from '@angular/fire/auth';
-import { environment } from '../environments/environment';
-
 export class CustomTranslateLoader implements TranslateLoader {
   constructor(private http: HttpClient) {}
 
   getTranslation(lang: string): Observable<any> {
-    // Apuntamos directamente a la ruta de tus JSON
     return this.http.get(`./assets/i18n/${lang}.json`);
   }
 }
@@ -29,8 +24,6 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(withInterceptors([apiAuthInterceptor])),
-    provideFirebaseApp(() => initializeApp((environment as any).firebaseConfig)),
-    provideAuth(() => getAuth()),
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {
