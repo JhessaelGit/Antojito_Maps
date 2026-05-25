@@ -220,8 +220,8 @@
   color: var(--color-accent);
 }
 .chip-active {
-  background: var(--color-accent);
-  color: var(--color-secondary);
+  background: var(--color-primary);
+  color: var(--color-white);
   border-color: var(--color-accent);
   font-weight: 600;
 }
