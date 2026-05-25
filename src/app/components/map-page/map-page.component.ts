@@ -179,7 +179,8 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
       )
       .subscribe({
         next: (data: any) => {
-          this.restaurantes = Array.isArray(data) ? data : (data?.data || []);
+          const restaurantes = Array.isArray(data) ? data : (data?.data || []);
+          this.restaurantes = restaurantes.filter((r: any) => !(r.isBlocked ?? r.bloqueado));
           this.filtrarRestaurantes();
         },
         error: (err) => {
@@ -220,10 +221,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
         ), { maxWidth: 290, className: 'custom-popup' });
 
       marker.on('popupopen', () => {
-        setTimeout(() => {
-          const btn = document.querySelector<HTMLButtonElement>(`.restaurant-popup-btn[data-uuid="${uuid}"]`);
-          btn?.addEventListener('click', () => this.router.navigate(['/restaurant-view', uuid]));
-        }, 50);
+        setTimeout(() => this.attachPopupActions(uuid), 50);
       });
 
       this.chatbotMarkersLayer.addLayer(marker);
@@ -272,10 +270,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
         ), { maxWidth: 290, className: 'custom-popup' });
 
       marker.on('popupopen', () => {
-        setTimeout(() => {
-          const btn = document.querySelector<HTMLButtonElement>(`.restaurant-popup-btn[data-uuid="${uuid}"]`);
-          btn?.addEventListener('click', () => this.router.navigate(['/restaurant-view', uuid]));
-        }, 50);
+        setTimeout(() => this.attachPopupActions(uuid), 50);
       });
 
       this.markersLayer.addLayer(marker);
@@ -288,7 +283,12 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     const sC = this.escapeHtml(c || 'General');
     const mediaHtml = i ? `<div class="restaurant-popup-media"><img src="${this.escapeHtml(i)}" class="restaurant-popup-image" onerror="this.parentElement.classList.add('no-image'); this.remove();"><div class="restaurant-popup-fallback">🍽️</div></div>` : `<div class="restaurant-popup-media no-image"><div class="restaurant-popup-fallback only">🍽️</div></div>`;
 
-    return `<article class="restaurant-popup-card">${mediaHtml}<div class="restaurant-popup-body"><span class="restaurant-popup-category">${sC}</span><h3 class="restaurant-popup-title">${sN}</h3><p class="restaurant-popup-desc">${sD}</p><button class="restaurant-popup-btn" data-uuid="${u}" type="button">Ver restaurante</button></div></article>`;
+    return `<article class="restaurant-popup-card">${mediaHtml}<div class="restaurant-popup-body"><span class="restaurant-popup-category">${sC}</span><h3 class="restaurant-popup-title">${sN}</h3><p class="restaurant-popup-desc">${sD}</p><button class="restaurant-popup-btn" data-uuid="${this.escapeHtml(u)}" type="button">Ver restaurante</button></div></article>`;
+  }
+
+  private attachPopupActions(uuid: string): void {
+    const detailBtn = document.querySelector<HTMLButtonElement>(`.restaurant-popup-btn[data-uuid="${uuid}"]`);
+    detailBtn?.addEventListener('click', () => this.router.navigate(['/restaurant-view', uuid]));
   }
 
   private escapeHtml(v: string): string {
@@ -556,10 +556,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
         ), { maxWidth: 290, className: 'custom-popup' });
 
       marker.on('popupopen', () => {
-        setTimeout(() => {
-          const btn = document.querySelector<HTMLButtonElement>(`.restaurant-popup-btn[data-uuid="${uuid}"]`);
-          btn?.addEventListener('click', () => this.router.navigate(['/restaurant-view', uuid]));
-        }, 50);
+        setTimeout(() => this.attachPopupActions(uuid), 50);
       });
 
       this.chatbotMarkersLayer.addLayer(marker);

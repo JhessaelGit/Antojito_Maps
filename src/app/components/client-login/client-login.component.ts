@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ClientService } from '../../core/services/client.service';
 
 @Component({
@@ -21,6 +21,7 @@ export class ClientLoginComponent {
 
   constructor(
     public router: Router,
+    private route: ActivatedRoute,
     private clientService: ClientService
   ) {}
 
@@ -49,7 +50,7 @@ export class ClientLoginComponent {
     this.clientService.login(this.email.trim().toLowerCase(), this.password).subscribe({
       next: () => {
         this.cargando = false;
-        this.router.navigate(['/mapa'], { replaceUrl: true });
+        this.router.navigateByUrl(this.getReturnUrl(), { replaceUrl: true });
       },
       error: (err) => {
         this.cargando = false;
@@ -59,6 +60,13 @@ export class ClientLoginComponent {
   }
 
   goToRegister(): void {
-    this.router.navigate(['/client/register']);
+    this.router.navigate(['/client/register'], {
+      queryParams: { returnUrl: this.getReturnUrl() }
+    });
+  }
+
+  private getReturnUrl(): string {
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+    return returnUrl?.startsWith('/') ? returnUrl : '/mapa';
   }
 }
