@@ -164,7 +164,7 @@
         @for (msg of chatMensajes; track msg.id) {
           <div class="chat-msg" [class.chat-msg--bot]="msg.rol === 'bot'" [class.chat-msg--user]="msg.rol === 'user'">
             <div class="chat-msg__bubble">
-              <p class="chat-msg__text">{{ msg.texto }}</p>
+              <p class="chat-msg__text" [innerHTML]="convertirMarkdown(msg.texto)"></p>
               <span class="chat-msg__time">{{ msg.hora }}</span>
             </div>
           </div>
