@@ -320,5 +320,52 @@
       "WELCOME": "¡Hola! Soy tu asistente de Antojitos. ¿Qué te apetece comer hoy en Cochabamba?",
       "MOCK_REPLY": "¡Excelente elección! Estoy buscando las mejores opciones de {{preference}} para ti..."
     }
+  },
+  "PROFILE": {
+    "BTN_LABEL": "Mi Perfil",
+    "TOOLTIP": "Ver mi perfil y cupones",
+    "PAGE_TITLE": "Mi Cuenta",
+    "BACK": "Volver al mapa",
+    "MEMBER_SINCE": "Miembro desde",
+    "ACTIVE_COUPONS": "Cupones activos",
+    "USED_COUPONS": "Cupones usados"
+  },
+ 
+  "COUPONS": {
+    "WALLET_TITLE": "Billetera de Cupones",
+    "TAB_PENDING": "Pendientes",
+    "TAB_HISTORY": "Historial",
+    "EMPTY_PENDING": "No tienes cupones activos por ahora.",
+    "EMPTY_HISTORY": "Aún no has usado o expirado ningún cupón.",
+    "COURTESY_OF": "Cortesía de",
+    "REDEEM_AT": "Canjear en",
+    "EXPIRES_SOON": "¡Expira pronto!",
+    "BTN_SHOW": "Mostrar para canjear",
+    "STATUS_USED": "✓ Utilizado",
+    "STATUS_EXPIRED": "Expirado"
+  },
+ 
+  "LOYALTY": {
+    "TITLE": "Programa de Fidelización",
+    "POINTS": "Puntos",
+    "PTS": "pts",
+    "CURRENT_LEVEL": "Nivel actual",
+    "POINTS_TO_NEXT": "Te faltan {{pts}} pts para alcanzar {{nivel}}",
+    "MAX_LEVEL": "¡Has alcanzado el nivel máximo! Gracias por tu fidelidad.",
+    "BENEFITS_TITLE": "Beneficios desbloqueados",
+    "LOCKED_BENEFITS": "Próximos beneficios",
+    "LEVEL": {
+      "BRONZE": "Bronce",
+      "SILVER": "Plata",
+      "GOLD": "Oro"
+    },
+    "BENEFIT": {
+      "FREE_DELIVERY": "Delivery gratis en tu próxima compra",
+      "BIRTHDAY_COUPON": "Cupón especial en tu cumpleaños",
+      "PRIORITY_SUPPORT": "Atención al cliente prioritaria",
+      "VIP_EVENTS": "Acceso a eventos VIP de restaurantes",
+      "PERSONAL_CHEF": "Sesión con chef personal (1 vez/año)",
+      "MONTHLY_BOX": "Caja sorpresa mensual de antojitos"
+    }
   }
 }

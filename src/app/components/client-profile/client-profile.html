@@ -1,0 +1,262 @@
+<div class="profile-page">
+
+  <!-- ══ HEADER ══════════════════════════════════════════════ -->
+  <header class="profile-header">
+    <button class="btn-back-profile" (click)="volver()" [title]="'PROFILE.BACK' | translate">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.5"
+           stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
+    </button>
+    <div class="profile-header__brand" (click)="irAlMapa()">
+      <span class="brand-dot"></span>
+      <span class="brand-name">Antojitos <span class="brand-accent">Maps</span></span>
+    </div>
+    <div class="profile-header__title">{{ 'PROFILE.PAGE_TITLE' | translate }}</div>
+  </header>
+
+  <!-- ══ CONTENIDO PRINCIPAL ══════════════════════════════════ -->
+  <main class="profile-main">
+
+    <!-- ── SECCIÓN A: Datos del usuario ──────────────────── -->
+    <section class="profile-card profile-user-card">
+      <div class="user-avatar-wrap">
+        <div class="user-avatar">
+          <span class="user-avatar__initials">{{ mockUsuario.iniciales }}</span>
+          <span class="user-avatar__ring"></span>
+        </div>
+        <div class="user-level-badge" [ngClass]="nivelActual.clase">
+          <span class="level-badge__icon">{{ nivelActual.icono }}</span>
+          <span class="level-badge__label">{{ 'LOYALTY.LEVEL.' + nivelActual.key | translate }}</span>
+        </div>
+      </div>
+
+      <div class="user-info">
+        <h2 class="user-name">{{ mockUsuario.nombre }}</h2>
+        <p class="user-email">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,12 2,6"/>
+          </svg>
+          {{ mockUsuario.email }}
+        </p>
+        <p class="user-member-since">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          {{ 'PROFILE.MEMBER_SINCE' | translate }} {{ mockUsuario.miembroDesde }}
+        </p>
+      </div>
+
+      <div class="user-stats-row">
+        <div class="user-stat">
+          <span class="user-stat__value">{{ mockFidelizacion.puntosActuales }}</span>
+          <span class="user-stat__label">{{ 'LOYALTY.POINTS' | translate }}</span>
+        </div>
+        <div class="user-stat-divider"></div>
+        <div class="user-stat">
+          <span class="user-stat__value">{{ cuponesActivos }}</span>
+          <span class="user-stat__label">{{ 'PROFILE.ACTIVE_COUPONS' | translate }}</span>
+        </div>
+        <div class="user-stat-divider"></div>
+        <div class="user-stat">
+          <span class="user-stat__value">{{ cuponesHistorial.length }}</span>
+          <span class="user-stat__label">{{ 'PROFILE.USED_COUPONS' | translate }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECCIÓN B: Billetera de Cupones ───────────────── -->
+    <section class="profile-card profile-coupons-card">
+      <div class="section-header">
+        <h3 class="section-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+          </svg>
+          {{ 'COUPONS.WALLET_TITLE' | translate }}
+        </h3>
+      </div>
+
+      <!-- Tabs -->
+      <div class="coupon-tabs">
+        <button
+          class="coupon-tab"
+          [class.coupon-tab--active]="tabActiva === 'pending'"
+          (click)="tabActiva = 'pending'">
+          {{ 'COUPONS.TAB_PENDING' | translate }}
+          <span class="coupon-tab__count" *ngIf="cuponesActivos > 0">{{ cuponesActivos }}</span>
+        </button>
+        <button
+          class="coupon-tab"
+          [class.coupon-tab--active]="tabActiva === 'history'"
+          (click)="tabActiva = 'history'">
+          {{ 'COUPONS.TAB_HISTORY' | translate }}
+        </button>
+      </div>
+
+      <!-- Tab: Pendientes -->
+      @if (tabActiva === 'pending') {
+        <div class="coupons-list">
+          @if (cuponesPendientes.length === 0) {
+            <div class="coupons-empty">
+              <span class="coupons-empty__icon">🎟️</span>
+              <p>{{ 'COUPONS.EMPTY_PENDING' | translate }}</p>
+            </div>
+          }
+          @for (cupon of cuponesPendientes; track cupon.id) {
+            <div class="coupon-card" [class.coupon-card--expiring]="cupon.expiraPronto">
+              <div class="coupon-card__left">
+                <div class="coupon-discount-badge">
+                  {{ cupon.descuento }}
+                  <span class="coupon-discount-unit">{{ cupon.unidad }}</span>
+                </div>
+              </div>
+              <div class="coupon-card__body">
+                <h4 class="coupon-name">{{ cupon.nombre }}</h4>
+                <div class="coupon-flow">
+                  <div class="coupon-flow__from">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+                    {{ 'COUPONS.COURTESY_OF' | translate }} <strong>{{ cupon.restauranteEmisor }}</strong>
+                  </div>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                  <div class="coupon-flow__to">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    {{ 'COUPONS.REDEEM_AT' | translate }} <strong>{{ cupon.restauranteCanje }}</strong>
+                  </div>
+                </div>
+                <div class="coupon-footer">
+                  <span class="coupon-expiry" [class.coupon-expiry--urgent]="cupon.expiraPronto">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    @if (cupon.expiraPronto) {
+                      ⚠️ {{ 'COUPONS.EXPIRES_SOON' | translate }}:
+                    }
+                    {{ cupon.fechaExpiracion }}
+                  </span>
+                  <button class="btn-redeem" (click)="mostrarParaCanjear(cupon)">
+                    {{ 'COUPONS.BTN_SHOW' | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Tab: Historial -->
+      @if (tabActiva === 'history') {
+        <div class="coupons-list coupons-list--history">
+          @if (cuponesHistorial.length === 0) {
+            <div class="coupons-empty">
+              <span class="coupons-empty__icon">📋</span>
+              <p>{{ 'COUPONS.EMPTY_HISTORY' | translate }}</p>
+            </div>
+          }
+          @for (cupon of cuponesHistorial; track cupon.id) {
+            <div class="coupon-card coupon-card--used">
+              <div class="coupon-card__left">
+                <div class="coupon-discount-badge coupon-discount-badge--used">
+                  {{ cupon.descuento }}
+                  <span class="coupon-discount-unit">{{ cupon.unidad }}</span>
+                </div>
+              </div>
+              <div class="coupon-card__body">
+                <h4 class="coupon-name coupon-name--used">{{ cupon.nombre }}</h4>
+                <div class="coupon-flow coupon-flow--used">
+                  <span>{{ cupon.restauranteEmisor }}</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                  <span>{{ cupon.restauranteCanje }}</span>
+                </div>
+                <div class="coupon-footer">
+                  <span class="coupon-status-tag" [class.coupon-status-tag--expired]="cupon.estado === 'expirado'" [class.coupon-status-tag--used]="cupon.estado === 'usado'">
+                    {{ cupon.estado === 'usado' ? ('COUPONS.STATUS_USED' | translate) : ('COUPONS.STATUS_EXPIRED' | translate) }}
+                  </span>
+                  <span class="coupon-date-used">{{ cupon.fechaUso }}</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- ── SECCIÓN C: Fidelización ────────────────────────── -->
+    <section class="profile-card profile-loyalty-card">
+      <div class="section-header">
+        <h3 class="section-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          {{ 'LOYALTY.TITLE' | translate }}
+        </h3>
+        <div class="loyalty-points-hero">
+          <span class="points-number">{{ mockFidelizacion.puntosActuales }}</span>
+          <span class="points-label">{{ 'LOYALTY.PTS' | translate }}</span>
+        </div>
+      </div>
+
+      <!-- Barra de niveles -->
+      <div class="level-track">
+        @for (nivel of nivelesConfig; track nivel.key; let i = $index) {
+          <div class="level-node" [class.level-node--active]="nivel.key === nivelActual.key" [class.level-node--passed]="i < indiceNivelActual">
+            <div class="level-node__icon">{{ nivel.icono }}</div>
+            <div class="level-node__label">{{ 'LOYALTY.LEVEL.' + nivel.key | translate }}</div>
+            <div class="level-node__pts">{{ nivel.ptsMin }}+ pts</div>
+          </div>
+          @if (i < nivelesConfig.length - 1) {
+            <div class="level-connector" [class.level-connector--filled]="i < indiceNivelActual"></div>
+          }
+        }
+      </div>
+
+      <!-- Barra de progreso al siguiente nivel -->
+      @if (indiceNivelActual < nivelesConfig.length - 1) {
+        <div class="progress-section">
+          <div class="progress-labels">
+            <span>{{ 'LOYALTY.CURRENT_LEVEL' | translate }}: <strong>{{ 'LOYALTY.LEVEL.' + nivelActual.key | translate }}</strong></span>
+            <span>{{ mockFidelizacion.puntosActuales }} / {{ siguienteNivel?.ptsMin }} pts</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" [style.width.%]="porcentajeProgreso"></div>
+            <div class="progress-bar-thumb" [style.left.%]="porcentajeProgreso"></div>
+          </div>
+          <p class="progress-hint">
+            {{ 'LOYALTY.POINTS_TO_NEXT' | translate:{ pts: puntosParaSiguienteNivel, nivel: ('LOYALTY.LEVEL.' + siguienteNivel?.key | translate) } }}
+          </p>
+        </div>
+      } @else {
+        <div class="progress-section">
+          <p class="progress-hint progress-hint--max">🏆 {{ 'LOYALTY.MAX_LEVEL' | translate }}</p>
+        </div>
+      }
+
+      <!-- Beneficios desbloqueados -->
+      <div class="benefits-section">
+        <h4 class="benefits-title">{{ 'LOYALTY.BENEFITS_TITLE' | translate }}</h4>
+        <ul class="benefits-list">
+          @for (beneficio of beneficiosDesbloqueados; track beneficio) {
+            <li class="benefit-item">
+              <span class="benefit-check">✓</span>
+              <span>{{ 'LOYALTY.BENEFIT.' + beneficio | translate }}</span>
+            </li>
+          }
+        </ul>
+        @if (beneficiosBloqueados.length > 0) {
+          <h4 class="benefits-title benefits-title--locked">{{ 'LOYALTY.LOCKED_BENEFITS' | translate }}</h4>
+          <ul class="benefits-list benefits-list--locked">
+            @for (beneficio of beneficiosBloqueados; track beneficio) {
+              <li class="benefit-item benefit-item--locked">
+                <span class="benefit-lock">🔒</span>
+                <span>{{ 'LOYALTY.BENEFIT.' + beneficio | translate }}</span>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+
+    </section>
+  </main>
+</div>

@@ -55,6 +55,18 @@
         </div>
       }
 
+      @if (clientSession.isAuthenticated()) {
+        <button class="btn-profile" (click)="irAlPerfil()" [title]="'PROFILE.TOOLTIP' | translate">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span class="btn-profile__label">{{ 'PROFILE.BTN_LABEL' | translate }}</span>
+        </button>
+      }
+      
       <button
         class="btn-chatbot"
         [class.btn-chatbot--active]="chatbotAbierto"

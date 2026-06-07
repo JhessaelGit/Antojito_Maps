@@ -320,5 +320,52 @@
       "WELCOME": "Hi! I'm your Antojitos assistant. What do you feel like eating today in Cochabamba?",
       "MOCK_REPLY": "Great choice! I'm looking for the best {{preference}} options for you..."
     }
-  }
+  },
+  
+   "PROFILE": {
+     "BTN_LABEL": "My Profile",
+     "TOOLTIP": "View my profile and coupons",
+     "PAGE_TITLE": "My Account",
+     "BACK": "Back to map",
+     "MEMBER_SINCE": "Member since",
+     "ACTIVE_COUPONS": "Active coupons",
+     "USED_COUPONS": "Used coupons"
+   },
+   "COUPONS": {
+     "WALLET_TITLE": "Coupon Wallet",
+     "TAB_PENDING": "Pending",
+     "TAB_HISTORY": "History",
+     "EMPTY_PENDING": "You have no active coupons right now.",
+     "EMPTY_HISTORY": "You haven't used or expired any coupons yet.",
+     "COURTESY_OF": "Courtesy of",
+     "REDEEM_AT": "Redeem at",
+     "EXPIRES_SOON": "Expiring soon!",
+     "BTN_SHOW": "Show to redeem",
+     "STATUS_USED": "✓ Used",
+     "STATUS_EXPIRED": "Expired"
+   },
+   "LOYALTY": {
+     "TITLE": "Loyalty Program",
+     "POINTS": "Points",
+     "PTS": "pts",
+     "CURRENT_LEVEL": "Current level",
+     "POINTS_TO_NEXT": "You need {{pts}} more pts to reach {{nivel}}",
+     "MAX_LEVEL": "You've reached the top level! Thank you for your loyalty.",
+     "BENEFITS_TITLE": "Unlocked benefits",
+     "LOCKED_BENEFITS": "Upcoming benefits",
+     "LEVEL": {
+       "BRONZE": "Bronze",
+       "SILVER": "Silver",
+       "GOLD": "Gold"
+     },
+     "BENEFIT": {
+       "FREE_DELIVERY": "Free delivery on your next order",
+       "BIRTHDAY_COUPON": "Special birthday coupon",
+       "PRIORITY_SUPPORT": "Priority customer support",
+       "VIP_EVENTS": "Access to VIP restaurant events",
+       "PERSONAL_CHEF": "Personal chef session (1x/year)",
+       "MONTHLY_BOX": "Monthly surprise snack box"
+     }
+   }
+
 }

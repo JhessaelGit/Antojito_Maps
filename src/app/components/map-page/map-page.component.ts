@@ -591,5 +591,8 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
       this.router.navigate(['/inicio']);
     }
   }
+  irAlPerfil(): void {
+  this.router.navigate(['/perfil-cliente']);
+  }
 }
 

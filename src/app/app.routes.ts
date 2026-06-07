@@ -22,6 +22,7 @@ import { ClientRegisterComponent } from './components/client-register/client-reg
 
 import { AdminManageComponent } from './components/admin-manage/admin-manage';
 import { AdminRequestsComponent } from './components/admin-requests/admin-requests';
+import { ClientProfileComponent } from './components/client-profile/client-profile';
 
 export const routes: Routes = [
 
@@ -123,7 +124,10 @@ export const routes: Routes = [
     path: 'restaurant-view/:uuid', 
     component: RestaurantView 
   },
-
+  {
+    path: 'perfil-cliente',
+    component: ClientProfileComponent
+  },
  
   {
     path: '',

@@ -1029,3 +1029,33 @@
 .btn-logout:hover {
   color: #e05555;
 }
+
+/* ─── BOTÓN MI PERFIL (header) ─────────────── */
+.btn-profile {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(191,152,97,0.35);
+  border-radius: 24px;
+  color: var(--color-neutral);
+  padding: 0 13px;
+  height: 36px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  flex-shrink: 0;
+}
+.btn-profile:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: rgba(191,152,97,0.1);
+}
+.btn-profile__label { line-height: 1; }
+@media (max-width: 768px) {
+  .btn-profile__label { display: none; }
+  .btn-profile { padding: 0 10px; }
+}
