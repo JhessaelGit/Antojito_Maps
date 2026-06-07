@@ -342,7 +342,17 @@
      "EXPIRES_SOON": "Expiring soon!",
      "BTN_SHOW": "Show to redeem",
      "STATUS_USED": "✓ Used",
-     "STATUS_EXPIRED": "Expired"
+     "STATUS_EXPIRED": "Expired",
+              "MODAL": {
+        "READY_TO_REDEEM": "Ready to redeem",
+        "REDEEM_AT": "Redeem at",
+        "QR_ALT": "Coupon QR Code",
+        "CODE_LABEL": "Manual Code",
+        "CODE_HINT": "The cashier can enter this code if the QR fails",
+        "HOLDER": "Holder",
+        "VALID_UNTIL": "Valid until",
+        "CLOSE": "Back to my wallet"
+      }
    },
    "LOYALTY": {
      "TITLE": "Loyalty Program",

@@ -259,4 +259,65 @@
 
     </section>
   </main>
+  <!-- ══ MODAL DE CANJE ══════════════════════════════════════════ -->
+@if (modalCanjeAbierto && cuponSeleccionado) {
+  <div class="canje-backdrop" (click)="cerrarModalCanje()">
+    <div class="canje-modal" (click)="$event.stopPropagation()">
+
+      <!-- Cabecera -->
+      <div class="canje-modal__header">
+        <span class="canje-modal__tag">{{ 'COUPONS.MODAL.READY_TO_REDEEM' | translate }}</span>
+        <h2 class="canje-modal__title">{{ cuponSeleccionado.nombre }}</h2>
+        <p class="canje-modal__restaurant">
+          {{ 'COUPONS.MODAL.REDEEM_AT' | translate }}
+          <strong>{{ cuponSeleccionado.restauranteCanje }}</strong>
+        </p>
+      </div>
+
+      <!-- QR -->
+      <div class="canje-qr-wrap">
+        <img
+          class="canje-qr-img"
+          [src]="cuponSeleccionado.qrUrl"
+          [alt]="'COUPONS.MODAL.QR_ALT' | translate"
+          (error)="onQrError($event)">
+        <div class="canje-qr-corner canje-qr-corner--tl"></div>
+        <div class="canje-qr-corner canje-qr-corner--tr"></div>
+        <div class="canje-qr-corner canje-qr-corner--bl"></div>
+        <div class="canje-qr-corner canje-qr-corner--br"></div>
+      </div>
+
+      <!-- Código único -->
+      <div class="canje-code-wrap">
+        <span class="canje-code-label">{{ 'COUPONS.MODAL.CODE_LABEL' | translate }}</span>
+        <span class="canje-code">{{ cuponSeleccionado.uniqueCode }}</span>
+        <span class="canje-code-hint">{{ 'COUPONS.MODAL.CODE_HINT' | translate }}</span>
+      </div>
+
+      <!-- Titular -->
+      <div class="canje-titular-wrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span class="canje-titular-label">{{ 'COUPONS.MODAL.HOLDER' | translate }}:</span>
+        <span class="canje-titular-name">{{ mockUsuario.nombre }}</span>
+      </div>
+
+      <!-- Expiry -->
+      <p class="canje-expiry" [class.canje-expiry--urgent]="cuponSeleccionado.expiraPronto">
+        @if (cuponSeleccionado.expiraPronto) { ⚠️ }
+        {{ 'COUPONS.MODAL.VALID_UNTIL' | translate }} {{ cuponSeleccionado.fechaExpiracion }}
+      </p>
+
+      <!-- Botón cerrar -->
+      <button class="canje-close-btn" (click)="cerrarModalCanje()">
+        {{ 'COUPONS.MODAL.CLOSE' | translate }}
+      </button>
+
+    </div>
+  </div>
+}
 </div>

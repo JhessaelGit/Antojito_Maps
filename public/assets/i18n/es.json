@@ -342,7 +342,17 @@
     "EXPIRES_SOON": "¡Expira pronto!",
     "BTN_SHOW": "Mostrar para canjear",
     "STATUS_USED": "✓ Utilizado",
-    "STATUS_EXPIRED": "Expirado"
+    "STATUS_EXPIRED": "Expirado",
+         "MODAL": {
+        "READY_TO_REDEEM": "Listo para canjear",
+        "REDEEM_AT": "Canjear en",
+        "QR_ALT": "Código QR del cupón",
+        "CODE_LABEL": "Código manual",
+        "CODE_HINT": "El cajero puede ingresar este código si el QR falla",
+        "HOLDER": "Titular",
+        "VALID_UNTIL": "Válido hasta",
+        "CLOSE": "Volver a mi billetera"
+      }
   },
  
   "LOYALTY": {

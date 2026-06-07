@@ -1,10 +1,3 @@
-/* ════════════════════════════════════════════════════════════════
-   CLIENT-PROFILE — Estilos completos
-   Hereda las CSS variables de AntojitoMaps:
-     --color-primary, --color-secondary, --color-accent,
-     --color-neutral, --color-white, --font-body, --font-heading
-   ════════════════════════════════════════════════════════════════ */
-
 /* ─── LAYOUT BASE ─────────────────────────────────────────────── */
 .profile-page {
   display: flex;
@@ -703,4 +696,207 @@
   .user-stats-row { padding: 10px 0; }
   .user-stat__value { font-size: 1.15rem; }
   .level-track { padding: 1rem 1rem 0.8rem; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MODAL DE CANJE
+   ════════════════════════════════════════════════════════════════ */
+
+.canje-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 51, 45, 0.7);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: backdrop-in 0.2s ease;
+}
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.canje-modal {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+  animation: modal-in 0.25s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.92) translateY(16px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+/* Cabecera del modal */
+.canje-modal__header {
+  width: 100%;
+  background: linear-gradient(135deg, var(--color-secondary), #0a3d35);
+  padding: 20px 20px 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.canje-modal__tag {
+  display: inline-block;
+  background: rgba(191,152,97,0.25);
+  border: 1px solid rgba(191,152,97,0.5);
+  color: var(--color-accent);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+  align-self: center;
+}
+.canje-modal__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-neutral);
+  font-family: var(--font-heading);
+  line-height: 1.25;
+}
+.canje-modal__restaurant {
+  margin: 0;
+  font-size: 0.75rem;
+  color: rgba(218,207,189,0.65);
+}
+.canje-modal__restaurant strong {
+  color: var(--color-accent);
+}
+
+/* QR */
+.canje-qr-wrap {
+  position: relative;
+  padding: 20px 20px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.canje-qr-img {
+  width: 200px;
+  height: 200px;
+  display: block;
+  border-radius: 8px;
+}
+.canje-qr-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Esquinas decorativas tipo scanner */
+.canje-qr-corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-color: var(--color-primary);
+  border-style: solid;
+}
+.canje-qr-corner--tl { top: 14px;  left: 14px;  border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+.canje-qr-corner--tr { top: 14px;  right: 14px; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
+.canje-qr-corner--bl { bottom: 6px; left: 14px; border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+.canje-qr-corner--br { bottom: 6px; right: 14px;border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+
+/* Código único */
+.canje-code-wrap {
+  width: 100%;
+  padding: 0 20px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 1px dashed #e0d8cc;
+}
+.canje-code-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #aaa;
+}
+.canje-code {
+  font-family: 'Courier New', 'Courier', monospace;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  letter-spacing: 3px;
+  line-height: 1;
+}
+.canje-code-hint {
+  font-size: 0.65rem;
+  color: #bbb;
+  text-align: center;
+}
+
+/* Titular */
+.canje-titular-wrap {
+  width: 100%;
+  padding: 12px 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: var(--color-secondary);
+}
+.canje-titular-label {
+  font-size: 0.8rem;
+  color: #888;
+  font-weight: 600;
+}
+.canje-titular-name {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--color-secondary);
+  font-family: var(--font-heading);
+}
+
+/* Expiración */
+.canje-expiry {
+  font-size: 0.72rem;
+  color: #aaa;
+  padding: 6px 20px 0;
+  text-align: center;
+}
+.canje-expiry--urgent {
+  color: #d63030;
+  font-weight: 700;
+}
+
+/* Botón cerrar */
+.canje-close-btn {
+  width: calc(100% - 40px);
+  margin: 14px 20px 18px;
+  padding: 13px;
+  background: var(--color-secondary);
+  color: var(--color-neutral);
+  border: none;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: opacity 0.2s;
+  letter-spacing: 0.2px;
+}
+.canje-close-btn:hover { opacity: 0.85; }
+
+/* ─── Responsive: pantallas muy pequeñas ──── */
+@media (max-width: 380px) {
+  .canje-modal { border-radius: 16px; }
+  .canje-qr-img { width: 170px; height: 170px; }
+  .canje-code { font-size: 1.35rem; letter-spacing: 2px; }
 }

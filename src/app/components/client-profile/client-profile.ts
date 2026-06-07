@@ -24,6 +24,9 @@ export interface MockCupon {
   expiraPronto: boolean;
   estado?: 'activo' | 'usado' | 'expirado';
   fechaUso?: string;
+  // ── Campos para el modal de canje ──
+  uniqueCode?: string;
+  qrUrl?: string;
 }
 
 export interface MockFidelizacion {
@@ -60,6 +63,8 @@ const MOCK_CUPONES_PENDIENTES: MockCupon[] = [
     fechaExpiracion: '14 jun 2026',
     expiraPronto: true,
     estado: 'activo',
+    uniqueCode: 'ANT-8F3K9X',
+    qrUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=ANT-8F3K9X',
   },
   {
     id: 'c2',
@@ -71,6 +76,8 @@ const MOCK_CUPONES_PENDIENTES: MockCupon[] = [
     fechaExpiracion: '30 jun 2026',
     expiraPronto: false,
     estado: 'activo',
+    uniqueCode: 'ANT-2M7PQR',
+    qrUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=ANT-2M7PQR',
   },
   {
     id: 'c3',
@@ -82,6 +89,8 @@ const MOCK_CUPONES_PENDIENTES: MockCupon[] = [
     fechaExpiracion: '25 jul 2026',
     expiraPronto: false,
     estado: 'activo',
+    uniqueCode: 'ANT-LK04WZ',
+    qrUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=ANT-LK04WZ',
   },
 ];
 
@@ -152,6 +161,9 @@ export class ClientProfileComponent implements OnInit {
   cuponesPendientes: MockCupon[] = MOCK_CUPONES_PENDIENTES;
   cuponesHistorial: MockCupon[] = MOCK_CUPONES_HISTORIAL;
 
+  cuponSeleccionado: MockCupon | null = null;
+  modalCanjeAbierto: boolean = false;
+
   /** Tab activa en la billetera: 'pending' | 'history' */
   tabActiva: 'pending' | 'history' = 'pending';
 
@@ -218,12 +230,52 @@ export class ClientProfileComponent implements OnInit {
 
   /* ── Acciones ───────────────────────────────────────────────── */
 
-  /**
-   * Muestra el cupón para canjearlo (próxima fase: abre modal/QR).
-   * Por ahora solo registra en consola y puede emitir un evento.
-   */
   mostrarParaCanjear(cupon: MockCupon): void {
-    // TODO Fase 2: Abrir modal con código QR del cupón
-    console.log('[ClientProfile] Mostrar para canjear:', cupon);
+    this.cuponSeleccionado = cupon;
+    this.modalCanjeAbierto = true;
+    // Bloquear scroll del body mientras el modal está abierto
+    document.body.style.overflow = 'hidden';
   }
+
+  cerrarModalCanje(): void {
+    this.modalCanjeAbierto = false;
+    this.cuponSeleccionado = null;
+    document.body.style.overflow = '';
+  }
+onQrError(event: Event): void {
+  // Si la imagen del QR falla, mostramos un placeholder SVG inline
+  const img = event.target as HTMLImageElement;
+  img.style.display = 'none';
+  const parent = img.parentElement;
+  if (parent && !parent.querySelector('.canje-qr-fallback')) {
+    const fallback = document.createElement('div');
+    fallback.className = 'canje-qr-fallback';
+    fallback.innerHTML = `
+      <svg width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+        <rect width="180" height="180" fill="#f4f1ec" rx="8"/>
+        <rect x="10" y="10" width="60" height="60" fill="none" stroke="#02332d" stroke-width="6" rx="4"/>
+        <rect x="22" y="22" width="36" height="36" fill="#02332d" rx="2"/>
+        <rect x="110" y="10" width="60" height="60" fill="none" stroke="#02332d" stroke-width="6" rx="4"/>
+        <rect x="122" y="22" width="36" height="36" fill="#02332d" rx="2"/>
+        <rect x="10" y="110" width="60" height="60" fill="none" stroke="#02332d" stroke-width="6" rx="4"/>
+        <rect x="22" y="122" width="36" height="36" fill="#02332d" rx="2"/>
+        <rect x="110" y="110" width="20" height="20" fill="#02332d" rx="2"/>
+        <rect x="140" y="110" width="20" height="20" fill="#02332d" rx="2"/>
+        <rect x="110" y="140" width="20" height="20" fill="#02332d" rx="2"/>
+        <rect x="140" y="140" width="20" height="20" fill="#02332d" rx="2"/>
+        <rect x="80" y="10" width="12" height="12" fill="#02332d" rx="1"/>
+        <rect x="80" y="30" width="12" height="12" fill="#02332d" rx="1"/>
+        <rect x="80" y="50" width="12" height="12" fill="#02332d" rx="1"/>
+        <rect x="10" y="80" width="12" height="12" fill="#02332d" rx="1"/>
+        <rect x="30" y="80" width="12" height="12" fill="#02332d" rx="1"/>
+        <rect x="50" y="80" width="12" height="12" fill="#02332d" rx="1"/>
+        <rect x="80" y="80" width="12" height="12" fill="#02332d" rx="1"/>
+        <rect x="100" y="80" width="12" height="12" fill="#02332d" rx="1"/>
+        <rect x="120" y="80" width="12" height="12" fill="#02332d" rx="1"/>
+        <rect x="140" y="80" width="12" height="12" fill="#02332d" rx="1"/>
+        <rect x="160" y="80" width="12" height="12" fill="#02332d" rx="1"/>
+      </svg>`;
+    parent.appendChild(fallback);
+  }
+}
 }
