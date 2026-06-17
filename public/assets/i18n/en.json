@@ -351,8 +351,14 @@
         "CODE_HINT": "The cashier can enter this code if the QR fails",
         "HOLDER": "Holder",
         "VALID_UNTIL": "Valid until",
-        "CLOSE": "Back to my wallet"
-      }
+        "CLOSE": "Back to my wallet"},
+        "PROMOS": "Promos",
+        "MODAL_HINT": "Go to the store and press the button to verify your location.",
+        "GET_IN_STORE": "Get in store",
+        "VERIFYING_LOCATION": "Verifying location...",
+        "NOT_IN_LOCATION": "You must be physically at the restaurant",
+        "SUCCESS_TITLE": "Coupon obtained!",
+        "CLOSE": "Close"
    },
    "LOYALTY": {
      "TITLE": "Loyalty Program",

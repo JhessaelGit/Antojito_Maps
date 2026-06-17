@@ -351,9 +351,15 @@
         "CODE_HINT": "El cajero puede ingresar este código si el QR falla",
         "HOLDER": "Titular",
         "VALID_UNTIL": "Válido hasta",
-        "CLOSE": "Volver a mi billetera"
-      }
-  },
+        "CLOSE": "Volver a mi billetera"},
+      "PROMOS": "Promos",
+      "MODAL_HINT": "Preséntate en el local y presiona el botón para verificar tu ubicación.",
+      "GET_IN_STORE": "Obtener en el local",
+      "VERIFYING_LOCATION": "Verificando ubicación...",
+      "NOT_IN_LOCATION": "Debes estar físicamente en el restaurante",
+      "SUCCESS_TITLE": "¡Cupón obtenido!",
+      "CLOSE": "Cerrar"
+    },
  
   "LOYALTY": {
     "TITLE": "Programa de Fidelización",
