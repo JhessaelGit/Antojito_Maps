@@ -23,6 +23,8 @@ import { ClientRegisterComponent } from './components/client-register/client-reg
 import { AdminManageComponent } from './components/admin-manage/admin-manage';
 import { AdminRequestsComponent } from './components/admin-requests/admin-requests';
 import { ClientProfileComponent } from './components/client-profile/client-profile';
+import { CouponValidationComponent } from './components/coupon-validation/coupon-validation.component';
+import { AnalyticsDashboardComponent } from './components/analytics-dashboard/analytics-dashboard.component';
 
 export const routes: Routes = [
 
@@ -128,6 +130,17 @@ export const routes: Routes = [
     path: 'perfil-cliente',
     component: ClientProfileComponent
   },
+  {
+    path: 'restaurant/validar-cupon',
+    component: CouponValidationComponent,
+    canActivate: [ownerGuard]
+  },
+  {
+    path: 'restaurant/analytics',
+    component: AnalyticsDashboardComponent,
+    canActivate: [ownerGuard]
+  },
+  
  
   {
     path: '',
