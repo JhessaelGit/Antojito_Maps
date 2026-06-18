@@ -19,7 +19,6 @@
 
   <div class="rp-body">
 
-    <!-- Sidebar -->
     <aside class="rp-sidebar">
       <div class="rp-restaurant-card">
         <div class="rp-restaurant-avatar">
@@ -40,12 +39,38 @@
           </svg>
           {{ 'OWNER.SIDE_PROMOS' | translate }}
         </a>
+        <a class="rp-nav-item" (click)="router.navigate(['/restaurant/validar-cupon'])">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <polyline points="9 12 12 15 16 10"/>
+          </svg>
+          {{ 'OWNER.SIDE_VALIDATE_COUPON' | translate }}
+        </a>
+        <a class="rp-nav-item" (click)="router.navigate(['/restaurant/analytics'])">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+          {{ 'OWNER.SIDE_ANALYTICS' | translate }}
+        </a>
+        <a class="rp-nav-item" [class.rp-nav-item-active]="vistaActiva === 'cupones'"
+          (click)="cambiarVista('cupones')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+          </svg>
+          {{ 'COUPONS.MENU_TITLE' | translate }}
+        </a>
         <a class="rp-nav-item" [class.rp-nav-item-active]="vistaActiva === 'menu'"
           (click)="cambiarVista('menu')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
+             <polyline points="14 2 14 8 20 8"/>
           </svg>
           {{ 'OWNER.SIDE_MENU' | translate }}
         </a>
@@ -80,10 +105,8 @@
       </div>
     </aside>
 
-    <!-- Main -->
     <main class="rp-main">
 
-      <!-- ── VISTA PROMOCIONES ── -->
       @if (vistaActiva === 'promos') {
         <section class="rp-section">
           <div class="rp-section-header">
@@ -128,7 +151,7 @@
             <div class="rp-promos-grid">
               @for (promo of promociones; track promo.uuid) {
                 <div class="rp-promo-card">
-                  <div class="rp-promo-top">
+                   <div class="rp-promo-top">
                     <span class="rp-promo-badge">{{ 'OWNER.PROMO_BADGE' | translate }}</span>
                   </div>
                   <h3 class="rp-promo-name">{{ promo.title }}</h3>
@@ -143,15 +166,152 @@
               }
             </div>
           }
+         </section>
+      }
+
+      @if (vistaActiva === 'cupones') {
+        <section class="rp-section">
+          <div class="rp-section-header" style="flex-direction: column; align-items: stretch;">
+            <div>
+              <h2 class="rp-section-title">{{ 'COUPONS.TITLE' | translate }}</h2>
+              <p class="rp-section-sub">{{ 'COUPONS.SUBTITLE' | translate }}</p>
+            </div>
+            
+            <div class="rp-tabs">
+              <button class="rp-tab-btn" 
+                [class.active]="cuponesTabActiva === 'list'" 
+                (click)="cambiarTabCupones('list')">
+                 {{ 'COUPONS.TAB_LIST' | translate }}
+              </button>
+              <button class="rp-tab-btn" 
+                [class.active]="cuponesTabActiva === 'create'" 
+                (click)="cambiarTabCupones('create')">
+                {{ 'COUPONS.TAB_CREATE' | translate }}
+              </button>
+            </div>
+          </div>
+
+          @if (cuponesTabActiva === 'list') {
+            <div class="rp-table-container">
+              <table class="rp-table">
+                <thead>
+                   <tr>
+                    <th>{{ 'COUPONS.COL_NAME' | translate }}</th>
+                    <th>{{ 'COUPONS.COL_DISCOUNT' | translate }}</th>
+                    <th>{{ 'COUPONS.FORM_DESC' | translate }}</th>
+                    <th>{{ 'COUPONS.COL_CLAIMED' | translate }}</th>
+                    <th>{{ 'COUPONS.COL_STATUS' | translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if (mockCupones.length === 0) {
+                    <tr>
+                       <td colspan="5" class="rp-empty" style="border: none;">
+                        <span class="rp-empty-icon">🎟️</span>
+                        <p class="rp-empty-txt">{{ 'COUPONS.EMPTY_LIST' | translate }}</p>
+                      </td>
+                    </tr>
+                  }
+                  @for (cupon of mockCupones; track cupon.id) {
+                     <tr>
+                      <td [attr.data-label]="'COUPONS.COL_NAME' | translate"><strong>{{ cupon.name }}</strong></td>
+                      <td [attr.data-label]="'COUPONS.COL_DISCOUNT' | translate">{{ cupon.discountType }}</td>
+                      <td [attr.data-label]="'COUPONS.FORM_DESC' | translate">{{ cupon.description }}</td>                      <td [attr.data-label]="'COUPONS.COL_CLAIMED' | translate">{{ cupon.claimed }} / {{ cupon.total }}</td>
+                      <td [attr.data-label]="'COUPONS.COL_STATUS' | translate">
+                        <span class="rp-status-badge"
+                              [ngClass]="{
+                               'status-available': cupon.status === 'available', 
+                                'status-expired': cupon.status === 'expired', 
+                                 'status-exhausted': cupon.status === 'exhausted'
+                              }">
+                          {{ 'COUPONS.STATUS_' + cupon.status.toUpperCase() | translate }}
+                        </span>
+                      </td>
+                    </tr>
+                  }
+                 </tbody>
+              </table>
+            </div>
+          }
+
+          @if (cuponesTabActiva === 'create') {
+            <div class="rp-form-grid">
+              <div class="rp-field">
+                <label class="rp-field-label">{{ 'COUPONS.FORM_NAME' | translate }}</label>
+                <input class="rp-field-input" type="text" [(ngModel)]="nuevoCupon.name" 
+                       [placeholder]="'COUPONS.FORM_PLACEHOLDER_NAME' | translate">
+              </div>
+              
+              <div class="rp-field">
+                 <label class="rp-field-label">{{ 'COUPONS.FORM_DISCOUNT_TYPE' | translate }}</label>
+                <select class="rp-field-input" [(ngModel)]="nuevoCupon.discountType">
+                  <option value="">{{ 'COUPONS.FORM_SELECT_DISCOUNT' | translate }}</option>
+                  <option value="% Descuento">% Descuento</option>
+                  <option value="NxM">Promoción (Ej. 2x1, 3x2)</option>
+                  <option value="Gratis">Gratis</option>
+                </select>
+              </div>
+
+              @if (nuevoCupon.discountType === '% Descuento') {
+                <div class="rp-field">
+                  <label class="rp-field-label">{{ 'COUPONS.FORM_DISCOUNT_VALUE' | translate }}</label>
+                  <input class="rp-field-input" type="number" [(ngModel)]="nuevoCupon.discountValue" min="1" max="99" placeholder="Ej: 20">
+                </div>
+              }
+
+              @if (nuevoCupon.discountType === 'NxM') {
+                <div class="rp-field">
+                  <label class="rp-field-label">{{ 'COUPONS.FORM_DISCOUNT_VALUE' | translate }}</label>
+                  <input class="rp-field-input" type="text" [(ngModel)]="nuevoCupon.discountValue" placeholder="Ej: 3x1, 4x2">
+                </div>
+              }
+
+              <div class="rp-field">
+                <label class="rp-field-label">{{ 'COUPONS.FORM_START_DATE' | translate }}</label>
+                <input class="rp-field-input" type="date" [(ngModel)]="nuevoCupon.startDate">
+              </div>
+              
+              <div class="rp-field">
+                <label class="rp-field-label">{{ 'COUPONS.FORM_END_DATE' | translate }}</label>
+                <input class="rp-field-input" type="date" [(ngModel)]="nuevoCupon.endDate">
+                @if (cuponDateError) {
+                  <p class="rp-field-error" style="font-size: 11px; margin-top: 4px;">{{ 'COUPONS.ERROR_DATES' | translate }}</p>
+                }
+              </div>
+
+              <div class="rp-field">
+                <label class="rp-field-label">{{ 'COUPONS.FORM_MAX_AVAILABLE' | translate }}</label>
+                <input class="rp-field-input" type="number" [(ngModel)]="nuevoCupon.maxAvailable" min="1" placeholder="Ej: 100">
+              </div>
+              
+              <div class="rp-field">
+                <label class="rp-field-label">{{ 'COUPONS.FORM_USER_LIMIT' | translate }}</label>
+                <input class="rp-field-input" type="number" [(ngModel)]="nuevoCupon.userLimit" min="1" placeholder="Ej: 1">
+              </div>
+
+              <div class="rp-field" style="grid-column: 1 / -1;">
+                <label class="rp-field-label">{{ 'COUPONS.FORM_DESC' | translate }}</label>
+                <textarea class="rp-field-input rp-field-textarea" [(ngModel)]="nuevoCupon.description"
+                          [placeholder]="'COUPONS.FORM_PLACEHOLDER_DESC' | translate"></textarea>
+              </div>
+
+            </div>
+            
+            <div style="margin-top: 2rem; display: flex; justify-content: flex-end;">
+              <button class="rp-btn-save" style="max-width: 220px;"
+                [disabled]="!isCuponValid" (click)="guardarNuevoCupon()">
+                {{ 'COUPONS.BTN_CREATE' | translate }}
+              </button>
+            </div>
+          }
         </section>
       }
 
-      <!-- ── VISTA MENÚ ── -->
       @if (vistaActiva === 'menu') {
         <section class="rp-section">
           <div class="rp-section-header">
             <div>
-              <h2 class="rp-section-title">{{ 'OWNER.SECTION_MENU_TITLE' | translate }}</h2>
+               <h2 class="rp-section-title">{{ 'OWNER.SECTION_MENU_TITLE' | translate }}</h2>
               <p class="rp-section-sub">{{ 'OWNER.SECTION_MENU_SUB' | translate }}</p>
             </div>
             <button class="rp-btn-add" (click)="crearMenu()">
@@ -204,7 +364,7 @@
                         <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
                       </svg>
                     </button>
-                  </div>
+                   </div>
                 </div>
               </div>
             }
@@ -212,11 +372,10 @@
         </section>
       }
 
-      <!-- ── VISTA PERFIL ── -->
       @if (vistaActiva === 'perfil') {
         <section class="rp-section">
           <div class="rp-section-header">
-            <div>
+             <div>
               <h2 class="rp-section-title">{{ 'OWNER.SECTION_PROFILE_TITLE' | translate }}</h2>
               <p class="rp-section-sub">{{ 'OWNER.SECTION_PROFILE_SUB' | translate }}</p>
             </div>
@@ -224,9 +383,8 @@
 
           <div class="rp-perfil-form">
 
-            <!-- Foto -->
             <div class="rp-perfil-field">
-              <label class="rp-perfil-label">{{ 'OWNER.PROFILE_LBL_PHOTO' | translate }}</label>
+               <label class="rp-perfil-label">{{ 'OWNER.PROFILE_LBL_PHOTO' | translate }}</label>
               <div class="rp-upload-zone"
                 [class.has-image]="perfilImagePreview"
                 (click)="perfilFileInput.click()"
@@ -240,7 +398,7 @@
                         stroke-linecap="round" stroke-linejoin="round">
                         <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
                         <circle cx="12" cy="13" r="4"/>
-                      </svg>
+                       </svg>
                     </div>
                     <span class="rp-upload-txt">{{ 'OWNER.UPLOAD_TXT' | translate }}</span>
                     <span class="rp-upload-sub">{{ 'OWNER.UPLOAD_SUB' | translate }}</span>
@@ -257,7 +415,6 @@
                 style="display:none" (change)="onPerfilFileSelected($event)">
             </div>
 
-            <!-- Nombre -->
             <div class="rp-perfil-field">
               <label class="rp-perfil-label">{{ 'OWNER.PROFILE_LBL_NAME' | translate }}</label>
               <input class="rp-perfil-input" type="text"
@@ -265,7 +422,6 @@
                 [placeholder]="'OWNER.PROFILE_PLACEHOLDER_NAME' | translate">
             </div>
 
-            <!-- Categoría -->
             <div class="rp-perfil-field">
               <label class="rp-perfil-label">{{ 'OWNER.PROFILE_LBL_CAT' | translate }}</label>
               <select class="rp-perfil-input" [(ngModel)]="perfilCategoria">
@@ -281,7 +437,6 @@
               </select>
             </div>
 
-            <!-- Descripción -->
             <div class="rp-perfil-field">
               <label class="rp-perfil-label">{{ 'OWNER.PROFILE_LBL_DESC' | translate }}</label>
               <textarea class="rp-perfil-input rp-perfil-textarea"
@@ -289,7 +444,6 @@
                 [placeholder]="'OWNER.PROFILE_PLACEHOLDER_DESC' | translate"></textarea>
             </div>
 
-            <!-- Mapa -->
             <div class="rp-perfil-field">
               <label class="rp-perfil-label">{{ 'OWNER.PROFILE_LBL_LOCATION' | translate }}</label>
               <p class="rp-perfil-hint">{{ 'OWNER.PROFILE_MAP_HINT' | translate }}</p>
@@ -298,22 +452,21 @@
               </div>
               <div class="rp-coords">
                 <div class="rp-coord-chip" [class.active]="restaurantLat !== null">
-                  <span class="rp-coord-lbl">LAT</span>
+                   <span class="rp-coord-lbl">LAT</span>
                   <span class="rp-coord-val">{{ formatCoord(restaurantLat) }}</span>
                 </div>
                 <div class="rp-coord-chip" [class.active]="restaurantLng !== null">
                   <span class="rp-coord-lbl">LNG</span>
                   <span class="rp-coord-val">{{ formatCoord(restaurantLng) }}</span>
-                </div>
+                 </div>
               </div>
             </div>
 
-            <!-- Guardar -->
             <button class="rp-btn-save-perfil"
               [disabled]="guardandoPerfil"
               (click)="guardarPerfil()">
               @if (guardandoPerfil) {
-                <span class="rp-spinner"></span>
+                 <span class="rp-spinner"></span>
                 {{ 'OWNER.SAVING' | translate }}
               } @else {
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
@@ -332,13 +485,12 @@
     </main>
   </div>
 
-  <!-- Modal edición -->
   @if (editandoItem) {
     <div class="rp-modal-overlay" (click)="cerrarModal()">
       <div class="rp-modal" (click)="$event.stopPropagation()">
         <div class="rp-modal-header">
           <h3 class="rp-modal-title">
-            {{ esPromo
+             {{ esPromo
               ? ('OWNER.MODAL_NEW_PROMO'  | translate)
               : (menu.find(m => m.id === itemTemporal.id)
                   ? ('OWNER.MODAL_EDIT_DISH'  | translate)
@@ -352,7 +504,7 @@
               <line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
           </button>
-        </div>
+         </div>
 
         <div class="rp-modal-body">
           <div class="rp-field">
@@ -388,7 +540,7 @@
           @if (errorMsg) {
             <p class="rp-field-hint rp-field-error">{{ errorMsg }}</p>
           }
-        </div>
+         </div>
 
         <div class="rp-modal-footer">
           <button class="rp-btn-cancel" (click)="cerrarModal()">
@@ -402,7 +554,6 @@
     </div>
   }
 
-  <!-- Snackbar -->
   @if (mostrandoUndo) {
     <div class="rp-snackbar">
       <div class="rp-snackbar-content">

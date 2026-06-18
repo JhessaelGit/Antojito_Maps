@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ClientSessionService } from '../../core/services/client-session.service';
 import { ClientService } from '../../core/services/client.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { ClientService } from '../../core/services/client.service';
   templateUrl: './client-login.component.html',
   styleUrls: ['./client-login.component.css'],
 })
-export class ClientLoginComponent {
+export class ClientLoginComponent implements OnInit {
 
   showPassword = false;
   email: string = '';
@@ -22,12 +23,24 @@ export class ClientLoginComponent {
   constructor(
     public router: Router,
     private route: ActivatedRoute,
-    private clientService: ClientService
+    private clientService: ClientService,
+    private clientSession: ClientSessionService,
+    private location: Location
   ) {}
 
-  togglePasswordVisibility(): void {
-    this.showPassword = !this.showPassword;
+  ngOnInit(): void {
+    if (this.clientSession.isAuthenticated()) {
+      this.router.navigateByUrl(this.getReturnUrl(), { replaceUrl: true });
+    }
   }
+
+    goBack(): void {
+      this.location.back();
+    }
+
+    togglePasswordVisibility(): void {
+      this.showPassword = !this.showPassword;
+    }
 
   isValidEmail(email: string): boolean {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);

@@ -20,6 +20,16 @@ export interface ChatMensaje {
   hora: string;
 }
 
+/* ── Interfaces de Cupones ────────────────────────────────────── */
+export interface Cupon {
+  id: string;
+  nombreLocal: string;
+  tipoPromocion: string;
+  estaEnElRestaurante: boolean;
+}
+
+export type EstadoReclamo = 'idle' | 'verificando' | 'exito' | 'error';
+
 @Component({
   selector: 'app-map-page',
   standalone: true,
@@ -81,6 +91,24 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     '🍣 Me apetece sushi',
     '🍔 Una buena hamburguesa',
   ];
+
+  /* ── Cupones ───────────────────────────────────────────────── */
+  cuponesPanelAbierto: boolean = false;
+
+  cupones: Cupon[] = [
+    { id: 'C001', nombreLocal: 'Pollos Juan',       tipoPromocion: '2x1',    estaEnElRestaurante: true  },
+    { id: 'C002', nombreLocal: 'Sushi Zen',          tipoPromocion: '-15%',   estaEnElRestaurante: false },
+    { id: 'C003', nombreLocal: 'Pizza Mamma',        tipoPromocion: 'Gratis', estaEnElRestaurante: true  },
+    { id: 'C004', nombreLocal: 'Burger Bros',        tipoPromocion: '-20%',   estaEnElRestaurante: false },
+    { id: 'C005', nombreLocal: 'Tacos el Gordo',     tipoPromocion: '3x2',    estaEnElRestaurante: true  },
+    { id: 'C006', nombreLocal: 'La Parrilla Mayor',  tipoPromocion: '-10%',   estaEnElRestaurante: false },
+    { id: 'C007', nombreLocal: 'Salteñas Doña Rosa', tipoPromocion: '2x1',    estaEnElRestaurante: true  },
+    { id: 'C008', nombreLocal: 'Chicharrón del Sur', tipoPromocion: 'Gratis', estaEnElRestaurante: false },
+  ];
+
+  cuponSeleccionado: Cupon | null = null;
+  estadoReclamo: EstadoReclamo = 'idle';
+  codigoGenerado: string = '';
 
   private readonly destroy$ = new Subject<void>();
 
@@ -585,11 +613,72 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   centrarEnMiUbicacion(): void { this.obtenerUbicacion(); }
   volverAlInicio(): void {
     const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-    if (returnUrl) {
+    
+    if (returnUrl && !returnUrl.includes('login')) {
       this.router.navigateByUrl(returnUrl);
     } else {
-      this.router.navigate(['/inicio']);
+      this.location.back();
     }
   }
-}
+  irAlPerfil(): void {
+  this.router.navigate(['/perfil-cliente']);
+  }
 
+  /* ── Métodos de Cupones ────────────────────────────────────── */
+
+  toggleCuponesPanel(): void {
+    this.cuponesPanelAbierto = !this.cuponesPanelAbierto;
+    this.refreshView();
+  }
+
+  abrirDetalleCupon(cupon: Cupon): void {
+    this.cuponSeleccionado = cupon;
+    this.estadoReclamo = 'idle';
+    this.codigoGenerado = '';
+    this.cuponesPanelAbierto = false;
+    this.refreshView();
+  }
+
+  cerrarModalCupon(): void {
+    this.cuponSeleccionado = null;
+    this.estadoReclamo = 'idle';
+    this.codigoGenerado = '';
+    this.refreshView();
+  }
+
+  reclamarCupon(): void {
+    if (!this.cuponSeleccionado || this.estadoReclamo === 'verificando') return;
+
+    this.estadoReclamo = 'verificando';
+    this.refreshView();
+
+    setTimeout(() => {
+      if (this.cuponSeleccionado!.estaEnElRestaurante) {
+        this.codigoGenerado = this.generarCodigo();
+        this.estadoReclamo = 'exito';
+      } else {
+        this.estadoReclamo = 'error';
+      }
+      this.refreshView();
+    }, 1500);
+  }
+
+  private generarCodigo(): string {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let codigo = 'ANT-';
+    for (let i = 0; i < 4; i++) {
+      codigo += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return codigo;
+  }
+
+  getBadgeClass(tipo: string): string {
+    if (tipo.includes('Gratis')) return 'badge--green';
+    if (tipo.startsWith('-'))    return 'badge--blue';
+    return 'badge--orange';
+  }
+
+  getNombreCliente(): string {
+    return this.clientSession.getSession()?.fullName || 'Cliente';
+  }
+}

@@ -289,8 +289,10 @@
 }
 
 .rp-empty-icon { font-size: 2rem; display: block; margin-bottom: 8px; }
-.rp-empty-txt  { font-size: 14px; font-weight: 600; color: var(--color-secondary); margin: 0 0 4px; }
-.rp-empty-sub  { font-size: 12px; color: rgba(2,51,45,0.45); margin: 0; }
+.rp-empty-txt  { font-size: 14px; font-weight: 600; color: var(--color-secondary);
+  margin: 0 0 4px; }
+.rp-empty-sub  { font-size: 12px; color: rgba(2,51,45,0.45); margin: 0;
+}
 
 /* ── Grid promociones ── */
 .rp-promos-grid {
@@ -499,7 +501,8 @@
 
 @keyframes modalIn {
   from { transform: translateY(20px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+  to   { transform: translateY(0);    opacity: 1;
+  }
 }
 
 .rp-modal-header {
@@ -541,7 +544,8 @@
   gap: 1rem;
 }
 
-.rp-field { display: flex; flex-direction: column; gap: 5px; }
+.rp-field { display: flex; flex-direction: column; gap: 5px;
+}
 
 .rp-field-label {
   font-size: 12px;
@@ -568,7 +572,8 @@
   box-shadow: 0 0 0 3px rgba(191,152,97,0.15);
 }
 
-.rp-field-textarea { resize: vertical; min-height: 80px; }
+.rp-field-textarea { resize: vertical; min-height: 80px;
+}
 
 .rp-field-hint {
   font-size: 11px;
@@ -650,7 +655,8 @@
 
 @keyframes snackIn {
   from { transform: translateY(60px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+  to   { transform: translateY(0);    opacity: 1;
+  }
 }
 
 .rp-snackbar-content {
@@ -685,7 +691,8 @@
 
 @keyframes barTimer {
   from { width: 100%; }
-  to   { width: 0%;   }
+  to   { width: 0%;
+  }
 }
 
 /* ── Perfil ── */
@@ -696,7 +703,8 @@
   max-width: 560px;
 }
 
-.rp-perfil-field { display: flex; flex-direction: column; gap: 6px; }
+.rp-perfil-field { display: flex;
+  flex-direction: column; gap: 6px; }
 
 .rp-perfil-label {
   font-size: 12px;
@@ -750,7 +758,8 @@
   background: rgba(191,152,97,0.07);
 }
 
-.rp-upload-zone.has-image { padding: 0; overflow: hidden; }
+.rp-upload-zone.has-image { padding: 0;
+  overflow: hidden; }
 
 .rp-upload-content { pointer-events: none; }
 
@@ -776,7 +785,8 @@
 
 .rp-upload-sub { font-size: 11px; color: rgba(2,51,45,0.4); }
 
-.rp-upload-preview { position: relative; height: 140px; }
+.rp-upload-preview { position: relative; height: 140px;
+}
 
 .rp-upload-preview img {
   width: 100%;
@@ -812,7 +822,8 @@
   border: 1.5px solid rgba(2,51,45,0.12);
 }
 
-.rp-perfil-map { width: 100%; height: 220px; display: block; }
+.rp-perfil-map { width: 100%; height: 220px; display: block;
+}
 
 /* Coordenadas */
 .rp-coords {
@@ -891,20 +902,149 @@
   display: inline-block;
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin { to { transform: rotate(360deg);
+} }
+
+/* =========================================
+   ── ESTILOS MÓDULO CUPONES ── 
+   ========================================= */
+
+/* Tabs Cupones */
+.rp-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  border-bottom: 2px solid rgba(2,51,45,0.06);
+}
+
+.rp-tab-btn {
+  background: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(2,51,45,0.5);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+
+.rp-tab-btn:hover { color: var(--color-secondary); }
+.rp-tab-btn.active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+
+/* Form Grid Cupones */
+.rp-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.rp-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-secondary);
+  cursor: pointer;
+}
+
+.rp-checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-accent);
+}
+
+/* Tabla de Cupones */
+.rp-table-container { width: 100%; overflow-x: auto; margin-top: 0.5rem; }
+
+.rp-table { width: 100%; border-collapse: collapse; text-align: left;
+}
+
+.rp-table th {
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(2,51,45,0.5);
+  border-bottom: 1px solid rgba(2,51,45,0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rp-table td {
+  padding: 16px 16px;
+  font-size: 13px;
+  color: var(--color-secondary);
+  border-bottom: 1px solid rgba(2,51,45,0.06);
+}
+
+/* Status Badges */
+.rp-status-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  display: inline-block;
+}
+
+.status-available { background: rgba(46, 204, 113, 0.15); color: #27ae60; border: 1px solid rgba(46, 204, 113, 0.3);
+}
+.status-expired { background: rgba(231, 76, 60, 0.15); color: #c0392b; border: 1px solid rgba(231, 76, 60, 0.3);
+}
+.status-exhausted { background: rgba(149, 165, 166, 0.15); color: #7f8c8d; border: 1px solid rgba(149, 165, 166, 0.3);
+}
 
 /* ── Responsive ── */
 @media (max-width: 860px) {
   .rp-sidebar { display: none; }
-  .rp-main { padding: 1.25rem; }
+  .rp-main { padding: 1.25rem;
+}
   .rp-promos-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  /* Tabla a Tarjetas en Cupones */
+  .rp-form-grid { grid-template-columns: 1fr;
+}
+  
+  .rp-table thead { display: none; }
+  .rp-table tr {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-neutral);
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    padding: 12px;
+  }
+  .rp-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed rgba(2,51,45,0.1);
+  }
+  .rp-table td:last-child { border-bottom: none;
+}
+  .rp-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    font-size: 11px;
+    color: rgba(2,51,45,0.5);
+    text-transform: uppercase;
+}
 }
 
 @media (max-width: 500px) {
   .rp-nav { padding: 0 1rem; }
-  .rp-nav-badge { display: none; }
+  .rp-nav-badge { display: none;
+}
   .rp-section { padding: 1.1rem; }
-  .rp-snackbar { right: 12px; bottom: 12px; left: 12px; min-width: unset; }
+  .rp-snackbar { right: 12px; bottom: 12px; left: 12px; min-width: unset;
+}
   .rp-perfil-form { max-width: 100%; }
   .rp-coords { grid-template-columns: 1fr; }
 }
