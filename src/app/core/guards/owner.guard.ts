@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 export const ownerGuard = () => {
-  /*const router = inject(Router);
+  const router = inject(Router);
 
   // La sesión del owner se almacena en localStorage tras el login
   const ownerId = localStorage.getItem('owner_id');
@@ -11,6 +11,5 @@ export const ownerGuard = () => {
   if (ownerId && restaurantIds) {
     return true;
   }
-  return router.createUrlTree(['/restaurant/login']);*/
-  return true;
+  return router.createUrlTree(['/restaurant/login']);
 };
