@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://antogitomapsbackend-production-baac.up.railway.app',
+  apiBaseUrl: 'https://antojitos-maps-6fafc945e691.herokuapp.com',
   firebaseConfig: {
     apiKey: "AIzaSyBAyNpkUTQhCOF7j7qbl3dCxb1DSapxbVc",
     authDomain: "antojitos-maps-auth.firebaseapp.com",
