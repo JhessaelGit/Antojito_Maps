@@ -208,7 +208,9 @@
     "UPLOAD_TXT": "Click or drag a photo here",
     "UPLOAD_SUB": "JPG, PNG or WEBP · Max. 5MB",
     "SAVING": "Saving...",
-    "BTN_SAVE_PROFILE": "Save changes"
+    "BTN_SAVE_PROFILE": "Save changes",
+    "SIDE_ANALYTICS": "Analytics",
+    "SIDE_VALIDATE_COUPON": "Validate coupon"
   },
   "ADMIN_LOGIN": {
     "BACK": "Back",
@@ -411,6 +413,81 @@
        "PERSONAL_CHEF": "Personal chef session (1x/year)",
        "MONTHLY_BOX": "Monthly surprise snack box"
      }
-   }
+   },
+
+  "VALIDATION": {
+    "NAV_TITLE": "Coupon Validation",
+    "NAV_BACK": "Back",
+    "PANEL_EYEBROW": "Redemption point",
+    "PANEL_TITLE": "Validate coupon",
+    "PANEL_SUB": "Enter the code or scan the QR the customer shows you",
+    "INPUT_LABEL": "Coupon code",
+    "INPUT_PLACEHOLDER": "E.g: VERANO-1234",
+    "BTN_CLEAR": "Clear",
+    "OR_SCAN": "or scan the code",
+    "BTN_SCAN_QR": "Scan QR",
+    "BTN_STOP_SCAN": "Stop scanning",
+    "SCANNER_HINT": "Point the camera at the coupon's QR code",
+    "BTN_VALIDATING": "Validating...",
+    "BTN_VALIDATE": "Validate coupon",
+    "DEMO_HINT": "Demo codes:",
+    "IDLE_TITLE": "Waiting for a code",
+    "IDLE_SUB": "The validation result will appear here",
+    "CHECKING": "Checking coupon...",
+    "STATUS_VALID": "Valid coupon",
+    "VALID_TAGLINE": "This coupon can be applied",
+    "DETAIL_COUPON": "Coupon",
+    "DETAIL_DISCOUNT": "Discount",
+    "DETAIL_CUSTOMER": "Customer",
+    "BTN_CONFIRM_APPLIED": "Discount applied",
+    "AUTO_RESET": "This screen will reset automatically",
+    "STATUS_INVALID": "Invalid coupon",
+    "STATUS_EXPIRED": "Expired coupon",
+    "STATUS_REUSED": "Coupon already used",
+    "DETAIL_USED_AT": "Used on",
+    "DETAIL_REASON": "Reason",
+    "REASON_NOT_FOUND": "No coupon was found with that code.",
+    "REASON_INVALID": "The entered code doesn't match a valid coupon.",
+    "REASON_EXPIRED": "This coupon has expired and can no longer be redeemed.",
+    "REASON_REUSED": "This coupon has already been used.",
+    "BTN_TRY_AGAIN": "Try again"
+ },
+
+  "ANALYTICS": {
+    "NAV_TITLE": "Analytics Dashboard",
+    "NAV_BACK": "Back",
+    "PERIOD_WEEK": "Week",
+    "PERIOD_MONTH": "Month",
+    "PERIOD_YEAR": "Year",
+    "METRIC_ACTIVE_COUPONS": "Active coupons",
+    "METRIC_ACTIVE_SUB": "out of total coupons",
+    "METRIC_VALIDATED": "Validated coupons",
+    "METRIC_VALIDATED_SUB": "in the selected period",
+    "METRIC_REJECTED": "Rejected coupons",
+    "METRIC_REJECTED_SUB": "invalid attempts",
+    "METRIC_RECURRING": "Returning customers",
+    "METRIC_RECURRING_SUB": "who redeemed again",
+    "TREND_UP": "Up from the previous period",
+    "TREND_DOWN": "Down from the previous period",
+    "DAY_MON": "Mon", "DAY_TUE": "Tue", "DAY_WED": "Wed", "DAY_THU": "Thu",
+    "DAY_FRI": "Fri", "DAY_SAT": "Sat", "DAY_SUN": "Sun",
+    "CHART_WEEKLY_TITLE": "Weekly validations",
+    "CHART_WEEKLY_SUB": "Validated vs. rejected coupons per day",
+    "LEGEND_VALIDATED": "Validated",
+    "LEGEND_REJECTED": "Rejected",
+    "DONUT_TITLE": "Coupon usage",
+    "DONUT_SUB": "Claimed out of total available",
+    "DONUT_CENTER_LABEL": "usage rate",
+    "DONUT_CLAIMED": "Claimed",
+    "DONUT_AVAILABLE": "Available",
+    "TABLE_TITLE": "Most used coupons",
+    "TABLE_SUB": "Ranked by redemption rate",
+    "TOP_5": "Top 5",
+    "COL_COUPON": "Coupon",
+    "COL_DISCOUNT": "Discount",
+    "COL_USAGE": "Usage",
+    "COL_STATUS": "Status"
+  }
 
 }
+

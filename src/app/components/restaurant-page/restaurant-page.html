@@ -39,6 +39,23 @@
           </svg>
           {{ 'OWNER.SIDE_PROMOS' | translate }}
         </a>
+        <a class="rp-nav-item" (click)="router.navigate(['/restaurant/validar-cupon'])">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <polyline points="9 12 12 15 16 10"/>
+          </svg>
+          {{ 'OWNER.SIDE_VALIDATE_COUPON' | translate }}
+        </a>
+        <a class="rp-nav-item" (click)="router.navigate(['/restaurant/analytics'])">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+          {{ 'OWNER.SIDE_ANALYTICS' | translate }}
+        </a>
         <a class="rp-nav-item" [class.rp-nav-item-active]="vistaActiva === 'cupones'"
           (click)="cambiarVista('cupones')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"

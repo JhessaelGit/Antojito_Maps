@@ -1,0 +1,237 @@
+<div class="ad-page">
+
+  <!-- ── NAV ── -->
+  <nav class="ad-nav">
+    <div class="ad-nav-logo" (click)="router.navigate(['/'])">
+      Antojitos<span>Maps</span>
+    </div>
+    <div class="ad-nav-center">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"/>
+        <line x1="12" y1="20" x2="12" y2="4"/>
+        <line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+      {{ 'ANALYTICS.NAV_TITLE' | translate }}
+    </div>
+    <div class="ad-nav-actions">
+      <!-- Period selector -->
+      <div class="ad-period-selector">
+        <button [class.active]="activePeriod === 'week'"   (click)="setPeriod('week')">
+          {{ 'ANALYTICS.PERIOD_WEEK' | translate }}
+        </button>
+        <button [class.active]="activePeriod === 'month'"  (click)="setPeriod('month')">
+          {{ 'ANALYTICS.PERIOD_MONTH' | translate }}
+        </button>
+        <button [class.active]="activePeriod === 'year'"   (click)="setPeriod('year')">
+          {{ 'ANALYTICS.PERIOD_YEAR' | translate }}
+        </button>
+      </div>
+      <button class="ad-nav-back" (click)="router.navigate(['/restaurant'])">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        {{ 'ANALYTICS.NAV_BACK' | translate }}
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <main class="ad-main">
+
+    <!-- ── ROW 1: Metric cards ── -->
+    <section class="ad-metrics-row">
+      @for (card of metricCards; track card.key) {
+        <div class="ad-metric-card" [ngClass]="'accent-' + card.accentColor">
+          <div class="ad-metric-top">
+            <span class="ad-metric-icon">{{ card.icon }}</span>
+            @if (card.trend !== undefined && card.trend !== 0) {
+              <span class="ad-metric-trend" [ngClass]="getTrendClass(card.trend)">
+                {{ getTrendIcon(card.trend) }} {{ card.trend | number:'1.0-0' }}%
+              </span>
+            }
+          </div>
+          <div class="ad-metric-value">{{ card.value | number }}</div>
+          <div class="ad-metric-label">{{ card.labelKey | translate }}</div>
+          <div class="ad-metric-sub">
+            {{ card.subLabelKey | translate }}
+            @if (card.subValue) { · {{ card.subValue }} }
+          </div>
+        </div>
+      }
+    </section>
+
+    <!-- ── ROW 2: Chart + Donut ── -->
+    <section class="ad-row-two">
+
+      <!-- Bar chart: weekly validations -->
+      <div class="ad-chart-card">
+        <div class="ad-card-header">
+          <div>
+            <h3 class="ad-card-title">{{ 'ANALYTICS.CHART_WEEKLY_TITLE' | translate }}</h3>
+            <p class="ad-card-sub">{{ 'ANALYTICS.CHART_WEEKLY_SUB' | translate }}</p>
+          </div>
+          <div class="ad-chart-legend">
+            <span class="ad-legend-dot green"></span>{{ 'ANALYTICS.LEGEND_VALIDATED' | translate }}
+            <span class="ad-legend-dot red"></span>{{ 'ANALYTICS.LEGEND_REJECTED' | translate }}
+          </div>
+        </div>
+
+        <div class="ad-bar-chart">
+          @for (d of weeklyData; track d.day) {
+            <div class="ad-bar-col">
+              <div class="ad-bar-track">
+                <div class="ad-bar-fill"
+                  [style.height.%]="getBarHeight(d)"
+                  [style.background]="'linear-gradient(to top, var(--color-primary) ' + (100 - getValidationRatio(d)) + '%, var(--color-secondary) ' + (100 - getValidationRatio(d)) + '%)'">
+                </div>
+              </div>
+              <span class="ad-bar-label">{{ d.dayKey | translate }}</span>
+              <span class="ad-bar-total">{{ d.validations + d.rejections }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Donut chart: claimed vs available -->
+      <div class="ad-donut-card">
+        <div class="ad-card-header">
+          <div>
+            <h3 class="ad-card-title">{{ 'ANALYTICS.DONUT_TITLE' | translate }}</h3>
+            <p class="ad-card-sub">{{ 'ANALYTICS.DONUT_SUB' | translate }}</p>
+          </div>
+        </div>
+
+        <div class="ad-donut-wrap">
+          <svg class="ad-donut-svg" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background ring -->
+            <circle
+              cx="64" cy="64" [attr.r]="donutRadius"
+              fill="none"
+              stroke="rgba(2,51,45,0.08)"
+              [attr.stroke-width]="donutStroke"/>
+            <!-- Used ring -->
+            <circle
+              cx="64" cy="64" [attr.r]="donutRadius"
+              fill="none"
+              stroke="var(--color-secondary)"
+              [attr.stroke-width]="donutStroke"
+              [attr.stroke-dasharray]="donutUsedDash + ' ' + donutFreeDash"
+              stroke-dashoffset="0"
+              stroke-linecap="round"
+              transform="rotate(-90 64 64)"
+              class="ad-donut-arc"/>
+            <!-- Accent arc (inner shine) -->
+            <circle
+              cx="64" cy="64" [attr.r]="donutRadius"
+              fill="none"
+              stroke="var(--color-accent)"
+              [attr.stroke-width]="donutStroke * 0.4"
+              [attr.stroke-dasharray]="(donutUsedDash * 0.3) + ' ' + (donutCircumference - donutUsedDash * 0.3)"
+              stroke-dashoffset="0"
+              stroke-linecap="round"
+              transform="rotate(-90 64 64)"
+              opacity="0.6"/>
+            <!-- Center label -->
+            <text x="64" y="57" text-anchor="middle"
+              font-family="Playfair Display, serif"
+              font-size="20" font-weight="700"
+              fill="var(--color-secondary)">{{ getUsagePercent() }}%</text>
+            <text x="64" y="74" text-anchor="middle"
+              font-family="Inter, sans-serif"
+              font-size="8" font-weight="500"
+              fill="rgba(2,51,45,0.45)">{{ 'ANALYTICS.DONUT_CENTER_LABEL' | translate }}</text>
+          </svg>
+
+          <div class="ad-donut-stats">
+            <div class="ad-donut-stat">
+              <div class="ad-donut-stat-dot secondary"></div>
+              <div>
+                <div class="ad-donut-stat-val">{{ totalClaimed }}</div>
+                <div class="ad-donut-stat-lbl">{{ 'ANALYTICS.DONUT_CLAIMED' | translate }}</div>
+              </div>
+            </div>
+            <div class="ad-donut-divider"></div>
+            <div class="ad-donut-stat">
+              <div class="ad-donut-stat-dot neutral"></div>
+              <div>
+                <div class="ad-donut-stat-val">{{ totalAvailable - totalClaimed }}</div>
+                <div class="ad-donut-stat-lbl">{{ 'ANALYTICS.DONUT_AVAILABLE' | translate }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ROW 3: Top coupons table ── -->
+    <section class="ad-table-card">
+      <div class="ad-card-header">
+        <div>
+          <h3 class="ad-card-title">{{ 'ANALYTICS.TABLE_TITLE' | translate }}</h3>
+          <p class="ad-card-sub">{{ 'ANALYTICS.TABLE_SUB' | translate }}</p>
+        </div>
+        <div class="ad-rank-badge">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          {{ 'ANALYTICS.TOP_5' | translate }}
+        </div>
+      </div>
+
+      <div class="ad-table-wrap">
+        <table class="ad-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>{{ 'ANALYTICS.COL_COUPON' | translate }}</th>
+              <th>{{ 'ANALYTICS.COL_DISCOUNT' | translate }}</th>
+              <th>{{ 'ANALYTICS.COL_USAGE' | translate }}</th>
+              <th>{{ 'ANALYTICS.COL_STATUS' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (c of topCoupones; track c.name; let i = $index) {
+              <tr [class.ad-row-top]="i === 0">
+                <td class="ad-rank-cell">
+                  @if (i === 0) {
+                    <span class="ad-rank-medal gold">🥇</span>
+                  } @else if (i === 1) {
+                    <span class="ad-rank-medal silver">🥈</span>
+                  } @else if (i === 2) {
+                    <span class="ad-rank-medal bronze">🥉</span>
+                  } @else {
+                    <span class="ad-rank-num">{{ i + 1 }}</span>
+                  }
+                </td>
+                <td [attr.data-label]="'ANALYTICS.COL_COUPON' | translate">
+                  <strong class="ad-coupon-name">{{ c.name }}</strong>
+                </td>
+                <td [attr.data-label]="'ANALYTICS.COL_DISCOUNT' | translate">
+                  <span class="ad-discount-tag">{{ c.discountType }}</span>
+                </td>
+                <td [attr.data-label]="'ANALYTICS.COL_USAGE' | translate">
+                  <div class="ad-usage-cell">
+                    <div class="ad-usage-bar-track">
+                      <div class="ad-usage-bar-fill" [style.width.%]="c.usagePercent"></div>
+                    </div>
+                    <span class="ad-usage-nums">{{ c.claimed }} / {{ c.total }}</span>
+                    <span class="ad-usage-pct">{{ c.usagePercent }}%</span>
+                  </div>
+                </td>
+                <td [attr.data-label]="'ANALYTICS.COL_STATUS' | translate">
+                  <span class="rp-status-badge" [ngClass]="getStatusClass(c.status)">
+                    {{ 'COUPONS.STATUS_' + c.status.toUpperCase() | translate }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
