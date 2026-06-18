@@ -42,9 +42,6 @@
           @if (restaurante.category) {
             <span class="rv-tag">{{ restaurante.category }}</span>
           }
-          @if (restaurante.planSuscription) {
-            <span class="rv-tag rv-tag-plan">{{ restaurante.planSuscription }}</span>
-          }
         </div>
         @if (restaurante.description) {
           <p class="rv-descripcion">{{ restaurante.description }}</p>
@@ -131,15 +128,6 @@
               <div>
                 <span class="rv-info-lbl">{{ 'RESTAURANT_VIEW.LABEL_CATEGORY' | translate }}</span>
                 <span class="rv-info-val">{{ restaurante.category }}</span>
-              </div>
-            </div>
-          }
-          @if (restaurante.planSuscription) {
-            <div class="rv-info-item">
-              <span class="rv-info-icon">⭐</span>
-              <div>
-                <span class="rv-info-lbl">{{ 'RESTAURANT_VIEW.LABEL_PLAN' | translate }}</span>
-                <span class="rv-info-val">{{ restaurante.planSuscription }}</span>
               </div>
             </div>
           }
