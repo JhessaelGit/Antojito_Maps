@@ -30,7 +30,7 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
     return localStorage.getItem('selected_plan') || '';
   }
 
-  vistaActiva: 'promos' | 'menu' | 'perfil' = 'promos';
+  vistaActiva: 'promos' | 'menu' | 'perfil' | 'cupones' = 'promos';
 
   promociones: PromotionResponse[] = [];
   menu: any[] = [];
@@ -66,6 +66,28 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
   private guardadoSafetyTimer: any;
   private timerUndo: any;
 
+  // ==========================================
+  // ESTADO Y MOCKS PARA EL MÓDULO DE CUPONES
+  // ==========================================
+  cuponesTabActiva: 'list' | 'create' = 'list';
+
+  mockCupones = [
+    { id: 1, name: 'Promo Verano', discountType: '15% Descuento', description: 'Válido solo en combos grandes', claimed: 15, total: 100, status: 'available' },
+    { id: 2, name: 'Martes Locos', discountType: '2x1', description: 'No aplica para delivery', claimed: 50, total: 50, status: 'exhausted' },
+    { id: 3, name: 'Postre Gratis', discountType: 'Gratis', description: 'Por compras mayores a 100 Bs', claimed: 10, total: 50, status: 'expired' }  
+  ];
+
+  nuevoCupon: any = {
+    name: '',
+    description: '',
+    startDate: '',
+    endDate: '',
+    maxAvailable: null,
+    userLimit: null,
+    discountType: '',
+    discountValue: '' // Campo añadido para guardar el porcentaje o el formato NxM
+  };
+
   constructor(
     public router: Router,
     private restauranteService: RestauranteService,
@@ -75,7 +97,7 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   irAlInicio(): void {
-  this.router.navigate(['/']);
+    this.router.navigate(['/']);
   }
 
   ngOnInit(): void {
@@ -108,9 +130,8 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
     this.mapaUbicacion?.remove();
   }
 
-  cambiarVista(vista: 'promos' | 'menu' | 'perfil'): void {
+  cambiarVista(vista: 'promos' | 'menu' | 'perfil' | 'cupones'): void {
     this.vistaActiva = vista;
-
     if (vista === 'promos') {
       this.cargarPromociones(true);
     }
@@ -120,10 +141,64 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  // ==========================================
+  // MÉTODOS PARA CUPONES
+  // ==========================================
+  cambiarTabCupones(tab: 'list' | 'create') {
+    this.cuponesTabActiva = tab;
+  }
+
+  get isCuponValid(): boolean {
+    const c = this.nuevoCupon;
+    if (!c.name || !c.startDate || !c.endDate || !c.maxAvailable || !c.userLimit || !c.discountType) return false;
+    if (c.startDate > c.endDate) return false;
+    if (c.maxAvailable <= 0 || c.userLimit <= 0) return false;
+// Validar que el porcentaje exista y esté estrictamente entre 1 y 99
+    if (c.discountType === '% Descuento') {
+      if (!c.discountValue || c.discountValue < 1 || c.discountValue > 99) return false;
+    }
+    if (c.discountType === 'NxM' && !c.discountValue) return false;
+        
+    return true;
+  }
+
+  get cuponDateError(): boolean {
+    if (this.nuevoCupon.startDate && this.nuevoCupon.endDate) {
+      return this.nuevoCupon.startDate > this.nuevoCupon.endDate;
+    }
+    return false;
+  }
+
+  guardarNuevoCupon() {
+    if (!this.isCuponValid) return;
+    
+    // Formatear el texto de descuento para mostrar en la lista
+    let finalDiscountStr = this.nuevoCupon.discountType;
+    if (this.nuevoCupon.discountType === '% Descuento') {
+      finalDiscountStr = `${this.nuevoCupon.discountValue}% Descuento`;
+    } else if (this.nuevoCupon.discountType === 'NxM') {
+      finalDiscountStr = this.nuevoCupon.discountValue; // Ej: "3x1"
+    }
+
+    this.mockCupones.unshift({
+      id: Date.now(),
+      name: this.nuevoCupon.name,
+      discountType: finalDiscountStr,
+      description: this.nuevoCupon.description || 'Sin descripción', // Añadimos la descripción aquí
+      claimed: 0,
+      total: this.nuevoCupon.maxAvailable,
+      status: 'available'
+    });
+      
+    // Resetear formulario
+    this.nuevoCupon = { name: '', description: '', startDate: '', endDate: '', maxAvailable: null, userLimit: null, discountType: '', discountValue: '' };
+    this.cuponesTabActiva = 'list';
+  }
+  // ==========================================
+
   crearPromo(): void {
     this.esPromo = true;
     this.errorMsg = '';
-
     const hoy = this.formatDateForApi(new Date());
     this.itemTemporal = {
       title: '',
@@ -133,7 +208,6 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
       dateEndPromotion: hoy,
       isActivePromotion: true
     };
-
     this.editandoItem = true;
   }
 
@@ -222,7 +296,6 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
     this.guardandoPerfil = true;
     this.restaurantName = this.perfilNombre;
     this.restaurantCategory = this.perfilCategoria;
-
     if (this.perfilImagePreview) {
       this.restaurantImage = this.perfilImagePreview;
       localStorage.setItem('restaurant_image', this.perfilImagePreview);
@@ -291,7 +364,6 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
     const candidateIds = (restaurants ?? [])
       .map((r: any) => `${r?.uuid ?? r?.restaurantId ?? r?.id ?? ''}`.trim())
       .filter((id: string) => !!id);
-
     if (!candidateIds.length) {
       this.cargarDesdeLocalStorage();
       this.promocionesErrorMsg = this.translate.instant('OWNER.ERR_PROMO_NO_RESTAURANT');
@@ -307,7 +379,6 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
         catchError(() => of({ id, total: 0 }))
       )
     );
-
     forkJoin(checks)
       .pipe(take(1))
       .subscribe((results) => {
@@ -340,6 +411,7 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
         this.restaurantLat = data.latitude ?? null;
         this.restaurantLng = data.longitude ?? null;
         this.sincronizarPerfil();
+  
         this.cd.detectChanges();
       },
       error: () => {
@@ -359,7 +431,6 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
 
     this.promocionesLoadSub?.unsubscribe();
     if (this.promocionesSafetyTimer) clearTimeout(this.promocionesSafetyTimer);
-
     if (showLoader) {
       this.cargandoPromociones = true;
       this.promociones = [];
@@ -369,7 +440,6 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
     this.promocionesSafetyTimer = setTimeout(() => {
       this.cargandoPromociones = false;
     }, 15000);
-
     this.promocionesLoadSub = this.restauranteService.getPromocionesPorRestaurante(this.restaurantUuid)
       .pipe(
         take(1),
@@ -403,7 +473,6 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
 
   private guardarNuevaPromocion(): void {
     this.errorMsg = '';
-
     if (!this.restaurantUuid || (!this.ownerUuid && !this.ownerMail)) {
       this.errorMsg = this.translate.instant('OWNER.ERR_PROMO_CONTEXT');
       return;
@@ -418,7 +487,6 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
     const percentDiscount = Number(this.itemTemporal.percentDiscount);
     const dateStartPromotion = `${this.itemTemporal.dateStartPromotion ?? ''}`.trim();
     const dateEndPromotion = `${this.itemTemporal.dateEndPromotion ?? ''}`.trim();
-
     if (!title) {
       this.errorMsg = this.translate.instant('OWNER.ERR_PROMO_TITLE');
       return;
@@ -471,7 +539,6 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
     this.guardadoSafetyTimer = setTimeout(() => {
       this.guardandoPromocion = false;
     }, 15000);
-
     this.restauranteService.crearPromocion(this.restaurantUuid, payload)
       .pipe(
         take(1),
@@ -513,7 +580,6 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
     const source = Array.isArray(raw)
       ? raw
       : (Array.isArray(raw?.items) ? raw.items : []);
-
     return source
       .map((p: any) => {
         const uuid = `${p?.uuid ?? p?.promotionId ?? p?.promotion_id ?? ''}`.trim();
@@ -559,22 +625,18 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
     const container = document.getElementById('perfil-map') as any;
     if (!container) return;
     if (container._leaflet_id) container._leaflet_id = undefined;
-
     const lat = this.restaurantLat ?? -17.3935;
     const lng = this.restaurantLng ?? -66.1568;
-
     this.mapaUbicacion = L.map('perfil-map', { center: [lat, lng], zoom: 15 });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(this.mapaUbicacion);
-
     const icono = L.divIcon({
       html: '<div style="width:24px;height:24px;background:#7F1100;border:3px solid #BF9861;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 2px 8px rgba(127,17,0,0.5);"></div>',
       iconSize: [24, 24],
       iconAnchor: [12, 24],
       className: ''
     });
-
     if (this.restaurantLat && this.restaurantLng) {
       this.mapaMarker = L.marker([lat, lng], { icon: icono, draggable: true }).addTo(this.mapaUbicacion);
       this.mapaMarker.on('dragend', (e: any) => {
@@ -607,7 +669,6 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
 
   private procesarImagenPerfil(file: File): void {
     if (file.size > 5 * 1024 * 1024) return;
-
     this.perfilImageFile = file;
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -627,7 +688,6 @@ export class RestaurantPage implements OnInit, OnDestroy, AfterViewInit {
   private readRestaurantIdsFromSession(): string[] {
     const raw = localStorage.getItem('restaurant_ids');
     if (!raw) return [];
-
     try {
       const parsed = JSON.parse(raw);
       if (!Array.isArray(parsed)) return [];

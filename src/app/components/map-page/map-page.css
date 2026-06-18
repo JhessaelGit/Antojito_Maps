@@ -1029,3 +1029,506 @@
 .btn-logout:hover {
   color: #e05555;
 }
+
+/* ─── BOTÓN MI PERFIL (header) ─────────────── */
+.btn-profile {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(191,152,97,0.35);
+  border-radius: 24px;
+  color: var(--color-neutral);
+  padding: 0 13px;
+  height: 36px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  flex-shrink: 0;
+}
+.btn-profile:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: rgba(191,152,97,0.1);
+}
+.btn-profile__label { line-height: 1; }
+@media (max-width: 768px) {
+  .btn-profile__label { display: none; }
+  .btn-profile { padding: 0 10px; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   CUPONES — Pestaña de carpeta + Panel desplegable + Modal
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Pestaña disparadora (lengüeta de carpeta) ── */
+.cupones-tab {
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  z-index: 1050;
+
+  border-radius: 10px 10px 0 0;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px 10px;
+
+  background: var(--color-secondary);
+  color: var(--color-neutral);
+  border: 1.5px solid rgba(191,152,97,0.45);
+  border-bottom: none;
+
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-family: var(--font-body);
+  cursor: pointer;
+  white-space: nowrap;
+
+  box-shadow: -2px -3px 10px rgba(0,0,0,0.18);
+  transition: background 0.2s, color 0.2s, border-color 0.2s,
+              transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  
+}
+.cupones-tab:hover {
+  background: var(--color-primary);
+  border-color: var(--color-accent);
+  color: var(--color-white);
+}
+.cupones-tab--active {
+  background: var(--color-primary);
+  border-color: var(--color-accent);
+  color: var(--color-white);
+  /* Sube exactamente la altura del panel abierto */
+  transform: translateY(calc(-1 * min(400px, 70vh)));
+}
+.cupones-tab__label { line-height: 1; }
+.cupones-tab__count {
+  background: var(--color-accent);
+  color: var(--color-secondary);
+  font-size: 10px;
+  font-weight: 800;
+  min-width: 17px;
+  height: 17px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+/* ── Panel desplegable (desliza hacia arriba) ── */
+/* ── Panel desplegable (desliza hacia arriba) ── */
+/* ── Panel desplegable (desliza hacia arriba) ── */
+.cupones-panel {
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  z-index: 1040;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Si quieres que la lista empiece desde arriba. Cámbialo a flex-end si quieres que quede pegada abajo */
+
+  width: 300px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+
+
+  background: #fff;
+  border-radius: 0 12px 0 0;
+  border: 1.5px solid rgba(191,152,97,0.35);
+  border-bottom: none;
+  padding: 0; 
+  margin: 0;
+}
+
+.cupones-panel--open {
+  /* Forzamos la altura exacta para que coincida con el translateY de la pestaña */
+  height: min(400px, 70vh); 
+  max-height: min(400px, 70vh); /* Lo mantenemos por seguridad */
+  opacity: 1;
+  border-bottom: none;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+/* Lista de cupones */
+.cupones-lista {
+  list-style: none;
+  margin: 0;       /* Sin margen */
+  padding: 0;      /* Sin relleno */
+  overflow-y: auto;
+  flex: 1;          /* Ahora sí funcionará porque el panel es flex */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(191,152,97,0.3) transparent;
+}
+
+.cupones-lista::-webkit-scrollbar { width: 4px; }
+.cupones-lista::-webkit-scrollbar-thumb {
+  background: rgba(191,152,97,0.35);
+  border-radius: 4px;
+}
+
+/* ── Fila minimalista de cupón ── */
+.cupon-fila {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid rgba(191,152,97,0.1);
+}
+.cupon-fila:last-child { border-bottom: none; }
+.cupon-fila:hover {
+  background: rgba(191,152,97,0.08);
+}
+
+/* Ícono genérico */
+.cupon-fila__icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: rgba(191,152,97,0.12);
+  color: var(--color-secondary);
+  flex-shrink: 0;
+}
+
+/* Nombre del local */
+.cupon-fila__local {
+  flex: 1;
+  font-size: 0.81rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-body);
+}
+
+/* Badge de promoción */
+.cupon-fila__badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.3px;
+}
+/* Variantes de badge */
+.badge--orange {
+  background: rgba(234,130,10,0.14);
+  color: #b35c00;
+  border: 1px solid rgba(234,130,10,0.35);
+}
+.badge--green {
+  background: rgba(40,167,69,0.12);
+  color: #1a6e30;
+  border: 1px solid rgba(40,167,69,0.3);
+}
+.badge--blue {
+  background: rgba(26,115,232,0.12);
+  color: #0d4ea6;
+  border: 1px solid rgba(26,115,232,0.28);
+}
+
+/* ── Backdrop del panel (solo móvil) ── */
+.cupones-backdrop {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(2,51,45,0.35);
+  z-index: 1030;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+  pointer-events: none;
+}
+.cupones-backdrop--visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+@media (max-width: 768px) {
+  .cupones-backdrop { display: block; }
+  .cupones-panel { width: calc(100% - 40px); }
+}
+
+/* ── MODAL DE DETALLE DE CUPÓN ── */
+.cupon-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(2,51,45,0.5);
+  backdrop-filter: blur(3px);
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fade-in 0.2s ease;
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.cupon-modal {
+  background: #fff;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 320px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.22);
+  overflow: hidden;
+  animation: modal-pop 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes modal-pop {
+  from { transform: scale(0.88); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* Contenido base del modal */
+.cupon-modal__content {
+  position: relative;
+  padding: 28px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  min-height: 260px;
+  justify-content: center;
+}
+
+/* Botón de cierre */
+.cupon-modal__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #f4f1ed;
+  border: none;
+  border-radius: 8px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+.cupon-modal__close:hover { background: #ede8e0; color: #444; }
+.cupon-modal__close--dark { background: rgba(255,255,255,0.25); color: #fff; }
+.cupon-modal__close--dark:hover { background: rgba(255,255,255,0.4); color: #fff; }
+
+/* Ícono principal del modal */
+.cupon-modal__icon-wrap {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(191,152,97,0.12);
+  border: 2px solid rgba(191,152,97,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-secondary);
+  margin-bottom: 4px;
+}
+
+/* Badge grande en el modal */
+.cupon-modal__badge {
+  font-size: 13px;
+  font-weight: 800;
+  padding: 5px 14px;
+  border-radius: 999px;
+}
+
+/* Nombre del local en el modal */
+.cupon-modal__local {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-secondary);
+  font-family: var(--font-heading);
+  line-height: 1.25;
+}
+
+/* Pista de uso */
+.cupon-modal__hint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #888;
+  line-height: 1.5;
+  max-width: 220px;
+}
+
+/* Botón principal: "Obtener en el local" */
+.cupon-modal__btn-get {
+  margin-top: 8px;
+  width: 100%;
+  padding: 12px 20px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: opacity 0.2s, transform 0.15s;
+  letter-spacing: 0.2px;
+}
+.cupon-modal__btn-get:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+/* ── Estado: Verificando ── */
+.cupon-modal__content--center {
+  gap: 16px;
+}
+.cupon-modal__spinner {
+  width: 44px;
+  height: 44px;
+  border: 3.5px solid rgba(2,51,45,0.1);
+  border-top-color: var(--color-secondary);
+  border-radius: 50%;
+  animation: spin 0.85s linear infinite;
+}
+.cupon-modal__verifying-text {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  font-family: var(--font-body);
+}
+
+/* ── Estado: Éxito ── */
+.cupon-modal__content--success {
+  background: linear-gradient(160deg, #e9f7ef 0%, #fff 60%);
+  gap: 8px;
+  padding-top: 36px;
+  padding-bottom: 28px;
+}
+.cupon-modal__success-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #28a745;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  margin-bottom: 4px;
+  box-shadow: 0 4px 16px rgba(40,167,69,0.3);
+  animation: pop-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes pop-in {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+.cupon-modal__success-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1a6e30;
+  font-family: var(--font-heading);
+}
+.cupon-modal__success-sub {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #555;
+}
+
+/* QR placeholder */
+.cupon-modal__qr {
+  background: #fff;
+  border: 2px solid rgba(2,51,45,0.12);
+  border-radius: 10px;
+  padding: 10px;
+  margin: 4px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+/* Código alfanumérico */
+.cupon-modal__code {
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: var(--color-secondary);
+  font-family: monospace;
+  background: rgba(191,152,97,0.1);
+  border: 1.5px dashed rgba(191,152,97,0.5);
+  border-radius: 8px;
+  padding: 6px 18px;
+}
+.cupon-modal__code-label {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #aaa;
+}
+
+/* ── Estado: Error ── */
+.cupon-modal__content--error {
+  background: linear-gradient(160deg, #fdf0f0 0%, #fff 60%);
+  gap: 10px;
+  padding-top: 36px;
+  padding-bottom: 28px;
+}
+.cupon-modal__error-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #dc3545;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  margin-bottom: 4px;
+  box-shadow: 0 4px 16px rgba(220,53,69,0.3);
+  animation: pop-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.cupon-modal__error-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #8b1a1a;
+  font-family: var(--font-heading);
+  max-width: 220px;
+  line-height: 1.35;
+}
+.cupon-modal__error-sub {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #888;
+}
+.cupon-modal__btn-retry {
+  margin-top: 8px;
+  padding: 10px 28px;
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: opacity 0.2s;
+}
+.cupon-modal__btn-retry:hover { opacity: 0.88; }
+
+@media (max-width: 380px) {
+  .cupones-tab__label { display: none; }
+  .cupones-tab { padding: 8px 10px 10px; }
+  .cupones-tab--active {
+    transform: translateY(calc(-1 * min(400px, 75vh)));
+  }
+}

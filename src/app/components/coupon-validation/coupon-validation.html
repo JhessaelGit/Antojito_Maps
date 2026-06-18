@@ -1,0 +1,252 @@
+<div class="cv-page">
+
+  <!-- ── HEADER ── -->
+  <nav class="cv-nav">
+    <div class="cv-nav-logo" (click)="router.navigate(['/'])">
+      Antojitos<span>Maps</span>
+    </div>
+    <div class="cv-nav-center">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+        <line x1="7" y1="7" x2="7.01" y2="7"/>
+      </svg>
+      {{ 'VALIDATION.NAV_TITLE' | translate }}
+    </div>
+    <button class="cv-nav-back" (click)="router.navigate(['/restaurant'])">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+      {{ 'VALIDATION.NAV_BACK' | translate }}
+    </button>
+  </nav>
+
+  <!-- ── BODY ── -->
+  <div class="cv-body">
+
+    <!-- LEFT: Input panel -->
+    <div class="cv-panel cv-panel-input">
+      <div class="cv-panel-eyebrow">
+        <div class="cv-eyebrow-dot"></div>
+        {{ 'VALIDATION.PANEL_EYEBROW' | translate }}
+      </div>
+      <h1 class="cv-panel-title">{{ 'VALIDATION.PANEL_TITLE' | translate }}</h1>
+      <p class="cv-panel-sub">{{ 'VALIDATION.PANEL_SUB' | translate }}</p>
+
+      <!-- Code input -->
+      <div class="cv-input-group" [class.has-value]="codigoIngresado.length > 0">
+        <label class="cv-input-label">{{ 'VALIDATION.INPUT_LABEL' | translate }}</label>
+        <div class="cv-input-wrap">
+          <svg class="cv-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <input
+            class="cv-input"
+            type="text"
+            [(ngModel)]="codigoIngresado"
+            [placeholder]="'VALIDATION.INPUT_PLACEHOLDER' | translate"
+            (keyup.enter)="validarCodigo()"
+            [disabled]="validationResult.status === 'loading'"
+            autocomplete="off"
+            spellcheck="false">
+          @if (codigoIngresado.length > 0) {
+            <button class="cv-input-clear" (click)="resetValidation()" [title]="'VALIDATION.BTN_CLEAR' | translate">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- QR Scanner option -->
+      @if (scannerAvailable) {
+        <div class="cv-scanner-section">
+          <div class="cv-divider">
+            <span>{{ 'VALIDATION.OR_SCAN' | translate }}</span>
+          </div>
+          <button class="cv-btn-scanner" [class.active]="isScanning" (click)="toggleScanner()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/>
+              <rect x="3" y="16" width="5" height="5"/>
+              <path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/>
+              <path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1a2 2 0 0 1 2 2v.01"/>
+            </svg>
+            {{ (isScanning ? 'VALIDATION.BTN_STOP_SCAN' : 'VALIDATION.BTN_SCAN_QR') | translate }}
+          </button>
+
+          @if (isScanning) {
+            <div class="cv-scanner-viewport">
+              <video id="qr-video" class="cv-scanner-video" playsinline muted></video>
+              <div class="cv-scanner-overlay">
+                <div class="cv-scanner-frame">
+                  <span class="cv-scanner-corner tl"></span>
+                  <span class="cv-scanner-corner tr"></span>
+                  <span class="cv-scanner-corner bl"></span>
+                  <span class="cv-scanner-corner br"></span>
+                  <div class="cv-scanner-beam"></div>
+                </div>
+                <p class="cv-scanner-hint">{{ 'VALIDATION.SCANNER_HINT' | translate }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- CTA Button -->
+      <button
+        class="cv-btn-validate"
+        [class.loading]="validationResult.status === 'loading'"
+        [disabled]="!canValidate"
+        (click)="validarCodigo()">
+        @if (validationResult.status === 'loading') {
+          <span class="cv-btn-spinner"></span>
+          {{ 'VALIDATION.BTN_VALIDATING' | translate }}
+        } @else {
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          {{ 'VALIDATION.BTN_VALIDATE' | translate }}
+        }
+      </button>
+
+      <!-- Demo hint -->
+      <p class="cv-demo-hint">
+        {{ 'VALIDATION.DEMO_HINT' | translate }}
+        <code>VERANO-1234</code>, <code>POSTRE-0099</code>, <code>MARTES-0050</code>
+      </p>
+    </div>
+
+    <!-- RIGHT: Result panel -->
+    <div class="cv-panel cv-panel-result">
+
+      @if (validationResult.status === 'idle') {
+        <div class="cv-result-idle">
+          <div class="cv-idle-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </div>
+          <p class="cv-idle-title">{{ 'VALIDATION.IDLE_TITLE' | translate }}</p>
+          <p class="cv-idle-sub">{{ 'VALIDATION.IDLE_SUB' | translate }}</p>
+        </div>
+      }
+
+      @if (validationResult.status === 'loading') {
+        <div class="cv-result-loading">
+          <div class="cv-loading-ring">
+            <div></div><div></div><div></div><div></div>
+          </div>
+          <p class="cv-loading-txt">{{ 'VALIDATION.CHECKING' | translate }}</p>
+        </div>
+      }
+
+      @if (isResultPositive) {
+        <div class="cv-result cv-result-valid">
+          <div class="cv-result-icon-wrap valid">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <h2 class="cv-result-headline valid">{{ 'VALIDATION.STATUS_VALID' | translate }}</h2>
+          <p class="cv-result-tagline">{{ 'VALIDATION.VALID_TAGLINE' | translate }}</p>
+
+          <div class="cv-coupon-detail">
+            <div class="cv-detail-row">
+              <span class="cv-detail-lbl">{{ 'VALIDATION.DETAIL_COUPON' | translate }}</span>
+              <span class="cv-detail-val">{{ validationResult.couponName }}</span>
+            </div>
+            <div class="cv-detail-row">
+              <span class="cv-detail-lbl">{{ 'VALIDATION.DETAIL_DISCOUNT' | translate }}</span>
+              <span class="cv-detail-val cv-detail-highlight">{{ validationResult.discountValue }}</span>
+            </div>
+            <div class="cv-detail-row">
+              <span class="cv-detail-lbl">{{ 'VALIDATION.DETAIL_CUSTOMER' | translate }}</span>
+              <span class="cv-detail-val">{{ validationResult.customerName }}</span>
+            </div>
+          </div>
+
+          <div class="cv-result-actions">
+            <button class="cv-btn-confirm" (click)="resetValidation()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              {{ 'VALIDATION.BTN_CONFIRM_APPLIED' | translate }}
+            </button>
+          </div>
+          <p class="cv-auto-reset">{{ 'VALIDATION.AUTO_RESET' | translate }}</p>
+        </div>
+      }
+
+      @if (isResultNegative) {
+        <div class="cv-result cv-result-invalid">
+          <div class="cv-result-icon-wrap invalid">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </div>
+          <h2 class="cv-result-headline invalid">{{ getStatusKey() | translate }}</h2>
+
+          @if (validationResult.status === 'reused') {
+            <div class="cv-coupon-detail">
+              <div class="cv-detail-row">
+                <span class="cv-detail-lbl">{{ 'VALIDATION.DETAIL_COUPON' | translate }}</span>
+                <span class="cv-detail-val">{{ validationResult.couponName }}</span>
+              </div>
+              <div class="cv-detail-row">
+                <span class="cv-detail-lbl">{{ 'VALIDATION.DETAIL_CUSTOMER' | translate }}</span>
+                <span class="cv-detail-val">{{ validationResult.customerName }}</span>
+              </div>
+              <div class="cv-detail-row">
+                <span class="cv-detail-lbl">{{ 'VALIDATION.DETAIL_USED_AT' | translate }}</span>
+                <span class="cv-detail-val cv-detail-warn">{{ validationResult.usedAt }}</span>
+              </div>
+            </div>
+          }
+
+          @if (validationResult.status === 'expired') {
+            <div class="cv-coupon-detail">
+              <div class="cv-detail-row">
+                <span class="cv-detail-lbl">{{ 'VALIDATION.DETAIL_COUPON' | translate }}</span>
+                <span class="cv-detail-val">{{ validationResult.couponName }}</span>
+              </div>
+              <div class="cv-detail-row">
+                <span class="cv-detail-lbl">{{ 'VALIDATION.DETAIL_REASON' | translate }}</span>
+                <span class="cv-detail-val cv-detail-warn">{{ validationResult.reason }}</span>
+              </div>
+            </div>
+          }
+
+          @if (validationResult.status === 'invalid') {
+            <p class="cv-result-tagline invalid-sub">{{ 'VALIDATION.REASON_INVALID' | translate }}</p>
+          }
+
+          <div class="cv-result-actions">
+            <button class="cv-btn-retry" (click)="resetValidation()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <polyline points="1 4 1 10 7 10"/>
+                <path d="M3.51 15a9 9 0 1 0 .49-3.81"/>
+              </svg>
+              {{ 'VALIDATION.BTN_TRY_AGAIN' | translate }}
+            </button>
+          </div>
+        </div>
+      }
+
+    </div>
+  </div>
+
+</div>
